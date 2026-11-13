@@ -1,0 +1,12 @@
+# Use the published Gorape image instead of building from the backend checkout.
+#
+# Usage (from gf-app):
+#   ./scripts/gorape-up.sh --hub
+#   GORAPE_SERVER_IMAGE=gorapeflutter/gorape:sha-7d9703b ./scripts/gorape-up.sh --hub
+#
+# The image is an override only. docker/server.yaml in the Gorape repository is
+# never edited.
+services:
+  server:
+    image: ${GORAPE_SERVER_IMAGE:-gorapeflutter/gorape:latest}
+    build: !reset null

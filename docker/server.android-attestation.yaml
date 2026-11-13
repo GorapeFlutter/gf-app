@@ -1,0 +1,16 @@
+# Android Key Attestation trust-anchor override.
+#
+# Gorape reads `Application.Server.Attestation.android_trust_anchors` from a
+# single YAML file, so the generated file is mounted over the container config
+# instead of editing the backend's etc/server.yaml.docker.
+#
+# Generate the files first:
+#   ./scripts/generate-android-trust-config.sh
+#
+# Then start the backend with:
+#   ./scripts/gorape-up.sh --android-attestation
+services:
+  server:
+    volumes: !override
+      - ${GORAPE_SERVER_CONFIG:?run scripts/generate-android-trust-config.sh first}:/app/etc/server.yaml:ro
+      - ${GORAPE_ANDROID_ATTESTATION_ROOTS:?run scripts/generate-android-trust-config.sh first}:/app/etc/android/android-attestation-roots.pem:ro
