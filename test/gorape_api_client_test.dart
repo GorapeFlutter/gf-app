@@ -1,9 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:gf_app/api/gorape_api_client.dart';
-import 'package:gf_app/api/models/registration.dart';
-import 'package:gf_app/core/errors/app_exception.dart';
+import 'package:gf_app/entity/model/role.dart';
+import 'package:gf_app/entity/request/device.dart';
+import 'package:gf_app/entity/request/group.dart';
+import 'package:gf_app/repository/gorape.dart';
+import 'package:gf_app/share/error.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 
@@ -34,8 +36,8 @@ void main() {
               'id': 'project-1',
               'slug': 'gorape',
               'name': 'Gorape',
-              'oidc_issuer': 'http://localhost:8080/realms/gorape',
-              'keycloak_realm': 'gorape',
+              'issuer': 'http://localhost:8080/realms/gorape',
+              'realm': 'gorape',
               'status': 'active',
             },
           ]),
@@ -47,6 +49,8 @@ void main() {
 
       expect(projects, hasLength(1));
       expect(projects.single.slug, 'gorape');
+      expect(projects.single.oidcIssuer, 'http://localhost:8080/realms/gorape');
+      expect(projects.single.keycloakRealm, 'gorape');
       expect(requests.single.method, 'GET');
       expect(
         requests.single.url.toString(),
@@ -264,6 +268,175 @@ void main() {
       );
 
       await expectLater(api.listProjects(), throwsFormatException);
+    });
+
+    test('creates a group with the OpenAPI request body', () async {
+      final api = clientWith(
+        (_) async => http.Response(
+          jsonEncode({
+            'id': 'group-1',
+            'project_id': 'project-1',
+            'slug': 'engineering',
+            'name': 'Engineering',
+            'status': 'active',
+            'created_at': '2026-01-01T00:00:00Z',
+            'updated_at': '2026-01-01T00:00:00Z',
+          }),
+          201,
+        ),
+      );
+
+      final group = await api.createGroup(
+        'project-1',
+        const GroupCreateRequest(slug: 'engineering', name: 'Engineering'),
+      );
+
+      expect(group.id, 'group-1');
+      expect(group.slug, 'engineering');
+      expect(group.isActive, isTrue);
+      expect(requests.single.method, 'POST');
+      expect(requests.single.url.path, '/v1/projects/project-1/groups');
+      expect(jsonDecode(requests.single.body), {
+        'slug': 'engineering',
+        'name': 'Engineering',
+      });
+    });
+
+    test('updates a group with PATCH', () async {
+      final api = clientWith(
+        (_) async => http.Response(
+          jsonEncode({
+            'id': 'group-1',
+            'project_id': 'project-1',
+            'slug': 'engineering',
+            'name': 'Platform',
+            'status': 'inactive',
+          }),
+          200,
+        ),
+      );
+
+      final group = await api.updateGroup(
+        'project-1',
+        'group-1',
+        const GroupUpdateRequest(name: 'Platform', status: 'inactive'),
+      );
+
+      expect(group.name, 'Platform');
+      expect(group.isActive, isFalse);
+      expect(requests.single.method, 'PATCH');
+      expect(jsonDecode(requests.single.body), {
+        'name': 'Platform',
+        'status': 'inactive',
+      });
+    });
+
+    test('lists group role bindings', () async {
+      final api = clientWith(
+        (_) async => http.Response(
+          jsonEncode({
+            'bindings': [
+              {
+                'id': 'binding-1',
+                'project_id': 'project-1',
+                'group_id': 'group-1',
+                'principal_id': 'principal-1',
+                'role_key': 'editor',
+                'created_at': '2026-01-01T00:00:00Z',
+              },
+            ],
+          }),
+          200,
+        ),
+      );
+
+      final bindings = await api.listGroupRoles('project-1', 'group-1');
+
+      expect(bindings, hasLength(1));
+      expect(bindings.single.groupId, 'group-1');
+      expect(bindings.single.accessRole.name, 'editor');
+      expect(
+        requests.single.url.path,
+        '/v1/projects/project-1/groups/group-1/roles',
+      );
+    });
+
+    test('unwraps project role bindings from the server response', () async {
+      final api = clientWith(
+        (_) async => http.Response(
+          jsonEncode({
+            'definitions': [],
+            'bindings': [
+              {
+                'id': 'binding-1',
+                'project_id': 'project-1',
+                'principal_id': 'principal-1',
+                'scope': 'project',
+                'role_key': 'admin',
+                'created_at': '2026-01-01T00:00:00Z',
+              },
+            ],
+          }),
+          200,
+        ),
+      );
+
+      final bindings = await api.listProjectRoles('project-1');
+
+      expect(bindings, hasLength(1));
+      expect(bindings.single.accessRole, AccessRole.admin);
+    });
+
+    test('sends the role binding subject field expected by Gorape', () async {
+      final api = clientWith((_) async => http.Response('', 204));
+
+      await api.putProjectRole(
+        'project-1',
+        const RoleCreateRequest(
+          oidcSubject: 'keycloak-subject',
+          role: 'editor',
+        ),
+      );
+
+      expect(requests.single.method, 'POST');
+      expect(jsonDecode(requests.single.body), {
+        'subject': 'keycloak-subject',
+        'role': 'editor',
+      });
+    });
+
+    test('deletes a project role binding', () async {
+      final api = clientWith((_) async => http.Response('', 204));
+
+      await api.deleteProjectRole('project-1', 'binding-1');
+
+      expect(requests.single.method, 'DELETE');
+      expect(
+        requests.single.url.path,
+        '/v1/projects/project-1/roles/binding-1',
+      );
+    });
+
+    test('maps 403 to an ApiException explaining role bindings', () async {
+      final api = clientWith(
+        (_) async => http.Response(
+          '{"code":"forbidden","message":"insufficient role"}',
+          403,
+        ),
+      );
+
+      await expectLater(
+        api.listProjectRoles('project-1'),
+        throwsA(
+          isA<ApiException>()
+              .having((error) => error.statusCode, 'statusCode', 403)
+              .having(
+                (error) => error.guidance,
+                'guidance',
+                contains('Gorape'),
+              ),
+        ),
+      );
     });
   });
 }

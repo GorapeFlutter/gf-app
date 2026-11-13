@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:gf_app/core/storage/secure_store.dart';
-import 'package:gf_app/policy/device_policy.dart';
+import 'package:gf_app/entity/model/policy.dart';
+import 'package:gf_app/repository/policy.dart';
+import 'package:gf_app/repository/secure_store.dart';
 
 void main() {
   group('LocalDevicePolicy', () {
@@ -29,7 +30,7 @@ void main() {
 
     test('repository stores values in the secure store', () async {
       final store = MemorySecureStore();
-      final repository = DevicePolicyRepository(store);
+      final repository = newDevicePolicyRepository(store);
 
       expect((await repository.load()).requireProofAfterLogin, isTrue);
 
@@ -37,7 +38,7 @@ void main() {
         const LocalDevicePolicy(requireProofAfterLogin: false),
       );
 
-      final reloaded = await DevicePolicyRepository(store).load();
+      final reloaded = await newDevicePolicyRepository(store).load();
       expect(reloaded.requireProofAfterLogin, isFalse);
       expect(repository.capabilities.backendSupported, isFalse);
       expect(repository.capabilities.reason, contains('OpenAPI'));

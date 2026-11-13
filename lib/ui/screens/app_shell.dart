@@ -1,11 +1,12 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Text;
+import '../../l10n/app_text.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../api/models/project.dart';
-import '../../state/auth_controller.dart';
-import '../../state/providers.dart';
+import '../../controller/providers.dart';
+import '../../entity/model/project.dart';
 import '../widgets/common.dart';
 import 'devices_screen.dart';
+import 'management_screen.dart';
 import 'policy_screen.dart';
 import 'register_device_screen.dart';
 import 'settings_screen.dart';
@@ -21,7 +22,7 @@ class AppShell extends ConsumerStatefulWidget {
 class _AppShellState extends ConsumerState<AppShell> {
   int _index = 0;
 
-  static const _titles = ['デバイス', 'デバイス登録', '対応状況', 'デバイスポリシー', '設定'];
+  static const _titles = ['デバイス', 'デバイス登録', '対応状況', 'デバイスポリシー', '管理', '設定'];
 
   @override
   Widget build(BuildContext context) {
@@ -34,9 +35,12 @@ class _AppShellState extends ConsumerState<AppShell> {
       appBar: AppBar(
         title: Row(
           children: [
-            Icon(Icons.shield_outlined, color: scheme.primary),
+            ColorFiltered(
+              colorFilter: ColorFilter.mode(scheme.primary, BlendMode.srcIn),
+              child: Icon(Icons.security, size: 22),
+            ),
             const SizedBox(width: 8),
-            Flexible(child: Text(_titles[_index])),
+            Flexible(child: AppText(_titles[_index])),
           ],
         ),
         actions: [
@@ -51,14 +55,14 @@ class _AppShellState extends ConsumerState<AppShell> {
                 ),
                 label: ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 140),
-                  child: Text(project.name, overflow: TextOverflow.ellipsis),
+                  child: AppText(project.name, overflow: TextOverflow.ellipsis),
                 ),
-                tooltip: 'プロジェクトを切り替え',
+                tooltip: tr(context, 'プロジェクトを切り替え'),
                 onPressed: () => _showProjectSheet(context),
               ),
             ),
           PopupMenuButton<String>(
-            tooltip: 'アカウント',
+            tooltip: tr(context, 'アカウント'),
             icon: const Icon(Icons.account_circle_outlined),
             onSelected: (value) async {
               switch (value) {
@@ -80,28 +84,28 @@ class _AppShellState extends ConsumerState<AppShell> {
                 child: ListTile(
                   contentPadding: EdgeInsets.zero,
                   leading: const Icon(Icons.person_outline),
-                  title: Text(session?.displayName ?? 'Signed in'),
-                  subtitle: Text(
+                  title: AppText(session?.displayName ?? 'Signed in'),
+                  subtitle: AppText(
                     session?.email ?? session?.subject ?? '',
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ),
               const PopupMenuDivider(),
-              const PopupMenuItem(
+              PopupMenuItem(
                 value: 'settings',
                 child: ListTile(
                   contentPadding: EdgeInsets.zero,
-                  leading: Icon(Icons.settings_outlined),
-                  title: Text('接続設定'),
+                  leading: Icon(Icons.settings, size: 22),
+                  title: AppText('接続設定'),
                 ),
               ),
-              const PopupMenuItem(
+              PopupMenuItem(
                 value: 'signout',
                 child: ListTile(
                   contentPadding: EdgeInsets.zero,
-                  leading: Icon(Icons.logout),
-                  title: Text('ログアウト'),
+                  leading: Icon(Icons.history, size: 22),
+                  title: AppText('ログアウト'),
                 ),
               ),
             ],
@@ -113,31 +117,36 @@ class _AppShellState extends ConsumerState<AppShell> {
       bottomNavigationBar: NavigationBar(
         selectedIndex: _index,
         onDestinationSelected: (value) => setState(() => _index = value),
-        destinations: const [
+        destinations: [
           NavigationDestination(
-            icon: Icon(Icons.devices_outlined),
-            selectedIcon: Icon(Icons.devices),
-            label: 'デバイス',
+            icon: Icon(Icons.devices, size: 22),
+            selectedIcon: Icon(Icons.devices, size: 22),
+            label: tr(context, 'デバイス'),
           ),
           NavigationDestination(
-            icon: Icon(Icons.add_moderator_outlined),
-            selectedIcon: Icon(Icons.add_moderator),
-            label: '登録',
+            icon: Icon(Icons.add, size: 22),
+            selectedIcon: Icon(Icons.add, size: 22),
+            label: tr(context, '登録'),
           ),
           NavigationDestination(
             icon: Icon(Icons.fact_check_outlined),
             selectedIcon: Icon(Icons.fact_check),
-            label: '対応状況',
+            label: tr(context, '対応状況'),
           ),
           NavigationDestination(
             icon: Icon(Icons.policy_outlined),
             selectedIcon: Icon(Icons.policy),
-            label: 'ポリシー',
+            label: tr(context, 'ポリシー'),
           ),
           NavigationDestination(
-            icon: Icon(Icons.settings_outlined),
-            selectedIcon: Icon(Icons.settings),
-            label: '設定',
+            icon: Icon(Icons.admin_panel_settings_outlined),
+            selectedIcon: Icon(Icons.admin_panel_settings),
+            label: tr(context, '管理'),
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.settings, size: 22),
+            selectedIcon: Icon(Icons.settings, size: 22),
+            label: tr(context, '設定'),
           ),
         ],
       ),
@@ -158,7 +167,15 @@ class _AppShellState extends ConsumerState<AppShell> {
       );
     }
     final list = projects.value ?? const <Project>[];
-    if (list.isEmpty) {
+    final activeProject = project ?? (list.isEmpty ? null : list.first);
+
+    // The management tab is available without a project: the cluster
+    // (Keycloak realm) overview needs no Gorape project.
+    if (_index == 4) {
+      return ManagementScreen(project: activeProject);
+    }
+
+    if (activeProject == null) {
       return EmptyState(
         icon: Icons.folder_off_outlined,
         title: 'Gorapeプロジェクトがありません',
@@ -166,28 +183,28 @@ class _AppShellState extends ConsumerState<AppShell> {
             'KeycloakユーザーがGorapeのProjectロールを持っていないか、'
             'プロジェクトがまだ作成されていません。\n'
             'Gorapeリポジトリのgorape-adminでプロジェクトを '
-            'bootstrapし、ユーザーにadmin/editor/viewerを付与してください。',
+            'bootstrapし、ユーザーにadmin/editor/viewerを付与してください。\n'
+            '「管理」タブではKeycloakトークンのロールとグループを確認できます。',
         action: Wrap(
           spacing: 8,
           children: [
             FilledButton.icon(
               onPressed: () => ref.read(projectsProvider.notifier).reload(),
-              icon: const Icon(Icons.refresh),
-              label: const Text('再読み込み'),
+              icon: Icon(Icons.refresh, size: 22),
+              label: const AppText('再読み込み'),
             ),
             OutlinedButton.icon(
               onPressed: () => Navigator.of(context).push(
                 MaterialPageRoute<void>(builder: (_) => const SettingsScreen()),
               ),
-              icon: const Icon(Icons.settings_outlined),
-              label: const Text('接続設定'),
+              icon: Icon(Icons.settings, size: 22),
+              label: const AppText('接続設定'),
             ),
           ],
         ),
       );
     }
 
-    final activeProject = project ?? list.first;
     return switch (_index) {
       0 => DevicesScreen(
         projectId: activeProject.id,
@@ -233,7 +250,7 @@ class _ProjectSheet extends ConsumerWidget {
           children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 4, 20, 8),
-              child: Text(
+              child: AppText(
                 'プロジェクト一覧',
                 style: Theme.of(context).textTheme.titleLarge,
               ),
@@ -246,14 +263,14 @@ class _ProjectSheet extends ConsumerWidget {
                   final project = list[index];
                   return ListTile(
                     leading: const Icon(Icons.folder_outlined),
-                    title: Text(project.name),
-                    subtitle: Text(
+                    title: AppText(project.name),
+                    subtitle: AppText(
                       '${project.slug} • ${project.oidcIssuer}',
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
                     trailing: project.id == selected?.id
-                        ? const Icon(Icons.check_circle)
+                        ? Icon(Icons.assignment, size: 22)
                         : StatusChip.status(context, project.status),
                     selected: project.id == selected?.id,
                     onTap: () {

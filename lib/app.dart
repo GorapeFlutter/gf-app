@@ -1,25 +1,34 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Text;
+import 'l10n/app_text.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'core/config/connection_settings.dart';
-import 'state/auth_controller.dart';
+import 'controller/providers.dart';
 import 'ui/app_theme.dart';
 import 'ui/screens/app_shell.dart';
 import 'ui/screens/login_screen.dart';
 import 'ui/screens/settings_screen.dart';
 import 'ui/widgets/common.dart';
 
-class GorapeApp extends StatelessWidget {
+class GorapeApp extends ConsumerWidget {
   const GorapeApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final locale = ref.watch(languageProvider).value ?? const Locale('ja');
     return MaterialApp(
-      title: 'Gorape Device Trust',
+      title: 'GF',
       debugShowCheckedModeBanner: false,
+      locale: locale,
+      supportedLocales: const [Locale('ja'), Locale('en')],
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
       theme: AppTheme.light(),
       darkTheme: AppTheme.dark(),
-      themeMode: ThemeMode.system,
+      themeMode: ThemeMode.light,
       home: const AuthGate(),
     );
   }
@@ -53,7 +62,7 @@ class AuthGate extends ConsumerWidget {
 
     final settings =
         connection.value ??
-        ConnectionSettings.defaultsFromEnvironment(platform);
+        ref.watch(connectionConfigProvider).defaultsFromEnvironment(platform);
     final session = auth.value;
 
     if (session != null) {
@@ -66,15 +75,18 @@ class AuthGate extends ConsumerWidget {
       );
     }
 
-    final oidc = ref.watch(oidcServiceProvider);
+    final authSupport = ref.watch(authSupportProvider);
     return LoginScreen(
       settings: settings,
       platform: platform,
-      oidcSupported: oidc.isSupported,
+      support: ref.watch(platformSupportProvider),
+      oidcSupported: authSupport.isSupported,
       loading: auth.isLoading,
       error: auth.hasError ? auth.error : null,
-      unsupportedReason: oidc.unsupportedReason,
+      unsupportedReason: authSupport.unsupportedReason,
       onLogin: () => ref.read(authControllerProvider.notifier).signIn(),
+      onAdminLogin: () =>
+          ref.read(authControllerProvider.notifier).signIn(forceLogin: true),
       onOpenSettings: () {
         Navigator.of(context).push(
           MaterialPageRoute<void>(
@@ -106,16 +118,16 @@ class _SplashScreen extends StatelessWidget {
                 color: scheme.primaryContainer,
                 borderRadius: BorderRadius.circular(20),
               ),
-              child: Icon(
-                Icons.shield_outlined,
-                size: 40,
-                color: scheme.onPrimaryContainer,
+              child: Image.asset(
+                'assets/gorape/brand/main_logo_symbol.png',
+                width: 40,
+                height: 40,
               ),
             ),
             const SizedBox(height: 20),
             const CircularProgressIndicator(),
             const SizedBox(height: 12),
-            Text(label),
+            AppText(label),
           ],
         ),
       ),

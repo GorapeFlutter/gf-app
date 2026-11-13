@@ -1,19 +1,25 @@
 import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:gf_app/api/gorape_api_client.dart';
-import 'package:gf_app/api/models/attestation.dart';
-import 'package:gf_app/api/models/challenge.dart';
-import 'package:gf_app/api/models/device.dart';
-import 'package:gf_app/api/models/project.dart';
-import 'package:gf_app/api/models/registration.dart';
-import 'package:gf_app/core/errors/app_exception.dart';
-import 'package:gf_app/core/storage/secure_store.dart';
-import 'package:gf_app/core/utils/base64_url.dart';
-import 'package:gf_app/device_keys/device_key_provider.dart';
-import 'package:gf_app/device_keys/device_key_store.dart';
-import 'package:gf_app/device_keys/device_proof_service.dart';
-import 'package:gf_app/device_keys/device_registration_service.dart';
+import 'package:gf_app/entity/model/attestation.dart';
+import 'package:gf_app/entity/model/device.dart';
+import 'package:gf_app/entity/model/device_key.dart';
+import 'package:gf_app/entity/model/group.dart';
+import 'package:gf_app/entity/model/project.dart';
+import 'package:gf_app/entity/model/registered_device_key.dart';
+import 'package:gf_app/entity/model/role_binding.dart';
+import 'package:gf_app/entity/request/device.dart';
+import 'package:gf_app/entity/request/group.dart';
+import 'package:gf_app/entity/response/attestation.dart';
+import 'package:gf_app/entity/response/challenge.dart';
+import 'package:gf_app/repository/attestation.dart';
+import 'package:gf_app/repository/device.dart';
+import 'package:gf_app/repository/device_key.dart';
+import 'package:gf_app/repository/gorape.dart';
+import 'package:gf_app/repository/secure_store.dart';
+import 'package:gf_app/share/base64_url.dart';
+import 'package:gf_app/share/error.dart';
+import 'package:gf_app/usecase/device.dart';
 
 const _projectId = 'project-1';
 const _challengeBytes = [1, 2, 3, 4, 5];
@@ -121,13 +127,87 @@ class FakeGorapeApi implements GorapeApi {
   Future<void> revokeDevice(String projectId, String deviceId) async {}
 
   @override
+  Future<List<Group>> listGroups(String projectId) async => const [];
+
+  @override
+  Future<Group> getGroup(String projectId, String groupId) =>
+      throw UnimplementedError();
+
+  @override
+  Future<Group> createGroup(String projectId, GroupCreateRequest request) =>
+      throw UnimplementedError();
+
+  @override
+  Future<Group> updateGroup(
+    String projectId,
+    String groupId,
+    GroupUpdateRequest request,
+  ) => throw UnimplementedError();
+
+  @override
+  Future<void> deleteGroup(String projectId, String groupId) async {}
+
+  @override
+  Future<List<Device>> listGroupDevices(
+    String projectId,
+    String groupId,
+  ) async => const [];
+
+  @override
+  Future<void> bindDeviceToGroup(
+    String projectId,
+    String groupId,
+    String deviceId,
+  ) async {}
+
+  @override
+  Future<void> unbindDeviceFromGroup(
+    String projectId,
+    String groupId,
+    String deviceId,
+  ) async {}
+
+  @override
+  Future<List<ProjectRoleBinding>> listProjectRoles(String projectId) async =>
+      const [];
+
+  @override
+  Future<void> putProjectRole(
+    String projectId,
+    RoleCreateRequest request,
+  ) async {}
+
+  @override
+  Future<void> deleteProjectRole(String projectId, String bindingId) async {}
+
+  @override
+  Future<List<GroupRoleBinding>> listGroupRoles(
+    String projectId,
+    String groupId,
+  ) async => const [];
+
+  @override
+  Future<void> putGroupRole(
+    String projectId,
+    String groupId,
+    RoleCreateRequest request,
+  ) async {}
+
+  @override
+  Future<void> deleteGroupRole(
+    String projectId,
+    String groupId,
+    String bindingId,
+  ) async {}
+
+  @override
   Future<List<AttestationRecord>> attestations(
     String projectId,
     String deviceId,
   ) async => const [];
 }
 
-class FakeDeviceKeyProvider implements DeviceKeyProvider {
+class FakeDeviceKeyProvider implements DeviceKeyRepository {
   bool supported = true;
   bool hasStoredKey = true;
   String? unsupportedReason;
@@ -190,26 +270,25 @@ void main() {
   late FakeGorapeApi api;
   late FakeDeviceKeyProvider keys;
   late MemorySecureStore store;
-  late DeviceKeyStore keyStore;
+  late DeviceKeyStoreRepository keyStore;
 
   setUp(() {
     api = FakeGorapeApi();
     keys = FakeDeviceKeyProvider();
     store = MemorySecureStore();
-    keyStore = DeviceKeyStore(store);
+    keyStore = newDeviceKeyStoreRepository(store);
   });
 
-  DeviceRegistrationService registrationService() {
-    return DeviceRegistrationService(
-      api: api,
-      keyProvider: keys,
-      keyStore: keyStore,
+  DeviceUsecase registrationService() {
+    return newDeviceUsecase(
+      deviceRepository: newDeviceRepository(api),
+      attestationRepository: newAttestationRepository(api),
+      keyRepository: keys,
+      keyStoreRepository: keyStore,
     );
   }
 
-  DeviceProofService proofService() {
-    return DeviceProofService(api: api, keyProvider: keys, keyStore: keyStore);
-  }
+  DeviceUsecase proofService() => registrationService();
 
   group('DeviceRegistrationService', () {
     test('binds the raw challenge and submits leaf-first evidence', () async {
@@ -353,7 +432,7 @@ void main() {
     test('signs the raw challenge bytes and sends Base64url', () async {
       await saveKey();
 
-      final record = await proofService().verifyPossession(
+      final record = await proofService().provePossession(
         projectId: _projectId,
         deviceId: 'device-1',
       );
@@ -366,7 +445,7 @@ void main() {
 
     test('requires a locally stored key for the device', () async {
       await expectLater(
-        proofService().verifyPossession(
+        proofService().provePossession(
           projectId: _projectId,
           deviceId: 'device-1',
         ),
@@ -380,7 +459,7 @@ void main() {
       keys.hasStoredKey = false;
 
       await expectLater(
-        proofService().verifyPossession(
+        proofService().provePossession(
           projectId: _projectId,
           deviceId: 'device-1',
         ),

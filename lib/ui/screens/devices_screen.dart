@@ -1,9 +1,13 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Text;
+import '../../l10n/app_text.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../api/models/device.dart';
-import '../../state/providers.dart';
+import '../../controller/providers.dart';
+import '../../entity/model/device.dart';
+import '../../entity/model/device_ref.dart';
+import '../../entity/model/role.dart';
 import '../widgets/common.dart';
+import '../widgets/role_badge.dart';
 import 'device_detail_screen.dart';
 
 class DevicesScreen extends ConsumerWidget {
@@ -19,6 +23,8 @@ class DevicesScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final devices = ref.watch(devicesProvider(projectId));
+    final role = ref.watch(projectRoleProvider(projectId));
+    final canEdit = role.canEdit;
     return RefreshIndicator(
       onRefresh: () => ref.read(devicesProvider(projectId).notifier).reload(),
       child: CustomScrollView(
@@ -30,7 +36,7 @@ class DevicesScreen extends ConsumerWidget {
               child: Row(
                 children: [
                   Expanded(
-                    child: Text(
+                    child: AppText(
                       '登録済みデバイス',
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
@@ -44,20 +50,34 @@ class DevicesScreen extends ConsumerWidget {
                       ),
                     ),
                   IconButton(
-                    tooltip: '再読み込み',
+                    tooltip: tr(context, '再読み込み'),
                     onPressed: () =>
                         ref.read(devicesProvider(projectId).notifier).reload(),
-                    icon: const Icon(Icons.refresh),
+                    icon: Icon(Icons.refresh, size: 22),
                   ),
                   FilledButton.tonalIcon(
-                    onPressed: onRegister,
-                    icon: const Icon(Icons.add),
-                    label: const Text('登録'),
+                    onPressed: canEdit ? onRegister : null,
+                    icon: Icon(Icons.add, size: 22),
+                    label: const AppText('登録'),
                   ),
                 ],
               ),
             ),
           ),
+          if (!canEdit)
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                child: RoleNotice(
+                  role: role,
+                  scopeLabel: 'デバイス',
+                  message: role == AccessRole.none
+                      ? 'Keycloakトークンにこのプロジェクトのロールがありません。'
+                            '参照はGorape側の権限に従いますが、登録・失効などの変更操作は無効です。'
+                      : '閲覧者のため、デバイスの登録・失効は実行できません。',
+                ),
+              ),
+            ),
           if (devices.isLoading && !devices.hasValue)
             const SliverFillRemaining(
               hasScrollBody: false,
@@ -81,14 +101,18 @@ class DevicesScreen extends ConsumerWidget {
               child: EmptyState(
                 icon: Icons.devices_other_outlined,
                 title: 'デバイスが登録されていません',
-                message:
-                    'Android実機でOS保護鍵を生成し、Gorapeへ登録してください。\n'
-                    '登録後、チャレンジ署名による所有証明を実行できます。',
-                action: FilledButton.icon(
-                  onPressed: onRegister,
-                  icon: const Icon(Icons.add_moderator_outlined),
-                  label: const Text('デバイスを登録'),
-                ),
+                message: canEdit
+                    ? 'Android実機でOS保護鍵を生成し、Gorapeへ登録してください。\n'
+                          '登録後、チャレンジ署名による所有証明を実行できます。'
+                    : 'このスコープではデバイスを登録できません。'
+                          '管理者または編集者のロールが必要です。',
+                action: canEdit
+                    ? FilledButton.icon(
+                        onPressed: onRegister,
+                        icon: Icon(Icons.add, size: 22),
+                        label: const AppText('デバイスを登録'),
+                      )
+                    : null,
               ),
             )
           else
@@ -134,7 +158,10 @@ class _DeviceTile extends ConsumerWidget {
         title: Row(
           children: [
             Flexible(
-              child: Text(device.displayName, overflow: TextOverflow.ellipsis),
+              child: AppText(
+                device.displayName,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
             const SizedBox(width: 8),
             StatusChip.status(context, device.status),
@@ -150,7 +177,7 @@ class _DeviceTile extends ConsumerWidget {
         ),
         subtitle: Padding(
           padding: const EdgeInsets.only(top: 4),
-          child: Text(
+          child: AppText(
             '${platformLabel(device.platform)} • 最終検証 '
             '${formatTimestamp(device.lastVerifiedAt)}\n'
             '登録 ${formatTimestamp(device.registeredAt)}',

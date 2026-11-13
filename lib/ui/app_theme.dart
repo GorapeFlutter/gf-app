@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../share/gorape_colors.dart';
+
 abstract final class AppTheme {
-  static const _seed = Color(0xFF0F766E);
+  static const _seed = GorapeColors.pink;
 
   static ThemeData light() => _build(Brightness.light);
 

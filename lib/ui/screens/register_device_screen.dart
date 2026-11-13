@@ -1,11 +1,13 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Text;
+import '../../l10n/app_text.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../api/models/attestation.dart';
-import '../../platform/platform_support.dart';
-import '../../state/auth_controller.dart';
-import '../../state/providers.dart';
+import '../../controller/providers.dart';
+import '../../entity/model/platform_support.dart';
+import '../../entity/model/role.dart';
+import '../../entity/response/attestation.dart';
 import '../widgets/common.dart';
+import '../widgets/role_badge.dart';
 
 class RegisterDeviceScreen extends ConsumerStatefulWidget {
   const RegisterDeviceScreen({
@@ -45,15 +47,17 @@ class _RegisterDeviceScreenState extends ConsumerState<RegisterDeviceScreen> {
   Widget build(BuildContext context) {
     final platform = ref.watch(runtimePlatformProvider);
     final support = ref.watch(platformSupportProvider);
-    final provider = ref.watch(deviceKeyProvider);
+    final devicePlatform = ref.watch(devicePlatformProvider);
     final availability = ref.watch(deviceKeyAvailabilityProvider);
     final capabilities = ref.watch(capabilitiesProvider(widget.projectId));
+    final role = ref.watch(projectRoleProvider(widget.projectId));
     final caps = capabilities.value ?? const AttestationCapabilities({});
-    final backendStatus = caps.statusFor(provider.platform);
+    final backendStatus = caps.statusFor(devicePlatform);
     final backendReady = backendStatus == 'implemented';
     final localReady = availability.value?.supported == true;
     final canRegister =
         !_busy &&
+        role.canEdit &&
         localReady &&
         backendReady &&
         _nameController.text.trim().isNotEmpty;
@@ -61,14 +65,23 @@ class _RegisterDeviceScreenState extends ConsumerState<RegisterDeviceScreen> {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        Text('Android端末を登録', style: Theme.of(context).textTheme.titleLarge),
+        AppText('Android端末を登録', style: Theme.of(context).textTheme.titleLarge),
         const SizedBox(height: 4),
-        Text(
+        AppText(
           'サーバーのチャレンジをOS鍵生成にバインドし、公開鍵と'
           'Key Attestation証明書チェーンをGorapeへ送信します。',
           style: Theme.of(context).textTheme.bodySmall,
         ),
         const SizedBox(height: 16),
+        if (!role.canEdit)
+          RoleNotice(
+            role: role,
+            scopeLabel: 'デバイス登録',
+            message: role == AccessRole.none
+                ? 'Keycloakトークンにこのプロジェクトのロールがありません。'
+                      'Gorape側でeditor権限があっても、UIからは登録できません。'
+                : '閲覧者のためデバイスを登録できません。管理者または編集者のロールが必要です。',
+          ),
         if (_error != null) ...[
           ErrorCard(error: _error!, compact: true),
           const SizedBox(height: 12),
@@ -107,7 +120,7 @@ class _RegisterDeviceScreenState extends ConsumerState<RegisterDeviceScreen> {
                       : 'このビルドでは取得できません',
                 ),
                 const SizedBox(height: 8),
-                Text(
+                AppText(
                   support.note,
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
@@ -119,13 +132,13 @@ class _RegisterDeviceScreenState extends ConsumerState<RegisterDeviceScreen> {
           title: 'Gorapeバックエンド',
           icon: Icons.cloud_outlined,
           trailing: IconButton(
-            tooltip: 'Verifier対応状況を更新',
+            tooltip: tr(context, 'Verifier対応状況を更新'),
             onPressed: _busy
                 ? null
                 : () => ref
                       .read(capabilitiesProvider(widget.projectId).notifier)
                       .reload(),
-            icon: const Icon(Icons.refresh),
+            icon: Icon(Icons.refresh, size: 22),
           ),
           child: capabilities.when(
             loading: () => const LinearProgressIndicator(),
@@ -149,11 +162,14 @@ class _RegisterDeviceScreenState extends ConsumerState<RegisterDeviceScreen> {
                     padding: const EdgeInsets.symmetric(vertical: 4),
                     child: Row(
                       children: [
-                        SizedBox(width: 90, child: Text(platformLabel(entry))),
+                        SizedBox(
+                          width: 90,
+                          child: AppText(platformLabel(entry)),
+                        ),
                         StatusChip.status(context, value.statusFor(entry)),
                         const Spacer(),
-                        Text(
-                          entry == provider.platform ? 'この端末' : '',
+                        AppText(
+                          entry == devicePlatform ? 'この端末' : '',
                           style: Theme.of(context).textTheme.labelSmall,
                         ),
                       ],
@@ -161,7 +177,7 @@ class _RegisterDeviceScreenState extends ConsumerState<RegisterDeviceScreen> {
                   ),
                 if (backendStatus == 'unconfigured') ...[
                   const SizedBox(height: 10),
-                  Text(
+                  AppText(
                     'Android verifierは "unconfigured" です。Gorapeの '
                     'android_trust_anchors にGoogle Hardware Attestation Root CAを'
                     '設定するまで登録は失敗します。',
@@ -185,9 +201,9 @@ class _RegisterDeviceScreenState extends ConsumerState<RegisterDeviceScreen> {
                 controller: _nameController,
                 enabled: !_busy,
                 onChanged: (_) => setState(() {}),
-                decoration: const InputDecoration(
-                  labelText: '表示名',
-                  hintText: '例: Pixel 8 Pro',
+                decoration: InputDecoration(
+                  labelText: tr(context, '表示名'),
+                  hintText: tr(context, '例: Pixel 8 Pro'),
                   prefixIcon: Icon(Icons.badge_outlined),
                 ),
               ),
@@ -200,17 +216,28 @@ class _RegisterDeviceScreenState extends ConsumerState<RegisterDeviceScreen> {
                         height: 18,
                         child: CircularProgressIndicator(strokeWidth: 2),
                       )
-                    : const Icon(Icons.add_moderator_outlined),
+                    : Icon(Icons.add, size: 22),
                 label: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: Text(_busy ? '登録しています...' : 'チャレンジを取得して登録'),
+                  child: AppText(_busy ? '登録しています...' : 'チャレンジを取得して登録'),
                 ),
               ),
               if (!localReady)
                 Padding(
                   padding: const EdgeInsets.only(top: 8),
-                  child: Text(
+                  child: AppText(
                     'このOSではOS保護鍵とAttestationが未実装のため登録できません。',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.error,
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+              if (!role.canEdit)
+                Padding(
+                  padding: const EdgeInsets.only(top: 8),
+                  child: AppText(
+                    'デバイス登録にはプロジェクトのeditor以上のロールが必要です。',
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.error,
                       fontSize: 12,
@@ -220,7 +247,7 @@ class _RegisterDeviceScreenState extends ConsumerState<RegisterDeviceScreen> {
               if (!backendReady)
                 Padding(
                   padding: const EdgeInsets.only(top: 8),
-                  child: Text(
+                  child: AppText(
                     'Gorapeバックエンドのverifierが "implemented" ではないため登録できません。',
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.error,
@@ -234,7 +261,7 @@ class _RegisterDeviceScreenState extends ConsumerState<RegisterDeviceScreen> {
         Card(
           child: ExpansionTile(
             leading: const Icon(Icons.help_outline),
-            title: const Text('登録フローの詳細'),
+            title: const AppText('登録フローの詳細'),
             childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
             children: [
               const _FlowStep(
@@ -252,7 +279,7 @@ class _RegisterDeviceScreenState extends ConsumerState<RegisterDeviceScreen> {
                 'POST /devices/registration/verify が422なら信頼アンカーを確認',
               ),
               const SizedBox(height: 8),
-              Text(
+              AppText(
                 PlatformSupport.passkeyDelegationNote,
                 style: Theme.of(context).textTheme.bodySmall,
               ),
@@ -270,7 +297,7 @@ class _RegisterDeviceScreenState extends ConsumerState<RegisterDeviceScreen> {
     });
     try {
       final result = await ref
-          .read(deviceActionsProvider)
+          .read(deviceControllerProvider)
           .register(
             projectId: widget.projectId,
             displayName: _nameController.text,
@@ -280,7 +307,7 @@ class _RegisterDeviceScreenState extends ConsumerState<RegisterDeviceScreen> {
         context: context,
         builder: (context) => AlertDialog(
           icon: const Icon(Icons.verified_user),
-          title: const Text('デバイスを登録しました'),
+          title: const AppText('デバイスを登録しました'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -289,7 +316,7 @@ class _RegisterDeviceScreenState extends ConsumerState<RegisterDeviceScreen> {
               KeyValueRow('Security Level', result.securityLevel ?? '—'),
               KeyValueRow('Device ID', result.device.id, monospace: true),
               const SizedBox(height: 8),
-              const Text(
+              const AppText(
                 'バックエンドがAttestationをverifiedとして記録しました。'
                 '続けてチャレンジ署名による所有証明を実行できます。',
               ),
@@ -298,14 +325,14 @@ class _RegisterDeviceScreenState extends ConsumerState<RegisterDeviceScreen> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('一覧へ'),
+              child: const AppText('一覧へ'),
             ),
             FilledButton(
               onPressed: () {
                 Navigator.pop(context);
                 widget.onRegistered(result.device.id);
               },
-              child: const Text('デバイス一覧を開く'),
+              child: const AppText('デバイス一覧を開く'),
             ),
           ],
         ),
@@ -348,8 +375,8 @@ class _CheckLine extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(label),
-                Text(detail, style: Theme.of(context).textTheme.bodySmall),
+                AppText(label),
+                AppText(detail, style: Theme.of(context).textTheme.bodySmall),
               ],
             ),
           ),
@@ -374,10 +401,10 @@ class _FlowStep extends StatelessWidget {
         children: [
           CircleAvatar(
             radius: 11,
-            child: Text(number, style: const TextStyle(fontSize: 11)),
+            child: AppText(number, style: const TextStyle(fontSize: 11)),
           ),
           const SizedBox(width: 10),
-          Expanded(child: Text(text)),
+          Expanded(child: AppText(text)),
         ],
       ),
     );

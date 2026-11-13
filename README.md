@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/gorape/brand/readme-header.png" alt="Gorape Flutter — Device Identity & Secure Access" width="100%">
+</p>
+
 # gf-app — Gorape Flutter client
 
 Flutter client for the [Gorape](../gorape) device trust / attestation backend.
@@ -19,6 +23,12 @@ development scripts that layer on top of it.
   session.
 - Project, device, registration, proof and attestation endpoints from
   `gorape/docs/swagger/swagger.yaml`.
+- Group and role management endpoints (group CRUD, group devices, project /
+  group role bindings) from the same contract.
+- Role-aware UI driven by Keycloak token claims: cluster (realm) overview,
+  per-project management and per-group management. Viewers get read-only
+  screens; editors can register/revoke devices and assign group devices; admins
+  can also create/edit/delete groups and grant project/group roles.
 - Android registration:
   - EC P-256 key generated inside Android Keystore (StrongBox when available).
   - Raw registration challenge passed to
@@ -31,8 +41,8 @@ development scripts that layer on top of it.
   backend supports their attestation.
 - Local-only policy preferences, clearly labelled as not enforced by Gorape
   (the backend has no policy API).
-- Automated tests for API contracts, settings, local policy, registration and
-  proof orchestration.
+- Automated tests for API contracts, role claim resolution, settings, local
+  policy, registration and proof orchestration.
 
 ## Requirements
 
@@ -60,7 +70,10 @@ cd gf-app
 #    CLI redirect http://127.0.0.1:8400/callback is preserved.
 ./scripts/keycloak-allow-redirect.sh
 
-# 4. Run on a connected Android device. adb reverse maps localhost:8000 and
+# 4. A fresh database has no Gorape projects. Bootstrap a project for this
+#    issuer and grant the signing Keycloak user's sub a project role before
+#    launching the app. See ../gorape/README.md, "Bootstrap a Project".
+# 5. Run on a connected Android device. adb reverse maps localhost:8000 and
 #    localhost:8080 back to the host so the OIDC issuer stays consistent.
 ./scripts/run-android.sh
 ```
@@ -77,8 +90,9 @@ curl -s -H "Authorization: Bearer $TOKEN" \
 # {"verifiers":{"android":"implemented","ios":"unsupported", ...}}
 ```
 
-The project ID above is the seeded development project. If your database is
-different, use any ID returned by `GET /v1/projects`.
+The project ID above is available only in a database that was seeded with the
+development data. A fresh Compose database requires the bootstrap step above;
+then use an ID returned by `GET /v1/projects`.
 
 ## Using the published Docker Hub image
 
@@ -122,6 +136,10 @@ flutter run \
 Values can also be edited in the app under **Settings**. They are stored in the
 OS secure storage, not in the Gorape backend.
 
+The app language can be changed under **Settings → Display language**. Japanese
+and English are supported; the selection is stored locally and defaults to
+Japanese.
+
 > The OIDC issuer must remain identical to the issuer that Keycloak puts in the
 > token. Replacing only the host (for example using `10.0.2.2` for the issuer)
 > makes token validation fail. Use `adb reverse tcp:8080 tcp:8080` or a proper
@@ -145,9 +163,51 @@ Only endpoints present in the backend OpenAPI contract are used:
 | POST | `/v1/projects/{projectId}/devices/{deviceId}/verify` |
 | GET | `/v1/projects/{projectId}/attestation/capabilities` |
 | GET | `/v1/projects/{projectId}/devices/{deviceId}/attestation` |
+| GET/POST | `/v1/projects/{projectId}/groups` |
+| GET/PATCH/DELETE | `/v1/projects/{projectId}/groups/{groupId}` |
+| GET/POST | `/v1/projects/{projectId}/groups/{groupId}/devices` |
+| DELETE | `/v1/projects/{projectId}/groups/{groupId}/devices/{deviceId}` |
+| GET/POST | `/v1/projects/{projectId}/roles` |
+| DELETE | `/v1/projects/{projectId}/roles/{bindingId}` |
+| GET/POST | `/v1/projects/{projectId}/groups/{groupId}/roles` |
+| DELETE | `/v1/projects/{projectId}/groups/{groupId}/roles/{bindingId}` |
 
-There is deliberately no policy, passkey or group-management API in the client:
-the current backend contract does not define a policy endpoint.
+There is deliberately no policy or passkey API in the client: the current
+backend contract does not define them.
+
+## Role-aware UI (Keycloak claims)
+
+The **管理** tab has three scopes: クラスタ (Keycloak realm), プロジェクト and
+グループ. Roles are resolved client-side from the access token for display and
+action gating. The backend is authoritative and combines Gorape project/group
+role bindings with configured Keycloak roles and group-path claims when
+authorizing requests.
+
+Supported claim conventions (all optional):
+
+| Claim | Meaning |
+| --- | --- |
+| `realm_access.roles` / `resource_access.*.roles` | `admin`, `editor`, `viewer` (the seeded `app` role maps to `viewer`; `owner` maps to `admin`) |
+| `gorape_cluster_role` | Explicit realm-wide role |
+| `gorape_project_role` | Project-wide fallback role |
+| `gorape_project_roles` | JSON object keyed by project slug/id |
+| `gorape_project_<slug>_role` | Per-project user attribute |
+| `gorape_group_role` | Group-wide fallback role |
+| `gorape_group_roles` | JSON object keyed by group slug/path |
+| `gorape_group_<slug>_role` | Per-group user attribute (for example `gorape_group_group001_role: ["owner"]`) |
+| `groups` | Group paths; `/group004/editor` also assigns a role |
+
+The seeded realm (`../gorape/etc/keycloak/gorape-realm.json`) maps `groups` plus
+every `gorape_group_<slug>_role` user attribute into the `gorape-client` access
+token. Realms configured by hand need those mappers added to the client:
+
+- **Group Membership** mapper → claim `groups`, full path, access token.
+- One **User Attribute** mapper per group attribute → claim name equal to the
+  attribute name, multivalued, access token.
+
+Role changes take effect after the next token refresh or sign-in. Realm roles are
+the quickest way to switch the whole UI: grant `admin`, `editor` or `viewer`
+(realm roles `editor` and `viewer` are included in the seed realm).
 
 ## OS support
 
@@ -173,19 +233,23 @@ verifies possession. The app never stores passkey secrets or passwords.
 
 ```
 lib/
-  api/              Gorape HTTP client and OpenAPI models
-  auth/             OIDC abstraction, AppAuth adapter, token/session models
-  core/             Config, secure storage, errors, JWT/Base64url utilities
-  device_keys/      Android Keystore bridge, registration/proof orchestration
-  platform/         Static OS support matrix
-  policy/           Local-only policy model (not sent to Gorape)
-  state/            Riverpod controllers/providers
-  ui/               Login, projects, devices, registration, support, settings
+  config/           接続設定などの既定値生成
+  controller/       UIから呼び出すRiverpod controllerと依存注入
+  entity/           model / request / response のデータ定義
+  usecase/          認証、端末登録、所有証明などのアプリケーションロジック
+  repository/       HTTP、AppAuth、Secure Storage、MethodChannel、OS判定
+  share/            レイヤー間で共有する例外とステートレスな変換処理
+  ui/               Login, devices, registration, management, support, settings
 android/            MainActivity.kt Keystore/attestation MethodChannel
 docker/             gf-app Compose overrides (backend files are not edited)
 scripts/            Backend, Keycloak, trust-anchor and Android dev helpers
 test/               Unit/widget tests
 ```
+
+`cmn-core` と同様に、各レイヤーは `project.dart`、`device.dart`、
+`attestation.dart` などの概念単位で分割しています。repository / usecase /
+controller では公開interface、実装class、生成関数を同じファイルに置き、
+UIはcontroller経由でのみ処理を開始します。
 
 ## Development checks
 
@@ -219,6 +283,9 @@ missing while the AOT snapshot exists.
 - iOS/macOS builds could not be validated here because Xcode is incomplete.
 - Windows/Linux/Web have no OIDC login and no attestation support.
 - The backend has no policy API; the policy screen is explicitly local-only.
+- Gorape has no cluster-wide or "my role" API. The クラスタ screen is built from
+  Keycloak claims and the projects visible to the signed-in user; per-project and
+  per-group role bindings are only listed for callers the backend already allows.
 - Swagger UI/godoc are optional containers (`make docs` in the backend).
 
 ## Further documentation

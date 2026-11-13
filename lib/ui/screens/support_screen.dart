@@ -1,11 +1,11 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Text;
+import '../../l10n/app_text.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../api/models/attestation.dart';
-import '../../core/config/runtime_platform.dart';
-import '../../platform/platform_support.dart';
-import '../../state/auth_controller.dart';
-import '../../state/providers.dart';
+import '../../controller/providers.dart';
+import '../../entity/model/platform.dart';
+import '../../entity/model/platform_support.dart';
+import '../../entity/response/attestation.dart';
 import '../widgets/common.dart';
 
 /// OS support matrix plus the backend's live verifier capabilities.
@@ -23,6 +23,17 @@ class SupportScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final current = ref.watch(runtimePlatformProvider);
     final capabilities = ref.watch(capabilitiesProvider(projectId));
+    final supports = [
+      for (final platform in const [
+        RuntimePlatform.android,
+        RuntimePlatform.ios,
+        RuntimePlatform.macos,
+        RuntimePlatform.windows,
+        RuntimePlatform.linux,
+        RuntimePlatform.web,
+      ])
+        ref.watch(platformSupportForProvider(platform)),
+    ];
 
     return RefreshIndicator(
       onRefresh: () =>
@@ -34,20 +45,20 @@ class SupportScreen extends ConsumerWidget {
           Row(
             children: [
               Expanded(
-                child: Text(
+                child: AppText(
                   'OS別の対応状況',
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
               ),
               IconButton(
-                tooltip: 'バックエンド対応状況を更新',
+                tooltip: tr(context, 'バックエンド対応状況を更新'),
                 onPressed: () =>
                     ref.read(capabilitiesProvider(projectId).notifier).reload(),
-                icon: const Icon(Icons.refresh),
+                icon: Icon(Icons.refresh, size: 22),
               ),
             ],
           ),
-          Text(
+          AppText(
             'この端末: ${current.displayName}。'
             '「アプリ側」はFlutterクライアントの実装状況、'
             '「Gorape」はバックエンドのVerifier対応状況です。',
@@ -61,7 +72,11 @@ class SupportScreen extends ConsumerWidget {
               onRetry: () =>
                   ref.read(capabilitiesProvider(projectId).notifier).reload(),
             ),
-            data: (value) => _SupportTable(current: current, backend: value),
+            data: (value) => _SupportTable(
+              current: current,
+              backend: value,
+              supports: supports,
+            ),
           ),
           const SizedBox(height: 16),
           SectionCard(
@@ -70,7 +85,7 @@ class SupportScreen extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
+                const AppText(
                   'Android実機ではAndroid KeystoreにEC P-256鍵を生成し、'
                   'サーバーのチャレンジをKeyGenParameterSpecへバインドして'
                   'Key Attestation証明書チェーン（leaf-first）を取得します。'
@@ -78,7 +93,7 @@ class SupportScreen extends ConsumerWidget {
                   'チェーンを検証します。',
                 ),
                 const SizedBox(height: 8),
-                Text(
+                AppText(
                   'バックエンドの android_trust_anchors が空の場合、'
                   'capabilitiesは "unconfigured" を返し、登録は422で失敗します。',
                   style: TextStyle(
@@ -92,7 +107,7 @@ class SupportScreen extends ConsumerWidget {
           SectionCard(
             title: 'iOS / macOS',
             icon: Icons.laptop_mac,
-            child: const Text(
+            child: const AppText(
               'Keycloakログインはflutter_appauthで対応します。'
               'ただしGorapeのAttestation VerifierはiOS/macOSを '
               '"unsupported" として返すため、デバイス登録・所有証明は'
@@ -103,7 +118,7 @@ class SupportScreen extends ConsumerWidget {
           SectionCard(
             title: 'Windows / Linux / Web',
             icon: Icons.desktop_windows_outlined,
-            child: const Text(
+            child: const AppText(
               'Windows TPM、Linux、Webは現行のGorapeバックエンドで'
               'Attestation対象外です。Windows/Linux/Webでは'
               'flutter_appauthによるOIDCログインも未対応のため、'
@@ -118,12 +133,12 @@ class SupportScreen extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  AppText(
                     'パスキーとデバイス鍵の役割',
                     style: Theme.of(context).textTheme.titleSmall,
                   ),
                   const SizedBox(height: 8),
-                  const Text(PlatformSupport.passkeyDelegationNote),
+                  const AppText(PlatformSupport.passkeyDelegationNote),
                 ],
               ),
             ),
@@ -135,21 +150,18 @@ class SupportScreen extends ConsumerWidget {
 }
 
 class _SupportTable extends StatelessWidget {
-  const _SupportTable({required this.current, required this.backend});
+  const _SupportTable({
+    required this.current,
+    required this.backend,
+    required this.supports,
+  });
 
   final RuntimePlatform current;
   final AttestationCapabilities backend;
+  final List<PlatformSupport> supports;
 
   @override
   Widget build(BuildContext context) {
-    final platforms = [
-      RuntimePlatform.android,
-      RuntimePlatform.ios,
-      RuntimePlatform.macos,
-      RuntimePlatform.windows,
-      RuntimePlatform.linux,
-      RuntimePlatform.web,
-    ];
     return SectionCard(
       title: '対応マトリクス',
       icon: Icons.grid_on_outlined,
@@ -158,16 +170,13 @@ class _SupportTable extends StatelessWidget {
         child: DataTable(
           columnSpacing: 18,
           columns: const [
-            DataColumn(label: Text('プラットフォーム')),
-            DataColumn(label: Text('ログイン')),
-            DataColumn(label: Text('OS鍵')),
-            DataColumn(label: Text('Attestation')),
-            DataColumn(label: Text('Gorape')),
+            DataColumn(label: AppText('プラットフォーム')),
+            DataColumn(label: AppText('ログイン')),
+            DataColumn(label: AppText('OS鍵')),
+            DataColumn(label: AppText('Attestation')),
+            DataColumn(label: AppText('Gorape')),
           ],
-          rows: [
-            for (final platform in platforms)
-              _row(context, PlatformSupport.forRuntime(platform)),
-          ],
+          rows: [for (final support in supports) _row(context, support)],
         ),
       ),
     );
@@ -183,7 +192,7 @@ class _SupportTable extends StatelessWidget {
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(platformName(support.platform)),
+              AppText(platformName(support.platform)),
               if (support.platform == current.wireName) ...[
                 const SizedBox(width: 6),
                 StatusChip(label: 'この端末', color: scheme.primary),

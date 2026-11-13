@@ -1,8 +1,9 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Text;
+import '../../l10n/app_text.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../policy/device_policy.dart';
-import '../../state/providers.dart';
+import '../../controller/providers.dart';
+import '../../entity/model/policy.dart';
 import '../widgets/common.dart';
 
 /// Local device policy preferences.
@@ -15,15 +16,18 @@ class PolicyScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final policy = ref.watch(policyControllerProvider);
-    final capabilities = ref.watch(devicePolicyRepositoryProvider).capabilities;
+    final capabilities = ref.watch(policyCapabilitiesProvider);
     final scheme = Theme.of(context).colorScheme;
 
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        Text('デバイスポリシー（ローカルのみ）', style: Theme.of(context).textTheme.titleLarge),
+        AppText(
+          'デバイスポリシー（ローカルのみ）',
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
         const SizedBox(height: 4),
-        Text(
+        AppText(
           'この画面の値は端末内に保存される希望値です。'
           'Gorapeバックエンドでは強制されません。',
           style: Theme.of(context).textTheme.bodySmall,
@@ -38,10 +42,16 @@ class PolicyScreen extends ConsumerWidget {
               children: [
                 Row(
                   children: [
-                    Icon(Icons.info_outline, color: scheme.onTertiaryContainer),
+                    ColorFiltered(
+                      colorFilter: ColorFilter.mode(
+                        scheme.onTertiaryContainer,
+                        BlendMode.srcIn,
+                      ),
+                      child: Icon(Icons.info, size: 22),
+                    ),
                     const SizedBox(width: 8),
                     Expanded(
-                      child: Text(
+                      child: AppText(
                         'バックエンドAPI未提供',
                         style: Theme.of(context).textTheme.titleSmall?.copyWith(
                           color: scheme.onTertiaryContainer,
@@ -51,7 +61,7 @@ class PolicyScreen extends ConsumerWidget {
                   ],
                 ),
                 const SizedBox(height: 8),
-                Text(
+                AppText(
                   capabilities.reason,
                   style: TextStyle(color: scheme.onTertiaryContainer),
                 ),
@@ -86,12 +96,12 @@ class _PolicyForm extends ConsumerWidget {
         if (!context.mounted) return;
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(const SnackBar(content: Text('ローカルポリシーを保存しました。')));
+        ).showSnackBar(const SnackBar(content: AppText('ローカルポリシーを保存しました。')));
       } on Object catch (error) {
         if (!context.mounted) return;
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('保存に失敗しました: $error')));
+        ).showSnackBar(SnackBar(content: AppText('保存に失敗しました: $error')));
       }
     }
 
@@ -105,8 +115,8 @@ class _PolicyForm extends ConsumerWidget {
             children: [
               SwitchListTile(
                 contentPadding: EdgeInsets.zero,
-                title: const Text('ログイン後の所有証明を推奨'),
-                subtitle: const Text(
+                title: const AppText('ログイン後の所有証明を推奨'),
+                subtitle: const AppText(
                   'Keycloakログイン後にチャレンジ署名を促すUIを表示します。'
                   '（アプリ内の案内のみ）',
                 ),
@@ -117,8 +127,8 @@ class _PolicyForm extends ConsumerWidget {
               const Divider(),
               SwitchListTile(
                 contentPadding: EdgeInsets.zero,
-                title: const Text('Attestationなしのデバイスを許可'),
-                subtitle: const Text(
+                title: const AppText('Attestationなしのデバイスを許可'),
+                subtitle: const AppText(
                   'バックエンドの登録APIはAttestation証拠を要求します。'
                   'この設定は表示上の希望値であり、登録可否を変えません。',
                 ),
@@ -147,8 +157,8 @@ class _PolicyForm extends ConsumerWidget {
                     RadioListTile<PasskeyStrategy>(
                       contentPadding: EdgeInsets.zero,
                       value: PasskeyStrategy.dedicatedDeviceKey,
-                      title: Text('デバイス専用鍵（推奨）'),
-                      subtitle: Text(
+                      title: AppText('デバイス専用鍵（推奨）'),
+                      subtitle: AppText(
                         'Gorapeに登録したOS保護鍵で所有証明を行います。'
                         'Keycloakのパスキーとは独立しています。',
                       ),
@@ -156,8 +166,8 @@ class _PolicyForm extends ConsumerWidget {
                     RadioListTile<PasskeyStrategy>(
                       contentPadding: EdgeInsets.zero,
                       value: PasskeyStrategy.sharedPasskey,
-                      title: Text('Keycloakの共有パスキー'),
-                      subtitle: Text(
+                      title: AppText('Keycloakの共有パスキー'),
+                      subtitle: AppText(
                         'パスキーはKeycloakアカウントに紐づき、複数端末で共有されます。'
                         'Gorapeのデバイス鍵による所有証明とは別物です。',
                       ),
@@ -166,7 +176,7 @@ class _PolicyForm extends ConsumerWidget {
                 ),
               ),
               const SizedBox(height: 8),
-              Text(
+              AppText(
                 'パスキー・MFA・アカウント回復はKeycloakの責務です。'
                 'このアプリはパスキーの秘密情報を保存せず、'
                 'Gorape APIにはアクセストークンのみを送信します。',
@@ -181,7 +191,7 @@ class _PolicyForm extends ConsumerWidget {
           child: const Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              AppText(
                 '• 値はOSのセキュアストレージに保存されます。\n'
                 '• Gorapeへは送信されません（ポリシーAPIがないため）。\n'
                 '• サーバー側の強制が必要な場合は、Gorapeに'

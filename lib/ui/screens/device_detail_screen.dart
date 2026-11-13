@@ -1,9 +1,13 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Text;
+import '../../l10n/app_text.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../api/models/device.dart';
-import '../../state/providers.dart';
+import '../../controller/providers.dart';
+import '../../entity/model/device.dart';
+import '../../entity/model/device_ref.dart';
+import '../../entity/model/role.dart';
 import '../widgets/common.dart';
+import '../widgets/role_badge.dart';
 
 class DeviceDetailScreen extends ConsumerStatefulWidget {
   const DeviceDetailScreen({
@@ -34,15 +38,21 @@ class _DeviceDetailScreenState extends ConsumerState<DeviceDetailScreen> {
     final device = detail.value ?? widget.initialDevice;
     final attestations = ref.watch(attestationsProvider(_refKey));
     final localKey = ref.watch(localDeviceKeyProvider(_refKey));
+    final role = ref.watch(projectRoleProvider(widget.projectId));
+    final canEdit = role.canEdit;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(device?.displayName ?? 'デバイス詳細'),
+        title: AppText(device?.displayName ?? 'デバイス詳細'),
         actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 4),
+            child: Center(child: RoleBadge(role: role)),
+          ),
           IconButton(
-            tooltip: '再読み込み',
+            tooltip: tr(context, '再読み込み'),
             onPressed: _busy ? null : _refresh,
-            icon: const Icon(Icons.refresh),
+            icon: Icon(Icons.refresh, size: 22),
           ),
         ],
       ),
@@ -63,6 +73,15 @@ class _DeviceDetailScreenState extends ConsumerState<DeviceDetailScreen> {
                     ErrorCard(error: _actionError!, compact: true),
                     const SizedBox(height: 12),
                   ],
+                  if (!canEdit)
+                    RoleNotice(
+                      role: role,
+                      scopeLabel: 'デバイス操作',
+                      message: role == AccessRole.none
+                          ? 'Keycloakトークンにこのプロジェクトのロールがありません。'
+                                '参照はできますが、所有証明・失効は実行できません。'
+                          : '閲覧者のため、所有証明とデバイス失効は実行できません。',
+                    ),
                   SectionCard(
                     title: 'デバイス状態',
                     icon: Icons.verified_user_outlined,
@@ -93,9 +112,9 @@ class _DeviceDetailScreenState extends ConsumerState<DeviceDetailScreen> {
                     icon: Icons.key_outlined,
                     child: localKey.when(
                       loading: () => const LinearProgressIndicator(),
-                      error: (error, _) => Text('$error'),
+                      error: (error, _) => AppText('$error'),
                       data: (key) => key == null
-                          ? Text(
+                          ? AppText(
                               'この端末には該当デバイスの秘密鍵がありません。\n'
                               '他端末で登録されたデバイスは表示・失効のみ可能です。',
                               style: Theme.of(context).textTheme.bodySmall,
@@ -129,6 +148,7 @@ class _DeviceDetailScreenState extends ConsumerState<DeviceDetailScreen> {
                         FilledButton.icon(
                           onPressed:
                               _busy ||
+                                  !canEdit ||
                                   !device.isActive ||
                                   localKey.value == null
                               ? null
@@ -141,12 +161,12 @@ class _DeviceDetailScreenState extends ConsumerState<DeviceDetailScreen> {
                                     strokeWidth: 2,
                                   ),
                                 )
-                              : const Icon(Icons.fingerprint),
-                          label: const Text('チャレンジ署名で所有証明'),
+                              : Icon(Icons.vpn_key, size: 22),
+                          label: const AppText('チャレンジ署名で所有証明'),
                         ),
                         const SizedBox(height: 8),
                         OutlinedButton.icon(
-                          onPressed: _busy || !device.isActive
+                          onPressed: _busy || !canEdit || !device.isActive
                               ? null
                               : _revokeDevice,
                           style: OutlinedButton.styleFrom(
@@ -155,10 +175,10 @@ class _DeviceDetailScreenState extends ConsumerState<DeviceDetailScreen> {
                             ).colorScheme.error,
                           ),
                           icon: const Icon(Icons.block),
-                          label: const Text('デバイスを失効'),
+                          label: const AppText('デバイスを失効'),
                         ),
                         const SizedBox(height: 8),
-                        Text(
+                        AppText(
                           '所有証明ではBase64urlチャレンジを生バイト列に戻し、'
                           'OS保護鍵で署名します。ECDSAはASN.1 DER、'
                           'RSAはPKCS#1 v1.5/SHA-256、Ed25519は生バイト列です。',
@@ -171,13 +191,13 @@ class _DeviceDetailScreenState extends ConsumerState<DeviceDetailScreen> {
                     title: 'Attestation記録',
                     icon: Icons.fact_check_outlined,
                     trailing: IconButton(
-                      tooltip: '最新の記録を取得',
+                      tooltip: tr(context, '最新の記録を取得'),
                       onPressed: _busy
                           ? null
                           : () => ref
                                 .read(attestationsProvider(_refKey).notifier)
                                 .reload(),
-                      icon: const Icon(Icons.refresh),
+                      icon: Icon(Icons.refresh, size: 22),
                     ),
                     child: attestations.when(
                       loading: () => const LinearProgressIndicator(),
@@ -189,7 +209,7 @@ class _DeviceDetailScreenState extends ConsumerState<DeviceDetailScreen> {
                             .reload(),
                       ),
                       data: (records) => records.isEmpty
-                          ? const Text('Attestation記録はありません。')
+                          ? const AppText('Attestation記録はありません。')
                           : Column(
                               children: [
                                 for (final record in records)
@@ -204,7 +224,7 @@ class _DeviceDetailScreenState extends ConsumerState<DeviceDetailScreen> {
                                           Row(
                                             children: [
                                               Expanded(
-                                                child: Text(
+                                                child: AppText(
                                                   record.attestationType,
                                                   style: Theme.of(
                                                     context,
@@ -232,7 +252,7 @@ class _DeviceDetailScreenState extends ConsumerState<DeviceDetailScreen> {
                                                   _ => Colors.orange,
                                                 },
                                               ),
-                                              Text(
+                                              AppText(
                                                 record.verifierVersion,
                                                 style: Theme.of(
                                                   context,
@@ -241,7 +261,7 @@ class _DeviceDetailScreenState extends ConsumerState<DeviceDetailScreen> {
                                             ],
                                           ),
                                           const SizedBox(height: 6),
-                                          Text(
+                                          AppText(
                                             formatTimestamp(record.verifiedAt),
                                             style: Theme.of(
                                               context,
@@ -279,15 +299,15 @@ class _DeviceDetailScreenState extends ConsumerState<DeviceDetailScreen> {
     });
     try {
       await ref
-          .read(deviceActionsProvider)
+          .read(deviceControllerProvider)
           .provePossession(
             projectId: widget.projectId,
             deviceId: widget.deviceId,
           );
       if (!mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('チャレンジ署名をGorapeが検証しました。')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: AppText('チャレンジ署名をGorapeが検証しました。')),
+      );
       await _refresh();
     } on Object catch (error) {
       if (mounted) setState(() => _actionError = error);
@@ -300,22 +320,22 @@ class _DeviceDetailScreenState extends ConsumerState<DeviceDetailScreen> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('デバイスを失効しますか？'),
-        content: const Text(
+        title: const AppText('デバイスを失効しますか？'),
+        content: const AppText(
           'Gorape側でデバイスがrevokedになります。\n'
           'この端末のローカル鍵も削除されます。元に戻せません。',
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('キャンセル'),
+            child: const AppText('キャンセル'),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(context, true),
             style: FilledButton.styleFrom(
               backgroundColor: Theme.of(context).colorScheme.error,
             ),
-            child: const Text('失効する'),
+            child: const AppText('失効する'),
           ),
         ],
       ),
@@ -327,12 +347,12 @@ class _DeviceDetailScreenState extends ConsumerState<DeviceDetailScreen> {
     });
     try {
       await ref
-          .read(deviceActionsProvider)
+          .read(deviceControllerProvider)
           .revoke(projectId: widget.projectId, deviceId: widget.deviceId);
       if (!mounted) return;
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(const SnackBar(content: Text('デバイスを失効しました。')));
+      ).showSnackBar(const SnackBar(content: AppText('デバイスを失効しました。')));
       Navigator.of(context).pop();
     } on Object catch (error) {
       if (mounted) setState(() => _actionError = error);

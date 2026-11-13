@@ -1,7 +1,8 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Text;
+import '../../l10n/app_text.dart';
 
-import '../../core/errors/app_exception.dart';
-import '../../core/errors/friendly_error.dart';
+import '../../share/error.dart';
+import '../../share/friendly_error.dart';
 
 class ErrorCard extends StatelessWidget {
   const ErrorCard({
@@ -28,10 +29,16 @@ class ErrorCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                Icon(Icons.error_outline, color: scheme.onErrorContainer),
+                ColorFiltered(
+                  colorFilter: ColorFilter.mode(
+                    scheme.onErrorContainer,
+                    BlendMode.srcIn,
+                  ),
+                  child: Icon(Icons.info, size: 24),
+                ),
                 const SizedBox(width: 8),
                 Expanded(
-                  child: Text(
+                  child: AppText(
                     friendly.title,
                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
                       color: scheme.onErrorContainer,
@@ -41,13 +48,13 @@ class ErrorCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 8),
-            Text(
+            AppText(
               friendly.message,
               style: TextStyle(color: scheme.onErrorContainer),
             ),
             if (friendly.guidance != null) ...[
               const SizedBox(height: 8),
-              Text(
+              AppText(
                 friendly.guidance!,
                 style: TextStyle(
                   color: scheme.onErrorContainer.withValues(alpha: 0.85),
@@ -61,8 +68,8 @@ class ErrorCard extends StatelessWidget {
                 alignment: Alignment.centerRight,
                 child: TextButton.icon(
                   onPressed: onRetry,
-                  icon: const Icon(Icons.refresh),
-                  label: const Text('再試行'),
+                  icon: Icon(Icons.refresh, size: 20),
+                  label: const AppText('再試行'),
                 ),
               ),
             ],
@@ -103,9 +110,9 @@ class EmptyState extends StatelessWidget {
                 color: Theme.of(context).colorScheme.outline,
               ),
               const SizedBox(height: 12),
-              Text(title, style: Theme.of(context).textTheme.titleLarge),
+              AppText(title, style: Theme.of(context).textTheme.titleLarge),
               const SizedBox(height: 8),
-              Text(
+              AppText(
                 message,
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.bodyMedium,
@@ -159,7 +166,7 @@ class StatusChip extends StatelessWidget {
             Icon(icon, size: 13, color: color),
             const SizedBox(width: 4),
           ],
-          Text(
+          AppText(
             label,
             style: TextStyle(
               color: color,
@@ -194,7 +201,7 @@ class KeyValueRow extends StatelessWidget {
         children: [
           SizedBox(
             width: 150,
-            child: Text(
+            child: AppText(
               label,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: Theme.of(context).colorScheme.outline,
@@ -248,7 +255,7 @@ class SectionCard extends StatelessWidget {
                   const SizedBox(width: 8),
                 ],
                 Expanded(
-                  child: Text(
+                  child: AppText(
                     title,
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
@@ -280,7 +287,7 @@ class LoadingView extends StatelessWidget {
           children: [
             const CircularProgressIndicator(),
             const SizedBox(height: 12),
-            Text(label),
+            AppText(label),
           ],
         ),
       ),

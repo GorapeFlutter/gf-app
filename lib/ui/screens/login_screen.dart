@@ -1,9 +1,10 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Text;
+import '../../l10n/app_text.dart';
 
-import '../../auth/auth_session.dart';
-import '../../core/config/connection_settings.dart';
-import '../../core/config/runtime_platform.dart';
-import '../../platform/platform_support.dart';
+import '../../entity/model/auth_session.dart';
+import '../../entity/model/connection.dart';
+import '../../entity/model/platform.dart';
+import '../../entity/model/platform_support.dart';
 import '../widgets/common.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -11,9 +12,11 @@ class LoginScreen extends StatelessWidget {
     super.key,
     required this.settings,
     required this.platform,
+    required this.support,
     required this.oidcSupported,
     required this.loading,
     required this.onLogin,
+    required this.onAdminLogin,
     required this.onOpenSettings,
     this.error,
     this.unsupportedReason,
@@ -22,18 +25,49 @@ class LoginScreen extends StatelessWidget {
 
   final ConnectionSettings? settings;
   final RuntimePlatform platform;
+  final PlatformSupport support;
   final bool oidcSupported;
   final bool loading;
   final VoidCallback onLogin;
+  final VoidCallback onAdminLogin;
   final VoidCallback onOpenSettings;
   final Object? error;
   final String? unsupportedReason;
   final AuthSession? session;
 
+  static const registrationUrl =
+      'http://localhost:8080/realms/gorape/protocol/openid-connect/registrations'
+      '?client_id=gorape-client'
+      '&redirect_uri=com.gorapeflutter.gfapp:/oauth2redirect'
+      '&response_type=code&scope=openid';
+
+  void _showRegistrationDialog(BuildContext context) {
+    showDialog<void>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const AppText('アカウント登録'),
+        content: const Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            AppText('以下のURLをブラウザで開いてアカウントを登録してください。'),
+            SizedBox(height: 12),
+            SelectableText(registrationUrl),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const AppText('閉じる'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final support = PlatformSupport.forRuntime(platform);
     final configuration = settings;
     return Scaffold(
       body: SafeArea(
@@ -47,30 +81,20 @@ class LoginScreen extends StatelessWidget {
                 children: [
                   Align(
                     alignment: Alignment.center,
-                    child: Container(
-                      width: 76,
-                      height: 76,
-                      decoration: BoxDecoration(
-                        color: theme.colorScheme.primaryContainer,
-                        borderRadius: BorderRadius.circular(22),
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 520),
+                      child: AspectRatio(
+                        aspectRatio: 3,
+                        child: Image.asset(
+                          'assets/gorape/brand/gorape_header.png',
+                          fit: BoxFit.contain,
+                          semanticLabel: 'Gorape',
+                        ),
                       ),
-                      child: Icon(
-                        Icons.shield_outlined,
-                        size: 42,
-                        color: theme.colorScheme.onPrimaryContainer,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  Text(
-                    'Gorape Device Trust',
-                    textAlign: TextAlign.center,
-                    style: theme.textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.w700,
                     ),
                   ),
                   const SizedBox(height: 8),
-                  Text(
+                  AppText(
                     'Keycloakでサインインし、OS保護鍵をGorapeに登録します。\n'
                     'パスキーとMFAはKeycloak、デバイス検証はGorapeが担当します。',
                     textAlign: TextAlign.center,
@@ -88,8 +112,8 @@ class LoginScreen extends StatelessWidget {
                       color: theme.colorScheme.secondaryContainer,
                       child: ListTile(
                         leading: const Icon(Icons.person_outline),
-                        title: Text(session!.displayName),
-                        subtitle: Text(
+                        title: AppText(session!.displayName),
+                        subtitle: AppText(
                           '${session!.email ?? session!.subject}\n'
                           'Issuer: ${session!.issuer ?? configuration?.issuer ?? '—'}',
                         ),
@@ -109,10 +133,32 @@ class LoginScreen extends StatelessWidget {
                         : const Icon(Icons.login),
                     label: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 12),
-                      child: Text(
+                      child: AppText(
                         loading ? 'Keycloakへ接続中...' : 'Keycloakでログイン',
                       ),
                     ),
+                  ),
+                  const SizedBox(height: 12),
+                  OutlinedButton.icon(
+                    onPressed: !oidcSupported || loading ? null : onAdminLogin,
+                    icon: const Icon(Icons.admin_panel_settings_outlined),
+                    label: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      child: const AppText('管理者ログイン'),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  AppText(
+                    '管理者機能を使う場合は、管理者ロールを持つKeycloakアカウントでログインしてください。'
+                    '権限を切り替える場合は、ログアウトしてから再ログインしてください。',
+                    textAlign: TextAlign.center,
+                    style: theme.textTheme.bodySmall,
+                  ),
+                  const SizedBox(height: 12),
+                  TextButton.icon(
+                    onPressed: () => _showRegistrationDialog(context),
+                    icon: const Icon(Icons.person_add_alt, size: 22),
+                    label: const AppText('アカウント登録'),
                   ),
                   if (!oidcSupported) ...[
                     const SizedBox(height: 12),
@@ -123,12 +169,12 @@ class LoginScreen extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
+                            AppText(
                               '${platform.displayName}ではログイン未対応です',
                               style: theme.textTheme.titleSmall,
                             ),
                             const SizedBox(height: 6),
-                            Text(
+                            AppText(
                               unsupportedReason ?? support.note,
                               style: theme.textTheme.bodySmall,
                             ),
@@ -143,7 +189,7 @@ class LoginScreen extends StatelessWidget {
                       title: '接続先',
                       icon: Icons.dns_outlined,
                       trailing: IconButton(
-                        tooltip: '接続設定を開く',
+                        tooltip: tr(context, '接続設定を開く'),
                         onPressed: onOpenSettings,
                         icon: const Icon(Icons.tune),
                       ),
@@ -171,7 +217,7 @@ class LoginScreen extends StatelessWidget {
                           ),
                           const SizedBox(height: 8),
                           if (configuration.usesInsecureTransport)
-                            Text(
+                            AppText(
                               'HTTPの開発用接続です。本番ではHTTPSを使用してください。',
                               style: theme.textTheme.bodySmall?.copyWith(
                                 color: theme.colorScheme.error,
@@ -180,7 +226,7 @@ class LoginScreen extends StatelessWidget {
                           if (platform == RuntimePlatform.android)
                             Align(
                               alignment: Alignment.centerLeft,
-                              child: Text(
+                              child: AppText(
                                 'Android Emulatorでは OIDC 用に '
                                 '`adb reverse tcp:8080 tcp:8080` を実行してください。'
                                 'APIは既定で 10.0.2.2:8000 を利用します。',
@@ -193,8 +239,8 @@ class LoginScreen extends StatelessWidget {
                   const SizedBox(height: 8),
                   Card(
                     child: ExpansionTile(
-                      leading: const Icon(Icons.info_outline),
-                      title: const Text('OS別の対応状況'),
+                      leading: Icon(Icons.info, size: 22),
+                      title: const AppText('OS別の対応状況'),
                       childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                       children: [
                         _SupportLine(
@@ -212,7 +258,7 @@ class LoginScreen extends StatelessWidget {
                         const SizedBox(height: 8),
                         Align(
                           alignment: Alignment.centerLeft,
-                          child: Text(
+                          child: AppText(
                             support.note,
                             style: theme.textTheme.bodySmall,
                           ),
@@ -220,7 +266,7 @@ class LoginScreen extends StatelessWidget {
                         const SizedBox(height: 8),
                         Align(
                           alignment: Alignment.centerLeft,
-                          child: Text(
+                          child: AppText(
                             PlatformSupport.passkeyDelegationNote,
                             style: theme.textTheme.bodySmall,
                           ),
@@ -231,10 +277,10 @@ class LoginScreen extends StatelessWidget {
                   const SizedBox(height: 8),
                   TextButton.icon(
                     onPressed: onOpenSettings,
-                    icon: const Icon(Icons.settings_outlined),
-                    label: const Text('接続設定・Redirect URI'),
+                    icon: Icon(Icons.settings, size: 22),
+                    label: const AppText('接続設定・Redirect URI'),
                   ),
-                  Text(
+                  AppText(
                     'Access TokenのみをGorape APIへ送信します。ID TokenはAPI認証情報として使用しません。',
                     textAlign: TextAlign.center,
                     style: theme.textTheme.labelSmall?.copyWith(
@@ -271,8 +317,8 @@ class _SupportLine extends StatelessWidget {
                 : Theme.of(context).colorScheme.error,
           ),
           const SizedBox(width: 8),
-          Expanded(child: Text(label)),
-          Text(
+          Expanded(child: AppText(label)),
+          AppText(
             supported ? '対応' : '未対応',
             style: Theme.of(context).textTheme.labelSmall,
           ),

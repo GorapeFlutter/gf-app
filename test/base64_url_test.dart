@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:gf_app/core/utils/base64_url.dart';
+import 'package:gf_app/share/base64_url.dart';
 
 void main() {
   group('Base64Url', () {

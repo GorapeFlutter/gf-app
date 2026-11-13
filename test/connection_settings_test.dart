@@ -1,13 +1,15 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:gf_app/auth/auth_tokens.dart';
-import 'package:gf_app/core/config/connection_settings.dart';
-import 'package:gf_app/core/config/runtime_platform.dart';
+import 'package:gf_app/config/connection.dart';
+import 'package:gf_app/entity/model/auth_tokens.dart';
+import 'package:gf_app/entity/model/connection.dart';
+import 'package:gf_app/entity/model/platform.dart';
 
 void main() {
   group('ConnectionSettings', () {
     test('uses emulator API host on Android and localhost elsewhere', () {
-      final android = ConnectionSettings.defaultsFor(RuntimePlatform.android);
-      final macos = ConnectionSettings.defaultsFor(RuntimePlatform.macos);
+      final config = newConnectionConfig();
+      final android = config.defaultsFor(RuntimePlatform.android);
+      final macos = config.defaultsFor(RuntimePlatform.macos);
 
       expect(android.apiBaseUrl, 'http://10.0.2.2:8000');
       expect(macos.apiBaseUrl, 'http://localhost:8000');
@@ -32,9 +34,9 @@ void main() {
     });
 
     test('round-trips through JSON', () {
-      final settings = ConnectionSettings.defaultsFor(
-        RuntimePlatform.android,
-      ).copyWith(apiBaseUrl: 'https://gorape.example.com/');
+      final settings = newConnectionConfig()
+          .defaultsFor(RuntimePlatform.android)
+          .copyWith(apiBaseUrl: 'https://gorape.example.com/');
       final decoded = ConnectionSettings.decode(settings.encode());
 
       expect(decoded, settings);
