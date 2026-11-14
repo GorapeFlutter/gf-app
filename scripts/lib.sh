@@ -70,7 +70,15 @@ compose() {
   )
   local file
   for file in "${GORAPE_COMPOSE_FILES[@]}"; do
-    args+=(-f "$BACKEND_DIR/$file")
+    if [[ -f "$BACKEND_DIR/$file" ]]; then
+      args+=(-f "$BACKEND_DIR/$file")
+    elif [[ "$file" == "docker/swagger.yaml" || "$file" == "docker/godoc.yaml" ]]; then
+      # These auxiliary services are optional and may not exist in a trimmed
+      # Gorape checkout. Core services remain mandatory.
+      continue
+    else
+      die "Required Gorape Compose file is missing: $BACKEND_DIR/$file"
+    fi
   done
   if [[ -n "${GORAPE_EXTRA_COMPOSE_FILES:-}" ]]; then
     while IFS= read -r file; do
@@ -87,6 +95,22 @@ wait_for_http() {
   local deadline=$((SECONDS + timeout))
   info "Waiting for $label ($url) ..."
   until curl -fsS --max-time 3 "$url" >/dev/null 2>&1; do
+    if ((SECONDS >= deadline)); then
+      die "Timed out after ${timeout}s waiting for $label."
+    fi
+    sleep 2
+  done
+  ok "$label is ready"
+}
+
+wait_for_https() {
+  local label="$1"
+  local url="$2"
+  local ca_file="$3"
+  local timeout="${4:-90}"
+  local deadline=$((SECONDS + timeout))
+  info "Waiting for $label ($url) ..."
+  until curl -fsS --cacert "$ca_file" --max-time 3 "$url" >/dev/null 2>&1; do
     if ((SECONDS >= deadline)); then
       die "Timed out after ${timeout}s waiting for $label."
     fi

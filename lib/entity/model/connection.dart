@@ -18,6 +18,9 @@ class ConnectionSettings {
 
   static const String flutterRedirectUri =
       'com.gorapeflutter.gfapp:/oauth2redirect';
+  static const String desktopRedirectUri =
+      'http://127.0.0.1:8401/oauth2redirect';
+  static const String webRedirectPath = 'auth.html';
 
   final String apiBaseUrl;
   final String issuer;
@@ -84,7 +87,7 @@ class ConnectionSettings {
   /// GF-00273 — Initializes ConnectionSettings.fromJson.
   factory ConnectionSettings.fromJson(Map<String, dynamic> json) {
     const defaults = ConnectionSettings(
-      apiBaseUrl: 'http://localhost:8000',
+      apiBaseUrl: 'https://localhost:8443',
       issuer: 'http://localhost:8080/realms/gorape',
       clientId: 'gorape-client',
       redirectUri: flutterRedirectUri,

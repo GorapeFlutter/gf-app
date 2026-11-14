@@ -6,9 +6,10 @@
 
 Flutter client for the [Gorape](../gorape) device trust / attestation backend.
 The app signs in with Keycloak (Authorization Code + PKCE), calls the Gorape
-OpenAPI 3.1 API with the **access token**, and registers Android devices using a
-hardware-backed Keystore key whose attestation challenge is bound to the
-server-issued registration challenge.
+OpenAPI 3.1 API with the **access token**, and registers a separate Gorape RP
+passkey through WebAuthn. The full credential/attestation response is verified
+by Gorape; the legacy Android Keystore registration API remains available for
+compatibility.
 
 The backend repository remains the single source of truth. This project does not
 fork or edit the Gorape Docker environment; it adds Compose overrides and
@@ -18,29 +19,28 @@ development scripts that layer on top of it.
 
 - Keycloak login for Android, iOS and macOS via `flutter_appauth`
   (public client, PKCE S256, `openid profile`, audience `gorape-api`).
+- Keycloak login on Windows/Linux/Web via system-browser or browser redirect
+  Authorization Code + PKCE with ID-token validation.
 - Access-token-only Gorape API client. The ID token is never sent to Gorape.
   An expired access token triggers one refresh-and-retry instead of dropping the
   session.
 - Project, device, registration, proof and attestation endpoints from
-  `gorape/docs/swagger/swagger.yaml`.
+  `gorape/docs/openapi/openapi.yaml`, including Gorape RP WebAuthn registration
+  and assertion.
 - Group and role management endpoints (group CRUD, group devices, project /
   group role bindings) from the same contract.
 - Role-aware UI driven by Keycloak token claims: cluster (realm) overview,
   per-project management and per-group management. Viewers get read-only
   screens; editors can register/revoke devices and assign group devices; admins
   can also create/edit/delete groups and grant project/group roles.
-- Android registration:
-  - EC P-256 key generated inside Android Keystore (StrongBox when available).
-  - Raw registration challenge passed to
-    `KeyGenParameterSpec.setAttestationChallenge`.
-  - Certificate chain submitted leaf-first as PEM.
-  - Possession proof signs the raw challenge bytes with
-    `SHA256withECDSA`; the ASN.1 signature is sent as unpadded Base64url.
-- Explicit OS support matrix in the UI and live backend verifier capabilities.
-- iOS/macOS/Windows/Linux/Web interfaces are modelled without pretending the
-  backend supports their attestation.
-- Local-only policy preferences, clearly labelled as not enforced by Gorape
-  (the backend has no policy API).
+- Device registration and proof use the `passkeys` 2.23.2 Flutter plugin on
+  Android, iOS, macOS, Windows and Web. Attestation presence/format is
+  provider-dependent and is never inferred by the client.
+- Linux uses the gf-app WebAuthn ceremony page in Chrome/Firefox; Gorape exposes
+  only one-time challenge APIs and does not serve an end-user UI.
+- Explicit platform support matrix in the UI and live legacy-verifier capabilities.
+- Legacy local-only policy preferences remain informational; WebAuthn attestation
+  acceptance is controlled by the Gorape server config, never by client policy.
 - Automated tests for API contracts, role claim resolution, settings, local
   policy, registration and proof orchestration.
 
@@ -63,36 +63,68 @@ cd gf-app
 #    config that points at them. Files go to git-ignored config/generated/.
 ./scripts/generate-android-trust-config.sh
 
-# 2. Build/start postgres, redis, keycloak and the Gorape server from ../gorape.
-./scripts/gorape-up.sh --android-attestation
+# 2. Generate a local HTTPS CA/server certificate (private keys are ignored).
+./scripts/generate-local-tls.sh
 
-# 3. Allow the Flutter redirect URI on the existing Keycloak client. Existing
-#    CLI redirect http://127.0.0.1:8400/callback is preserved.
-./scripts/keycloak-allow-redirect.sh
+# 3. Build/start postgres, redis, keycloak and the Gorape server from ../gorape.
+./scripts/gorape-up.sh --https --android-attestation
 
-# 4. A fresh database has no Gorape projects. Bootstrap a project for this
-#    issuer and grant the signing Keycloak user's sub a project role before
-#    launching the app. See ../gorape/README.md, "Bootstrap a Project".
-# 5. Run on a connected Android device. adb reverse maps localhost:8000 and
-#    localhost:8080 back to the host so the OIDC issuer stays consistent.
+# 4. A fresh local stack imports the Keycloak realm and seeds the demo project
+#    and permission fixtures from configuration files. No API bootstrap step.
+# 5. Run on a connected Android device. The script trusts the local CA in the
+#    debug Dart client and adb-reverses the HTTPS API and Keycloak issuer.
 ./scripts/run-android.sh
 ```
 
-Check that the backend now exposes an implemented Android verifier:
+The default Android API endpoint is `https://localhost:8443`. To check it
+outside the app, use the generated CA explicitly:
 
 ```bash
-curl -s http://localhost:8000/health
+curl --cacert config/generated/tls/ca.crt https://localhost:8443/health
+```
+
+The CA/server private keys are mode `0600` and live only in the Git-ignored
+`config/generated/tls/` directory. This self-signed certificate is for local
+API transport only. Android Credential Manager uses the separate RP ID
+`gorapeflutter.github.io`, with its public Digital Asset Links statement served
+from the organization Pages repository. The statement includes both
+`delegate_permission/common.get_login_creds` and
+`delegate_permission/common.handle_all_urls` for package
+`com.gorapeflutter.gf_app`. Google Password Manager registration was verified on
+Pixel 6 with the current debug signing key. The API may remain on local HTTPS;
+the RP association is fetched from the Pages domain.
+
+Keycloak redirects, passwordless WebAuthn, the passkey-only login flow, AMR
+mapper, and test users/groups are declared in
+`../gorape/etc/keycloak/gorape-realm.json`. Gorape's `demo` project and
+role/group bindings are seeded by PostgreSQL's `docker-entrypoint-initdb.d`
+files. Keycloak import and PostgreSQL initialization run only for a fresh local
+database; recreating the tmpfs Postgres container also resets Keycloak users and
+their passkeys, which must be registered again.
+
+Check that the legacy Android Key Attestation verifier is active:
+
+```bash
+curl --cacert config/generated/tls/ca.crt https://localhost:8443/health
 # {"service":"gorape","status":"ok"}
 
 TOKEN=$(cat ../gorape/etc/.gorape/client/admin/access_token)
 curl -s -H "Authorization: Bearer $TOKEN" \
-  http://localhost:8000/v1/projects/805c5265-7315-420b-8aa7-3aea715ed88a/attestation/capabilities
+  --cacert config/generated/tls/ca.crt \
+  https://localhost:8443/v1/projects/805c5265-7315-420b-8aa7-3aea715ed88a/attestation/capabilities
 # {"verifiers":{"android":"implemented","ios":"unsupported", ...}}
 ```
 
 The project ID above is available only in a database that was seeded with the
 development data. A fresh Compose database requires the bootstrap step above;
 then use an ID returned by `GET /v1/projects`.
+
+`--android-attestation` configures only the legacy Android Keystore verifier; it
+does not enable WebAuthn passkey attestation. Before passkey registration,
+apply Gorape migration `000003_webauthn`, configure a stable WebAuthn RP ID and
+exact origins, explicitly allow formats and mount their trust anchors. The
+default empty allowlist rejects registration. Android also needs Digital Asset
+Links for that RP domain. See [setup](docs/en/SETUP.md).
 
 ## Using the published Docker Hub image
 
@@ -117,21 +149,27 @@ Runtime defaults:
 
 | Setting | Default | Notes |
 | --- | --- | --- |
-| API base URL | `http://10.0.2.2:8000` on Android, `http://localhost:8000` elsewhere | Android emulator host alias |
+| API base URL | `https://localhost:8443` | Local TLS listener; Android runner uses `adb reverse` and debug-only CA trust |
 | OIDC issuer | `http://localhost:8080/realms/gorape` | Must exactly match Keycloak's `iss` |
 | Client ID | `gorape-client` | Public client, PKCE only |
-| Redirect URI | `com.gorapeflutter.gfapp:/oauth2redirect` | Registered on the Keycloak client |
+| Android/iOS/macOS redirect | `com.gorapeflutter.gfapp:/oauth2redirect` | Registered on the Keycloak client |
+| Windows/Linux redirect | `http://127.0.0.1:8401/oauth2redirect` | System-browser loopback callback |
+| Web redirect | Same-origin `/auth.html` | Local dev default: `http://localhost:5000/auth.html` |
 | Scopes | `openid profile` | Audience `gorape-api` comes from a mapper |
 
 Override at build/run time with `--dart-define`:
 
 ```bash
 flutter run \
-  --dart-define=GORAPE_API_BASE_URL=http://192.168.1.10:8000 \
-  --dart-define=GORAPE_OIDC_ISSUER=http://gorape.local:8080/realms/gorape \
+  --dart-define=GORAPE_API_BASE_URL=https://api.example.com \
+  --dart-define=GORAPE_OIDC_ISSUER=https://keycloak.example.com/realms/gorape \
   --dart-define=GORAPE_OIDC_CLIENT_ID=gorape-client \
-  --dart-define=GORAPE_OIDC_REDIRECT_URI=com.gorapeflutter.gfapp:/oauth2redirect
+  --dart-define=GORAPE_OIDC_REDIRECT_URI=http://127.0.0.1:8401/oauth2redirect
 ```
+
+Override the redirect URI per target deployment. The Keycloak public client must
+allow each target's exact redirect URI; Web deployments must also add the Web
+origin to `webOrigins` for discovery/token CORS.
 
 Values can also be edited in the app under **Settings**. They are stored in the
 OS secure storage, not in the Gorape backend.
@@ -159,8 +197,12 @@ Only endpoints present in the backend OpenAPI contract are used:
 | DELETE | `/v1/projects/{projectId}/devices/{deviceId}` |
 | POST | `/v1/projects/{projectId}/devices/registration/challenge` |
 | POST | `/v1/projects/{projectId}/devices/registration/verify` |
+| POST | `/v1/projects/{projectId}/devices/passkeys/registration/options` |
+| POST | `/v1/projects/{projectId}/devices/passkeys/registration/verify` |
 | POST | `/v1/projects/{projectId}/devices/{deviceId}/challenge` |
 | POST | `/v1/projects/{projectId}/devices/{deviceId}/verify` |
+| POST | `/v1/projects/{projectId}/devices/{deviceId}/passkeys/authentication/options` |
+| POST | `/v1/projects/{projectId}/devices/{deviceId}/passkeys/authentication/verify` |
 | GET | `/v1/projects/{projectId}/attestation/capabilities` |
 | GET | `/v1/projects/{projectId}/devices/{deviceId}/attestation` |
 | GET/POST | `/v1/projects/{projectId}/groups` |
@@ -172,8 +214,11 @@ Only endpoints present in the backend OpenAPI contract are used:
 | GET/POST | `/v1/projects/{projectId}/groups/{groupId}/roles` |
 | DELETE | `/v1/projects/{projectId}/groups/{groupId}/roles/{bindingId}` |
 
-There is deliberately no policy or passkey API in the client: the current
-backend contract does not define them.
+Passkey registration and device proof use Gorape's separate WebAuthn RP
+endpoints. Keycloak passkeys remain Keycloak credentials and cannot be reused
+for Gorape because their RP IDs differ. The legacy Android Keystore endpoints
+remain available for compatibility; the device registration UI uses the
+WebAuthn flow.
 
 ## Role-aware UI (Keycloak claims)
 
@@ -211,23 +256,33 @@ the quickest way to switch the whole UI: grant `admin`, `editor` or `viewer`
 
 ## OS support
 
-App-side capabilities (the backend column is fetched live):
+Client/plugin and legacy-verifier capabilities:
 
-| Platform | Keycloak login | OS-protected key | Attestation flow | Gorape verifier |
+| Platform | Keycloak login | Gorape passkey ceremony | Legacy OS key | Legacy Gorape verifier |
 | --- | --- | --- | --- | --- |
-| Android | Yes | Yes (Keystore, StrongBox preferred) | Yes | `implemented` when trust anchors are configured |
-| iOS | Yes | Not implemented | No | `unsupported` |
-| macOS | Yes | Not implemented | No | `unsupported` |
-| Windows | No (`flutter_appauth` has no Windows implementation) | No | No | `unsupported` |
-| Linux | No | No | No | Not a Gorape platform |
-| Web | No | No | No | Not a Gorape platform |
+| Android | Yes | Yes | Yes (Credential Manager/provider-dependent) | `implemented` when legacy Android roots are configured |
+| iOS | Yes | Yes (AuthenticationServices) | Legacy flow not implemented | Legacy verifier `unsupported` |
+| macOS | Yes | Yes (AuthenticationServices) | Legacy flow not implemented | Legacy verifier `unsupported` |
+| Windows | Yes (system browser + PKCE) | Yes (Windows WebAuthn API) | Legacy flow not implemented | Legacy verifier `unsupported` |
+| Linux | Yes (system browser + PKCE) | Yes (gf-app browser ceremony page) | No | Legacy verifier `unsupported` |
+| Web | Yes (browser redirect + PKCE) | Yes (browser WebAuthn API) | Legacy flow not implemented | Legacy verifier `unsupported` |
 
-iOS/macOS UI and URL schemes are present, but registration is intentionally
-disabled because the backend returns `unsupported`. Adding App Attest/Secure
-Enclave support requires a backend verifier first.
+The passkeys Flutter plugin returns the full WebAuthn credential response on
+Android, iOS, macOS, Windows, and Web, but an `attestation: direct` request is a
+preference, not a guarantee. Providers may return `none`; Apple platform
+credentials do not expose a conveyance preference through the plugin. Gorape
+validates the actual `fmt` and trust chain and applies default-deny policy.
+Linux's native passkeys plugin is unavailable, so the gf-app web asset performs
+the ceremony in Chrome/Firefox at the configured RP origin; Gorape remains
+API-only. Windows/Web use their native/browser WebAuthn APIs.
 
-Passkeys and MFA stay in Keycloak. Gorape only stores the device public key and
-verifies possession. The app never stores passkey secrets or passwords.
+Before deploying, configure one stable Gorape RP ID and associate the app with
+that domain: Android Digital Asset Links, Apple AASA/`webcredentials` entitlements,
+and an RP ID matching the Web origin. For Linux browser handoff, set
+`Application.Server.WebAuthn.portal_origin` to the gf-app web origin,
+`browser_api_origin` to Gorape's public API origin, and allow the portal origin
+in `Application.Server.web_origins` for CORS. Add exact WebAuthn origins to
+`rp_origins`. These platform associations are separate from Keycloak's setup.
 
 ## Project layout
 
@@ -268,8 +323,12 @@ missing while the AOT snapshot exists.
   Keycloak, and a registered HTTPS or platform-native redirect URI.
 - Only the access token is sent to Gorape. The ID token is kept for sign-out
   hints and never used as an API bearer token.
-- Android private keys never leave the Keystore. Only the alias is persisted in
-  secure storage; the public key and certificate chain are sent to Gorape.
+- Passkey private keys remain in the OS/browser credential provider. The app
+  forwards the complete WebAuthn response; Gorape verifies before persisting the
+  credential public key and removes the raw attestation evidence from the stored
+  credential record.
+- The legacy Android Keystore flow still keeps private keys in Keystore and
+  sends its public key/certificate chain to Gorape.
 - `config/generated/` is git-ignored because it contains machine-specific
   absolute paths and downloaded trust anchors.
 - The bundled Keycloak admin credentials (`admin` / `admin`) and seeded user
@@ -277,11 +336,13 @@ missing while the AOT snapshot exists.
 
 ## Known limitations
 
-- Real attestation validation needs a device whose Keystore returns a chain
-  rooted in Google's Key Attestation roots. Many emulators use software or test
-  roots and will fail Gorape's verifier.
+- Real passkey attestation is provider-dependent. Android may return
+  `android-key` or `none`; Windows may or may not return TPM attestation; Apple
+  may return an anonymous `apple` statement or `none`; browsers can anonymize.
+  Default policy rejects `none`, unconfigured formats, and untrusted chains.
 - iOS/macOS builds could not be validated here because Xcode is incomplete.
-- Windows/Linux/Web have no OIDC login and no attestation support.
+- Linux browser handoff requires Gorape's RP ceremony page and a matching
+  `portal_origin`; Windows/Web use the platform/browser WebAuthn APIs.
 - The backend has no policy API; the policy screen is explicitly local-only.
 - Gorape has no cluster-wide or "my role" API. The クラスタ screen is built from
   Keycloak claims and the projects visible to the signed-in user; per-project and

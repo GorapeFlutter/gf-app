@@ -4,7 +4,7 @@ import 'package:flutter_appauth/flutter_appauth.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gf_app/entity/model/auth_tokens.dart';
 import 'package:gf_app/entity/model/connection.dart';
-import 'package:gf_app/repository/auth.dart';
+import 'package:gf_app/back/repository/auth.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 
@@ -41,6 +41,7 @@ final class _RecordingAppAuth extends FlutterAppAuth {
 
   EndSessionRequest? lastRequest;
   AuthorizationTokenRequest? lastAuthorizationRequest;
+  Map<String, dynamic>? authorizationAdditionalParameters;
   int calls = 0;
   int authorizationCalls = 0;
 
@@ -57,7 +58,7 @@ final class _RecordingAppAuth extends FlutterAppAuth {
       'id-token',
       'Bearer',
       const ['openid'],
-      null,
+      authorizationAdditionalParameters ?? const {},
       null,
     );
   }
@@ -83,6 +84,58 @@ void main() {
 
       expect(appAuth.authorizationCalls, 1);
       expect(appAuth.lastAuthorizationRequest?.promptValues, ['login']);
+    });
+
+    test(
+      'forces an interactive Keycloak passkey login when requested',
+      () async {
+        final appAuth = _RecordingAppAuth();
+        final repository = AppAuthRepository(
+          settings: _settings(),
+          appAuth: appAuth,
+        );
+
+        await repository.signIn(requirePasskey: true);
+
+        expect(appAuth.lastAuthorizationRequest?.promptValues, ['login']);
+        expect(
+          appAuth.lastAuthorizationRequest?.additionalParameters?['acr_values'],
+          'gorape-passkey',
+        );
+      },
+    );
+
+    test(
+      'registers a Keycloak passkey through the passwordless AIA action',
+      () async {
+        final appAuth = _RecordingAppAuth()
+          ..authorizationAdditionalParameters = const {
+            'kc_action_status': 'success',
+          };
+        final repository = AppAuthRepository(
+          settings: _settings(),
+          appAuth: appAuth,
+        );
+
+        expect(await repository.registerPasskey(), isTrue);
+        expect(
+          appAuth.lastAuthorizationRequest?.additionalParameters?['kc_action'],
+          'webauthn-register-passwordless:skip_if_exists',
+        );
+      },
+    );
+
+    test('reports a cancelled Keycloak passkey registration action', () async {
+      final appAuth = _RecordingAppAuth()
+        ..authorizationAdditionalParameters = const {
+          'kc_action_status': 'cancelled',
+        };
+      final repository = AppAuthRepository(
+        settings: _settings(),
+        appAuth: appAuth,
+      );
+
+      expect(await repository.registerPasskey(), isFalse);
     });
   });
 

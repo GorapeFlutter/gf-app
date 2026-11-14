@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart' hide Text;
-import '../../l10n/app_text.dart';
+import '../../config/langages/app_text.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../controller/providers.dart';
+import '../../back/controller/providers.dart';
 import '../../entity/model/project.dart';
 import '../widgets/common.dart';
 import 'cluster_screen.dart';
@@ -60,18 +60,18 @@ class _ManagementScreenState extends ConsumerState<ManagementScreen> {
               const ButtonSegment(
                 value: ManagementScope.cluster,
                 icon: Icon(Icons.public),
-                label: AppText('クラスタ'),
+                label: AppText('MCODE-00182'),
               ),
               if (project != null) ...[
                 const ButtonSegment(
                   value: ManagementScope.project,
                   icon: Icon(Icons.folder_outlined),
-                  label: AppText('プロジェクト'),
+                  label: AppText('MCODE-00183'),
                 ),
                 ButtonSegment(
                   value: ManagementScope.groups,
                   icon: Icon(Icons.person, size: 22),
-                  label: AppText('グループ'),
+                  label: AppText('MCODE-00184'),
                 ),
               ],
             ],
@@ -102,8 +102,8 @@ class _ManagementScreenState extends ConsumerState<ManagementScreen> {
               GroupManagementScreen(project: project),
             _ => const EmptyState(
               icon: Icons.folder_off_outlined,
-              title: 'プロジェクトがありません',
-              message: '管理対象のプロジェクトがありません。クラスタ表示のみ利用できます。',
+              title: 'MCODE-00185',
+              message: 'MCODE-00186',
             ),
           },
         ),

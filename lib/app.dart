@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart' hide Text;
-import 'l10n/app_text.dart';
+import 'config/langages/app_text.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'controller/providers.dart';
+import 'back/controller/providers.dart';
 import 'ui/app_theme.dart';
 import 'ui/screens/app_shell.dart';
 import 'ui/screens/login_screen.dart';
@@ -51,7 +51,7 @@ class AuthGate extends ConsumerWidget {
 
     if (connection.isLoading && !connection.hasValue) {
       // GF-02038 — Keep the splash screen visible while settings are loading.
-      return const _SplashScreen(label: '設定を読み込み中...');
+      return const _SplashScreen(label: 'MCODE-00038');
     }
     if (connection.hasError && !connection.hasValue) {
       // GF-02039 — Surface settings errors with a retry action.
@@ -81,7 +81,7 @@ class AuthGate extends ConsumerWidget {
 
     if (auth.isLoading) {
       return _SplashScreen(
-        label: auth.hasValue ? 'ログインしています...' : 'セッションを確認中...',
+        label: auth.hasValue ? 'MCODE-00039' : 'MCODE-00040',
       );
     }
 
@@ -97,6 +97,12 @@ class AuthGate extends ConsumerWidget {
       unsupportedReason: authSupport.unsupportedReason,
       onLogin: /* GF-00105 — Runs an inline callback in AuthGate.build. */ () =>
           ref.read(authControllerProvider.notifier).signIn(),
+      onPasskeyLogin: /* GF-02167 — Starts Keycloak OIDC login and requires a passkey AMR. */
+          () => ref
+              .read(authControllerProvider.notifier)
+              .signIn(forceLogin: true, requirePasskey: true),
+      onRegisterPasskey: /* GF-02168 — Starts Keycloak's passkey registration AIA. */
+          () => ref.read(authControllerProvider.notifier).registerPasskey(),
       onAdminLogin: /* GF-00106 — Runs an inline callback in AuthGate.build. */
           () => ref
               .read(authControllerProvider.notifier)

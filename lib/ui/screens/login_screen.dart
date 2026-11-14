@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart' hide Text;
-import '../../l10n/app_text.dart';
+import '../../config/langages/app_text.dart';
 
 import '../../entity/model/auth_session.dart';
 import '../../entity/model/connection.dart';
@@ -17,6 +17,8 @@ class LoginScreen extends StatelessWidget {
     required this.oidcSupported,
     required this.loading,
     required this.onLogin,
+    required this.onPasskeyLogin,
+    required this.onRegisterPasskey,
     required this.onAdminLogin,
     required this.onOpenSettings,
     this.error,
@@ -30,6 +32,8 @@ class LoginScreen extends StatelessWidget {
   final bool oidcSupported;
   final bool loading;
   final VoidCallback onLogin;
+  final VoidCallback onPasskeyLogin;
+  final Future<bool> Function() onRegisterPasskey;
   final VoidCallback onAdminLogin;
   final VoidCallback onOpenSettings;
   final Object? error;
@@ -48,12 +52,12 @@ class LoginScreen extends StatelessWidget {
       context: context,
       builder: /* GF-00826 — Runs an inline callback in LoginScreen._showRegistrationDialog. */
           (context) => AlertDialog(
-            title: const AppText('アカウント登録'),
+            title: const AppText('MCODE-00061'),
             content: const Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                AppText('以下のURLをブラウザで開いてアカウントを登録してください。'),
+                AppText('MCODE-00063'),
                 SizedBox(height: 12),
                 SelectableText(registrationUrl),
               ],
@@ -62,7 +66,7 @@ class LoginScreen extends StatelessWidget {
               TextButton(
                 onPressed: /* GF-00827 — Runs an inline callback in LoginScreen._showRegistrationDialog.callback. */
                     () => Navigator.of(context).pop(),
-                child: const AppText('閉じる'),
+                child: const AppText('MCODE-00062'),
               ),
             ],
           ),
@@ -100,8 +104,7 @@ class LoginScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   AppText(
-                    'Keycloakでサインインし、OS保護鍵をGorapeに登録します。\n'
-                    'パスキーとMFAはKeycloak、デバイス検証はGorapeが担当します。',
+                    'MCODE-00462',
                     textAlign: TextAlign.center,
                     style: theme.textTheme.bodyMedium?.copyWith(
                       color: theme.colorScheme.onSurfaceVariant,
@@ -138,24 +141,57 @@ class LoginScreen extends StatelessWidget {
                         : const Icon(Icons.login),
                     label: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 12),
-                      child: AppText(
-                        loading ? 'Keycloakへ接続中...' : 'Keycloakでログイン',
-                      ),
+                      child: AppText(loading ? 'MCODE-00067' : 'MCODE-00065'),
                     ),
                   ),
                   const SizedBox(height: 12),
+                  OutlinedButton.icon(
+                    onPressed: !oidcSupported || loading
+                        ? null
+                        : onPasskeyLogin,
+                    icon: const Icon(Icons.fingerprint),
+                    label: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      child: const AppText('MCODE-00505'),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  TextButton.icon(
+                    onPressed: !oidcSupported || loading
+                        ? null
+                        : () async {
+                            try {
+                              final registered = await onRegisterPasskey();
+                              if (!context.mounted) return;
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: AppText(
+                                    registered ? 'MCODE-00506' : 'MCODE-00507',
+                                  ),
+                                ),
+                              );
+                            } on Object catch (error) {
+                              if (!context.mounted) return;
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: AppText('$error')),
+                              );
+                            }
+                          },
+                    icon: const Icon(Icons.key_outlined),
+                    label: const AppText('MCODE-00504'),
+                  ),
+                  const SizedBox(height: 8),
                   OutlinedButton.icon(
                     onPressed: !oidcSupported || loading ? null : onAdminLogin,
                     icon: const Icon(Icons.admin_panel_settings_outlined),
                     label: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 12),
-                      child: const AppText('管理者ログイン'),
+                      child: const AppText('MCODE-00066'),
                     ),
                   ),
                   const SizedBox(height: 12),
                   AppText(
-                    '管理者機能を使う場合は、管理者ロールを持つKeycloakアカウントでログインしてください。'
-                    '権限を切り替える場合は、ログアウトしてから再ログインしてください。',
+                    'MCODE-00463',
                     textAlign: TextAlign.center,
                     style: theme.textTheme.bodySmall,
                   ),
@@ -164,7 +200,7 @@ class LoginScreen extends StatelessWidget {
                     onPressed: /* GF-00829 — Runs an inline callback in LoginScreen.build. */
                         () => _showRegistrationDialog(context),
                     icon: const Icon(Icons.person_add_alt, size: 22),
-                    label: const AppText('アカウント登録'),
+                    label: const AppText('MCODE-00061'),
                   ),
                   if (!oidcSupported) ...[
                     const SizedBox(height: 12),
@@ -192,7 +228,7 @@ class LoginScreen extends StatelessWidget {
                   const SizedBox(height: 20),
                   if (configuration != null)
                     SectionCard(
-                      title: '接続先',
+                      title: 'MCODE-00072',
                       icon: Icons.dns_outlined,
                       trailing: IconButton(
                         tooltip: tr(context, '接続設定を開く'),
@@ -202,29 +238,29 @@ class LoginScreen extends StatelessWidget {
                       child: Column(
                         children: [
                           KeyValueRow(
-                            'Gorape API',
+                            'MCODE-00073',
                             configuration.apiBaseUrl,
                             monospace: true,
                           ),
                           KeyValueRow(
-                            'OIDC Issuer',
+                            'MCODE-00076',
                             configuration.issuer,
                             monospace: true,
                           ),
                           KeyValueRow(
-                            'Client ID',
+                            'MCODE-00077',
                             configuration.clientId,
                             monospace: true,
                           ),
                           KeyValueRow(
-                            'Redirect URI',
+                            'MCODE-00078',
                             configuration.redirectUri,
                             monospace: true,
                           ),
                           const SizedBox(height: 8),
                           if (configuration.usesInsecureTransport)
                             AppText(
-                              'HTTPの開発用接続です。本番ではHTTPSを使用してください。',
+                              'MCODE-00095',
                               style: theme.textTheme.bodySmall?.copyWith(
                                 color: theme.colorScheme.error,
                               ),
@@ -233,9 +269,7 @@ class LoginScreen extends StatelessWidget {
                             Align(
                               alignment: Alignment.centerLeft,
                               child: AppText(
-                                'Android Emulatorでは OIDC 用に '
-                                '`adb reverse tcp:8080 tcp:8080` を実行してください。'
-                                'APIは既定で 10.0.2.2:8000 を利用します。',
+                                'MCODE-00484',
                                 style: theme.textTheme.bodySmall,
                               ),
                             ),
@@ -246,20 +280,16 @@ class LoginScreen extends StatelessWidget {
                   Card(
                     child: ExpansionTile(
                       leading: Icon(Icons.info, size: 22),
-                      title: const AppText('OS別の対応状況'),
+                      title: const AppText('MCODE-00069'),
                       childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                       children: [
                         _SupportLine(
-                          label: 'Keycloakログイン',
+                          label: 'MCODE-00176',
                           supported: support.oidcLogin,
                         ),
                         _SupportLine(
-                          label: 'OS保護鍵の生成',
-                          supported: support.localKeyGeneration,
-                        ),
-                        _SupportLine(
-                          label: 'Attestation（バックエンド）',
-                          supported: support.attestationFlow,
+                          label: 'MCODE-00475',
+                          supported: support.passkeyCeremony,
                         ),
                         const SizedBox(height: 8),
                         Align(
@@ -284,10 +314,10 @@ class LoginScreen extends StatelessWidget {
                   TextButton.icon(
                     onPressed: onOpenSettings,
                     icon: Icon(Icons.settings, size: 22),
-                    label: const AppText('接続設定・Redirect URI'),
+                    label: const AppText('MCODE-00059'),
                   ),
                   AppText(
-                    'Access TokenのみをGorape APIへ送信します。ID TokenはAPI認証情報として使用しません。',
+                    'MCODE-00416',
                     textAlign: TextAlign.center,
                     style: theme.textTheme.labelSmall?.copyWith(
                       color: theme.colorScheme.outline,
@@ -327,7 +357,7 @@ class _SupportLine extends StatelessWidget {
           const SizedBox(width: 8),
           Expanded(child: AppText(label)),
           AppText(
-            supported ? '対応' : '未対応',
+            supported ? 'MCODE-00070' : 'MCODE-00071',
             style: Theme.of(context).textTheme.labelSmall,
           ),
         ],

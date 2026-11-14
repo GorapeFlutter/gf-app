@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart' hide Text;
-import '../../l10n/app_text.dart';
+import '../../config/langages/app_text.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../controller/providers.dart';
+import '../../back/controller/providers.dart';
 import '../../entity/model/project.dart';
 import '../widgets/common.dart';
 import 'devices_screen.dart';
@@ -24,7 +24,14 @@ class AppShell extends ConsumerStatefulWidget {
 class _AppShellState extends ConsumerState<AppShell> {
   int _index = 0;
 
-  static const _titles = ['デバイス', 'デバイス登録', '対応状況', 'デバイスポリシー', '管理', '設定'];
+  static const _titles = [
+    'MCODE-00051',
+    'MCODE-00052',
+    'MCODE-00054',
+    'MCODE-00405',
+    'MCODE-00056',
+    'MCODE-00050',
+  ];
 
   /// GF-00673 — Builds the widget or value for _AppShellState.
   @override
@@ -104,7 +111,7 @@ class _AppShellState extends ConsumerState<AppShell> {
                     child: ListTile(
                       contentPadding: EdgeInsets.zero,
                       leading: Icon(Icons.settings, size: 22),
-                      title: AppText('接続設定'),
+                      title: AppText('MCODE-00058'),
                     ),
                   ),
                   PopupMenuItem(
@@ -112,7 +119,7 @@ class _AppShellState extends ConsumerState<AppShell> {
                     child: ListTile(
                       contentPadding: EdgeInsets.zero,
                       leading: Icon(Icons.history, size: 22),
-                      title: AppText('ログアウト'),
+                      title: AppText('MCODE-00057'),
                     ),
                   ),
                 ],
@@ -167,7 +174,7 @@ class _AppShellState extends ConsumerState<AppShell> {
   /// GF-00680 — Handles build body in _AppShellState.
   Widget _buildBody(AsyncValue<List<Project>> projects, Project? project) {
     if (projects.isLoading && !projects.hasValue) {
-      return const LoadingView(label: 'プロジェクトを読み込み中...');
+      return const LoadingView(label: 'MCODE-00042');
     }
     if (projects.hasError && !projects.hasValue) {
       return SingleChildScrollView(
@@ -191,13 +198,8 @@ class _AppShellState extends ConsumerState<AppShell> {
     if (activeProject == null) {
       return EmptyState(
         icon: Icons.folder_off_outlined,
-        title: 'Gorapeプロジェクトがありません',
-        message:
-            'KeycloakユーザーがGorapeのProjectロールを持っていないか、'
-            'プロジェクトがまだ作成されていません。\n'
-            'Gorapeリポジトリのgorape-adminでプロジェクトを '
-            'bootstrapし、ユーザーにadmin/editor/viewerを付与してください。\n'
-            '「管理」タブではKeycloakトークンのロールとグループを確認できます。',
+        title: 'MCODE-00269',
+        message: 'MCODE-00487',
         action: Wrap(
           spacing: 8,
           children: [
@@ -205,7 +207,7 @@ class _AppShellState extends ConsumerState<AppShell> {
               onPressed: /* GF-00682 — Runs an inline callback in _AppShellState._buildBody. */
                   () => ref.read(projectsProvider.notifier).reload(),
               icon: Icon(Icons.refresh, size: 22),
-              label: const AppText('再読み込み'),
+              label: const AppText('MCODE-00124'),
             ),
             OutlinedButton.icon(
               onPressed: /* GF-00683 — Runs an inline callback in _AppShellState._buildBody. */
@@ -216,7 +218,7 @@ class _AppShellState extends ConsumerState<AppShell> {
                     ),
                   ),
               icon: Icon(Icons.settings, size: 22),
-              label: const AppText('接続設定'),
+              label: const AppText('MCODE-00058'),
             ),
           ],
         ),
@@ -285,7 +287,7 @@ class _ProjectSheet extends ConsumerWidget {
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 4, 20, 8),
               child: AppText(
-                'プロジェクト一覧',
+                'MCODE-00363',
                 style: Theme.of(context).textTheme.titleLarge,
               ),
             ),

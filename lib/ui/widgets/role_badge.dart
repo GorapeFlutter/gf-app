@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart' hide Text;
-import '../../l10n/app_text.dart';
+import '../../config/langages/app_text.dart';
 
 import '../../entity/model/role.dart';
 
@@ -96,7 +96,9 @@ class RoleCapabilityCard extends StatelessWidget {
                 const SizedBox(width: 8),
                 Expanded(
                   child: AppText(
-                    '$scopeLabelのロール',
+                    'MCODE-00438',
+                    parameters: {'scope': scopeLabel},
+                    localizedParameters: const {'scope'},
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                 ),
@@ -110,10 +112,18 @@ class RoleCapabilityCard extends StatelessWidget {
               spacing: 8,
               runSpacing: 6,
               children: [
-                _Capability(label: '参照', enabled: role.canView, color: color),
-                _Capability(label: '編集操作', enabled: role.canEdit, color: color),
                 _Capability(
-                  label: '管理操作',
+                  label: 'MCODE-00031',
+                  enabled: role.canView,
+                  color: color,
+                ),
+                _Capability(
+                  label: 'MCODE-00032',
+                  enabled: role.canEdit,
+                  color: color,
+                ),
+                _Capability(
+                  label: 'MCODE-00033',
                   enabled: role.canAdmin,
                   color: color,
                 ),
@@ -229,18 +239,20 @@ class RoleNoneScreen extends StatelessWidget {
               Icon(Icons.lock_outline, size: 56, color: scheme.outline),
               const SizedBox(height: 12),
               AppText(
-                '$scopeLabelのロールがありません',
+                'MCODE-00439',
+                parameters: {'scope': scopeLabel},
+                localizedParameters: const {'scope'},
                 style: Theme.of(context).textTheme.titleLarge,
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 8),
               AppText(
                 message ??
-                    'Keycloakトークンにこのスコープのロールが含まれていません。'
-                        'realmロール admin / editor / viewer、または'
-                        'gorape_project_role / gorape_group_<slug>_role 属性を'
-                        'アクセストークンへマッピングしてください。'
-                        '設定変更後は再ログインで反映されます。',
+                    'MCODE-00324'
+                        'MCODE-00345'
+                        'MCODE-00342'
+                        'MCODE-00034'
+                        'MCODE-00035',
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.bodyMedium,
               ),

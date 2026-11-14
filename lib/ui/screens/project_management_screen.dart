@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart' hide Text;
-import '../../l10n/app_text.dart';
+import '../../config/langages/app_text.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../controller/providers.dart';
+import '../../back/controller/providers.dart';
 import '../../entity/model/group.dart';
 import '../../entity/model/project.dart';
 import '../../entity/model/role.dart';
@@ -163,38 +163,38 @@ class _ProjectScopeViewState extends ConsumerState<_ProjectScopeView> {
         if (role == AccessRole.viewer)
           const RoleNotice(
             role: AccessRole.viewer,
-            scopeLabel: '閲覧者ビュー',
-            message: 'プロジェクト、グループ、デバイスを参照できます。作成・変更・失効の操作は表示されません。',
+            scopeLabel: 'MCODE-00261',
+            message: 'MCODE-00212',
           ),
         if (role == AccessRole.editor)
           const RoleNotice(
             role: AccessRole.editor,
-            scopeLabel: '編集者ビュー',
+            scopeLabel: 'MCODE-00213',
             message:
-                'デバイスの失効とグループへのデバイス割当が可能です。'
+                'MCODE-00350'
                 'グループの作成・削除やロール付与は管理者のみ表示されます。',
           ),
         SectionCard(
-          title: 'プロジェクト情報',
+          title: 'MCODE-00207',
           icon: Icons.folder_outlined,
           trailing: StatusChip.status(context, widget.project.status),
           child: Column(
             children: [
-              KeyValueRow('名前', widget.project.name),
-              KeyValueRow('Slug', widget.project.slug, monospace: true),
-              KeyValueRow('Project ID', widget.project.id, monospace: true),
+              KeyValueRow('MCODE-00215', widget.project.name),
+              KeyValueRow('MCODE-00268', widget.project.slug, monospace: true),
+              KeyValueRow('MCODE-00267', widget.project.id, monospace: true),
               KeyValueRow(
-                'Keycloak Realm',
+                'MCODE-00266',
                 widget.project.keycloakRealm.isEmpty
                     ? '—'
                     : widget.project.keycloakRealm,
               ),
-              KeyValueRow('OIDC Issuer', widget.project.oidcIssuer),
+              KeyValueRow('MCODE-00076', widget.project.oidcIssuer),
             ],
           ),
         ),
         SectionCard(
-          title: 'グループ',
+          title: 'MCODE-00184',
           icon: Icons.groups_outlined,
           trailing: Wrap(
             spacing: 8,
@@ -209,7 +209,7 @@ class _ProjectScopeViewState extends ConsumerState<_ProjectScopeView> {
                 FilledButton.tonalIcon(
                   onPressed: _busy ? null : _createGroup,
                   icon: Icon(Icons.add, size: 22),
-                  label: const AppText('作成'),
+                  label: const AppText('MCODE-00218'),
                 ),
             ],
           ),
@@ -235,12 +235,12 @@ class _ProjectScopeViewState extends ConsumerState<_ProjectScopeView> {
         ),
         if (role.canAdmin)
           SectionCard(
-            title: 'プロジェクトロール',
+            title: 'MCODE-00216',
             icon: Icons.manage_accounts_outlined,
             trailing: FilledButton.tonalIcon(
               onPressed: _busy ? null : _assignProjectRole,
               icon: const Icon(Icons.person_add_alt_1),
-              label: const AppText('付与'),
+              label: const AppText('MCODE-00219'),
             ),
             child: _ProjectRoleList(
               project: widget.project,
@@ -248,7 +248,7 @@ class _ProjectScopeViewState extends ConsumerState<_ProjectScopeView> {
             ),
           ),
         SectionCard(
-          title: 'デバイス',
+          title: 'MCODE-00051',
           icon: Icons.devices_outlined,
           trailing: Row(
             mainAxisSize: MainAxisSize.min,
@@ -282,7 +282,7 @@ class _ProjectScopeViewState extends ConsumerState<_ProjectScopeView> {
                 ),
             data: /* GF-00874 — Runs an inline callback in _ProjectScopeViewState.build. */
                 (list) {
-                  if (list.isEmpty) return const AppText('デバイスが登録されていません。');
+                  if (list.isEmpty) return const AppText('MCODE-00121');
                   final shown = list.take(6).toList(growable: false);
                   return Column(
                     children: [
@@ -334,13 +334,12 @@ class _ProjectScopeViewState extends ConsumerState<_ProjectScopeView> {
                 const SizedBox(width: 10),
                 Expanded(
                   child: AppText(switch (role) {
-                    AccessRole.admin =>
-                      '管理者: グループ作成・プロジェクト/グループのロール付与・デバイス失効が可能です。',
+                    AccessRole.admin => 'MCODE-00221',
                     AccessRole.editor =>
-                      '編集者: デバイス失効とグループへのデバイス割当が可能です。'
-                          'グループ作成とロール付与は管理者のみです。',
-                    AccessRole.viewer => '閲覧者: 参照のみ可能です。変更操作は表示されません。',
-                    AccessRole.none => 'このスコープのロールがありません。',
+                      'MCODE-00385'
+                          'MCODE-00400',
+                    AccessRole.viewer => 'MCODE-00223',
+                    AccessRole.none => 'MCODE-00392',
                   }, style: Theme.of(context).textTheme.bodySmall),
                 ),
               ],
@@ -445,13 +444,13 @@ class _ProjectScopeViewState extends ConsumerState<_ProjectScopeView> {
       context: context,
       builder: /* GF-00886 — Runs an inline callback in _ProjectScopeViewState._revokeDevice. */
           (context) => AlertDialog(
-            title: const AppText('デバイスを失効しますか？'),
-            content: AppText('$name をGorape側でrevokedにします。元に戻せません。'),
+            title: const AppText('MCODE-00145'),
+            content: AppText('MCODE-00434', parameters: {'name': name}),
             actions: [
               TextButton(
                 onPressed: /* GF-00887 — Runs an inline callback in _ProjectScopeViewState._revokeDevice.callback. */
                     () => Navigator.of(context).pop(false),
-                child: const AppText('キャンセル'),
+                child: const AppText('MCODE-00147'),
               ),
               FilledButton(
                 onPressed: /* GF-00888 — Runs an inline callback in _ProjectScopeViewState._revokeDevice.callback. */
@@ -459,7 +458,7 @@ class _ProjectScopeViewState extends ConsumerState<_ProjectScopeView> {
                 style: FilledButton.styleFrom(
                   backgroundColor: Theme.of(context).colorScheme.error,
                 ),
-                child: const AppText('失効する'),
+                child: const AppText('MCODE-00148'),
               ),
             ],
           ),
@@ -498,7 +497,11 @@ class _ProjectScopeViewState extends ConsumerState<_ProjectScopeView> {
     final friendly = friendlyError(error);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: AppText('${friendly.title}: ${friendly.message}'),
+        content: AppText(
+          'MCODE-00500',
+          parameters: {'title': friendly.title, 'message': friendly.message},
+          localizedParameters: const {'title', 'message'},
+        ),
         backgroundColor: Theme.of(context).colorScheme.error,
       ),
     );
@@ -521,7 +524,7 @@ class _GroupList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (groups.isEmpty) {
-      return const AppText('グループが作成されていません。');
+      return const AppText('MCODE-00210');
     }
     final shown = groups.take(6).toList(growable: false);
     return Column(
@@ -533,7 +536,10 @@ class _GroupList extends StatelessWidget {
             child: TextButton.icon(
               onPressed: onOpenGroups,
               icon: Icon(Icons.person, size: 22),
-              label: AppText('すべて表示（${groups.length} 件）'),
+              label: AppText(
+                'MCODE-00444',
+                parameters: {'count': groups.length},
+              ),
             ),
           ),
       ],
@@ -597,7 +603,7 @@ class _ProjectRoleList extends ConsumerWidget {
           ),
       data: /* GF-00904 — Runs an inline callback in _ProjectRoleList.build. */
           (list) {
-            if (list.isEmpty) return const AppText('プロジェクトロールがありません。');
+            if (list.isEmpty) return const AppText('MCODE-00251');
             return Column(
               children: [
                 for (final binding in list)
@@ -618,7 +624,7 @@ class _ProjectRoleList extends ConsumerWidget {
                       children: [
                         RoleBadge(role: binding.accessRole),
                         IconButton(
-                          tooltip: tr(context, '削除'),
+                          tooltip: tr(context, 'MCODE-00496'),
                           onPressed: /* GF-00905 — Runs an inline callback in _ProjectRoleList.build.callback. */
                               () => onDelete(binding.id),
                           icon: ColorFiltered(

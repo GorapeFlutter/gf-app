@@ -9,6 +9,7 @@
 #   ./scripts/gorape-up.sh --android-attestation    # + generated trust anchors
 #   ./scripts/gorape-up.sh --hub                    # gorapeflutter/gorape:latest
 #   ./scripts/gorape-up.sh --hub gorapeflutter/gorape:sha-7d9703b
+#   ./scripts/gorape-up.sh --https                  # also serve HTTPS on :8443
 #   ./scripts/gorape-up.sh --all                    # also pgadmin/swagger/godoc/localstack
 
 set -euo pipefail
@@ -26,6 +27,8 @@ Options:
   --android-attestation       Require and mount the generated Android trust
                               anchors (fails if they are missing).
   --no-android-attestation    Ignore generated trust anchors even if present.
+  --https                     Enable the optional HTTPS listener on port 8443.
+                              Generate local certificates with generate-local-tls.sh.
   --all                       Start every Compose service, including pgadmin,
                               swagger-ui, godoc and localstack.
   --server-only               Start only the server service (dependencies must
@@ -49,6 +52,7 @@ server_only=0
 do_build=1
 do_pull=0
 do_wait=1
+use_https=0
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -62,6 +66,7 @@ while [[ $# -gt 0 ]]; do
     --local) mode="local" ;;
     --android-attestation) requested_attestation="yes" ;;
     --no-android-attestation) requested_attestation="no" ;;
+    --https) use_https=1 ;;
     --all) all_services=1 ;;
     --server-only) server_only=1 ;;
     --no-build) do_build=0 ;;
@@ -123,6 +128,20 @@ else
   info "Android attestation: backend default (verifier reports 'unconfigured')"
 fi
 
+if [[ "$use_https" == "1" ]]; then
+  tls_dir="$APP_ROOT/config/generated/tls"
+  [[ -s "$tls_dir/server.crt" ]] ||
+    die "Missing $tls_dir/server.crt. Run ./scripts/generate-local-tls.sh first."
+  [[ -s "$tls_dir/server.key" ]] ||
+    die "Missing $tls_dir/server.key. Run ./scripts/generate-local-tls.sh first."
+  [[ -s "$tls_dir/ca.crt" ]] ||
+    die "Missing $tls_dir/ca.crt. Run ./scripts/generate-local-tls.sh first."
+  export GORAPE_TLS_CERT="$tls_dir/server.crt"
+  export GORAPE_TLS_KEY="$tls_dir/server.key"
+  extra_files+=("$APP_ROOT/docker/server.tls.yaml")
+  info "HTTPS: enabled (self-signed local development CA)"
+fi
+
 if [[ ${#extra_files[@]} -gt 0 ]]; then
   GORAPE_EXTRA_COMPOSE_FILES="$(printf '%s\n' "${extra_files[@]}")"
   export GORAPE_EXTRA_COMPOSE_FILES
@@ -155,6 +174,10 @@ compose "${up_args[@]}"
 
 if [[ "$do_wait" == "1" ]]; then
   wait_for_http "Gorape API" "http://localhost:8000/health" 120
+  if [[ "$use_https" == "1" ]]; then
+    wait_for_https "Gorape HTTPS API" "https://localhost:8443/health" \
+      "$APP_ROOT/config/generated/tls/ca.crt" 120
+  fi
   if [[ "$server_only" != "1" ]]; then
     wait_for_http "Keycloak realm" \
       "http://localhost:8080/realms/gorape/.well-known/openid-configuration" 180
@@ -166,11 +189,20 @@ cat <<EOF
 ${C_BOLD}Gorape is running${C_RESET}
   API             http://localhost:8000
   Health          http://localhost:8000/health
+EOF
+if [[ "$use_https" == "1" ]]; then
+  cat <<'EOF'
+  HTTPS API       https://localhost:8443
+  HTTPS health    https://localhost:8443/health (trust config/generated/tls/ca.crt)
+EOF
+fi
+cat <<'EOF'
   Keycloak        http://localhost:8080/realms/gorape
   Admin console   http://localhost:8080/admin (admin / admin)
 
 Next:
-  ./scripts/keycloak-allow-redirect.sh    # allow the Flutter redirect URI
+  # Keycloak realm, redirects, passkey flow, users, and demo project are
+  # imported from ../gorape/etc and the Postgres init SQL on a fresh database.
   ./scripts/run-android.sh                # build/run on a connected device
 
 EOF

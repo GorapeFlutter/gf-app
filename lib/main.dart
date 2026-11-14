@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'app.dart';
-import 'share/error.dart';
+import 'back/share/error.dart';
 
 /// GF-00402 — Starts the Flutter application.
 void main() {

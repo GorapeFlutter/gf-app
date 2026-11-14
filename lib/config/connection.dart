@@ -17,15 +17,27 @@ final class ConnectionConfigImpl implements ConnectionConfig {
   @override
   ConnectionSettings defaultsFor(RuntimePlatform platform) {
     return ConnectionSettings(
-      // Android emulators reach the host through 10.0.2.2. The issuer stays
-      // on localhost so it remains identical to Keycloak's `iss` claim.
-      apiBaseUrl: platform == RuntimePlatform.android
-          ? 'http://10.0.2.2:8000'
-          : 'http://localhost:8000',
+      // The Android run script uses adb reverse for this local HTTPS endpoint.
+      // The issuer remains HTTP and must match Keycloak's `iss` claim exactly.
+      apiBaseUrl: 'https://localhost:8443',
       issuer: 'http://localhost:8080/realms/gorape',
       clientId: 'gorape-client',
-      redirectUri: ConnectionSettings.flutterRedirectUri,
+      redirectUri: switch (platform) {
+        RuntimePlatform.windows ||
+        RuntimePlatform.linux => ConnectionSettings.desktopRedirectUri,
+        RuntimePlatform.web => _webRedirectUri(),
+        _ => ConnectionSettings.flutterRedirectUri,
+      },
     );
+  }
+
+  static String _webRedirectUri() {
+    final base = Uri.base;
+    if ((base.scheme == 'https' || base.scheme == 'http') &&
+        base.host.isNotEmpty) {
+      return base.resolve(ConnectionSettings.webRedirectPath).toString();
+    }
+    return 'http://localhost:8080/${ConnectionSettings.webRedirectPath}';
   }
 
   /// GF-00115 — Handles defaults from environment in ConnectionConfigImpl.

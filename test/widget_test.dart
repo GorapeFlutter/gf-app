@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:gf_app/config/connection.dart';
 import 'package:gf_app/entity/model/connection.dart';
 import 'package:gf_app/entity/model/platform.dart';
-import 'package:gf_app/repository/platform.dart';
+import 'package:gf_app/back/repository/platform.dart';
 import 'package:gf_app/ui/screens/login_screen.dart';
 import 'package:gf_app/ui/widgets/common.dart';
 
@@ -16,6 +16,8 @@ void main() {
     required bool oidcSupported,
     required VoidCallback onLogin,
     VoidCallback? onAdminLogin,
+    VoidCallback? onPasskeyLogin,
+    Future<bool> Function()? onRegisterPasskey,
   }) {
     return tester.pumpWidget(
       MaterialApp(
@@ -33,6 +35,8 @@ void main() {
           oidcSupported: oidcSupported,
           loading: false,
           onLogin: onLogin,
+          onPasskeyLogin: onPasskeyLogin ?? onLogin,
+          onRegisterPasskey: onRegisterPasskey ?? () async => false,
           onAdminLogin: onAdminLogin ?? onLogin,
           onOpenSettings: () {},
           unsupportedReason: oidcSupported ? null : 'テスト用の未対応理由',
@@ -64,7 +68,7 @@ void main() {
       ),
       findsOneWidget,
     );
-    expect(find.text('http://10.0.2.2:8000'), findsOneWidget);
+    expect(find.text('https://localhost:8443'), findsOneWidget);
     expect(find.text('http://localhost:8080/realms/gorape'), findsOneWidget);
     expect(find.text(ConnectionSettings.flutterRedirectUri), findsOneWidget);
     expect(find.textContaining('ID TokenはAPI認証情報として使用しません'), findsOneWidget);
@@ -89,6 +93,37 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text(LoginScreen.registrationUrl), findsOneWidget);
+  });
+
+  testWidgets('offers Keycloak passkey registration and login actions', (
+    tester,
+  ) async {
+    var passkeyLogins = 0;
+    var passkeyRegistrations = 0;
+    await pumpLogin(
+      tester,
+      oidcSupported: true,
+      onLogin: () {},
+      onPasskeyLogin: () => passkeyLogins++,
+      onRegisterPasskey: () async {
+        passkeyRegistrations++;
+        return true;
+      },
+    );
+
+    await tester.ensureVisible(find.text('パスキーでログイン'));
+    await tester.tap(find.text('パスキーでログイン'));
+    await tester.pump();
+    expect(passkeyLogins, 1);
+
+    await tester.ensureVisible(find.text('Keycloakパスキーを登録'));
+    await tester.tap(find.text('Keycloakパスキーを登録'));
+    await tester.pumpAndSettle();
+    expect(passkeyRegistrations, 1);
+    expect(
+      find.text('Keycloakパスキーを登録しました。続けてパスキーでログインしてください。'),
+      findsOneWidget,
+    );
   });
 
   testWidgets('disables login and explains unsupported platforms', (

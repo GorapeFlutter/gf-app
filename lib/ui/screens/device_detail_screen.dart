@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart' hide Text;
-import '../../l10n/app_text.dart';
+import '../../config/langages/app_text.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../controller/providers.dart';
+import '../../back/controller/providers.dart';
 import '../../entity/model/device.dart';
 import '../../entity/model/device_ref.dart';
 import '../../entity/model/role.dart';
@@ -41,13 +41,14 @@ class _DeviceDetailScreenState extends ConsumerState<DeviceDetailScreen> {
     final detail = ref.watch(deviceDetailProvider(_refKey));
     final device = detail.value ?? widget.initialDevice;
     final attestations = ref.watch(attestationsProvider(_refKey));
-    final localKey = ref.watch(localDeviceKeyProvider(_refKey));
     final role = ref.watch(projectRoleProvider(widget.projectId));
     final canEdit = role.canEdit;
+    final session = ref.watch(authControllerProvider).value;
+    final canProve = canEdit && (session?.isPasskeyAuthenticated ?? false);
 
     return Scaffold(
       appBar: AppBar(
-        title: AppText(device?.displayName ?? 'デバイス詳細'),
+        title: AppText(device?.displayName ?? 'MCODE-00123'),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 4),
@@ -80,84 +81,60 @@ class _DeviceDetailScreenState extends ConsumerState<DeviceDetailScreen> {
                   if (!canEdit)
                     RoleNotice(
                       role: role,
-                      scopeLabel: 'デバイス操作',
+                      scopeLabel: 'MCODE-00125',
                       message: role == AccessRole.none
                           ? 'Keycloakトークンにこのプロジェクトのロールがありません。'
                                 '参照はできますが、所有証明・失効は実行できません。'
                           : '閲覧者のため、所有証明とデバイス失効は実行できません。',
                     ),
+                  if (canEdit && !canProve)
+                    const Card(
+                      child: Padding(
+                        padding: EdgeInsets.all(12),
+                        child: AppText('MCODE-00508'),
+                      ),
+                    ),
                   SectionCard(
-                    title: 'デバイス状態',
+                    title: 'MCODE-00128',
                     icon: Icons.verified_user_outlined,
                     trailing: StatusChip.status(context, device.status),
                     child: Column(
                       children: [
-                        KeyValueRow('デバイスID', device.id, monospace: true),
-                        KeyValueRow('プラットフォーム', platformLabel(device.platform)),
+                        KeyValueRow('MCODE-00129', device.id, monospace: true),
                         KeyValueRow(
-                          '登録日時',
+                          'MCODE-00130',
+                          platformLabel(device.platform),
+                        ),
+                        KeyValueRow(
+                          'MCODE-00131',
                           formatTimestamp(device.registeredAt),
                         ),
                         KeyValueRow(
-                          '最終検証',
+                          'MCODE-00132',
                           formatTimestamp(device.lastVerifiedAt),
                         ),
                         if (device.revokedAt != null)
                           KeyValueRow(
-                            '失効日時',
+                            'MCODE-00133',
                             formatTimestamp(device.revokedAt),
                           ),
-                        KeyValueRow('バージョン', device.version.toString()),
+                        KeyValueRow('MCODE-00134', device.version.toString()),
                       ],
                     ),
                   ),
                   SectionCard(
-                    title: 'この端末の鍵',
+                    title: 'MCODE-00476',
                     icon: Icons.key_outlined,
-                    child: localKey.when(
-                      loading: /* GF-00721 — Runs an inline callback in _DeviceDetailScreenState.build. */
-                          () => const LinearProgressIndicator(),
-                      error: /* GF-00722 — Runs an inline callback in _DeviceDetailScreenState.build. */
-                          (error, _) => AppText('$error'),
-                      data: /* GF-00723 — Runs an inline callback in _DeviceDetailScreenState.build. */
-                          (key) => key == null
-                          ? AppText(
-                              'この端末には該当デバイスの秘密鍵がありません。\n'
-                              '他端末で登録されたデバイスは表示・失効のみ可能です。',
-                              style: Theme.of(context).textTheme.bodySmall,
-                            )
-                          : Column(
-                              children: [
-                                KeyValueRow(
-                                  'Key Identifier',
-                                  key.keyIdentifier,
-                                  monospace: true,
-                                ),
-                                KeyValueRow('Algorithm', key.algorithm),
-                                KeyValueRow(
-                                  'Security Level',
-                                  key.securityLevel ?? '—',
-                                ),
-                                KeyValueRow(
-                                  'ローカル登録',
-                                  formatTimestamp(key.createdAt),
-                                ),
-                              ],
-                            ),
-                    ),
+                    child: const AppText('MCODE-00464'),
                   ),
                   SectionCard(
-                    title: '操作',
+                    title: 'MCODE-00137',
                     icon: Icons.play_circle_outline,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         FilledButton.icon(
-                          onPressed:
-                              _busy ||
-                                  !canEdit ||
-                                  !device.isActive ||
-                                  localKey.value == null
+                          onPressed: _busy || !canProve || !device.isActive
                               ? null
                               : _verifyPossession,
                           icon: _busy
@@ -169,7 +146,7 @@ class _DeviceDetailScreenState extends ConsumerState<DeviceDetailScreen> {
                                   ),
                                 )
                               : Icon(Icons.vpn_key, size: 22),
-                          label: const AppText('チャレンジ署名で所有証明'),
+                          label: const AppText('MCODE-00442'),
                         ),
                         const SizedBox(height: 8),
                         OutlinedButton.icon(
@@ -182,20 +159,18 @@ class _DeviceDetailScreenState extends ConsumerState<DeviceDetailScreen> {
                             ).colorScheme.error,
                           ),
                           icon: const Icon(Icons.block),
-                          label: const AppText('デバイスを失効'),
+                          label: const AppText('MCODE-00139'),
                         ),
                         const SizedBox(height: 8),
                         AppText(
-                          '所有証明ではBase64urlチャレンジを生バイト列に戻し、'
-                          'OS保護鍵で署名します。ECDSAはASN.1 DER、'
-                          'RSAはPKCS#1 v1.5/SHA-256、Ed25519は生バイト列です。',
+                          'MCODE-00465',
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
                       ],
                     ),
                   ),
                   SectionCard(
-                    title: 'Attestation記録',
+                    title: 'MCODE-00142',
                     icon: Icons.fact_check_outlined,
                     trailing: IconButton(
                       tooltip: tr(context, '最新の記録を取得'),
@@ -225,7 +200,7 @@ class _DeviceDetailScreenState extends ConsumerState<DeviceDetailScreen> {
                           ),
                       data: /* GF-00728 — Runs an inline callback in _DeviceDetailScreenState.build. */
                           (records) => records.isEmpty
-                          ? const AppText('Attestation記録はありません。')
+                          ? const AppText('MCODE-00143')
                           : Column(
                               children: [
                                 for (final record in records)
@@ -319,33 +294,35 @@ class _DeviceDetailScreenState extends ConsumerState<DeviceDetailScreen> {
       },
     );
     try {
-      // GF-02103 — Run the challenge-signing ownership proof.
+      // GF-02103 — Run the WebAuthn assertion ownership proof.
       await ref
           .read(deviceControllerProvider)
-          .provePossession(
+          .provePasskeyPossession(
             projectId: widget.projectId,
             deviceId: widget.deviceId,
           );
       if (!mounted) return;
       // GF-02104 — Report verified proof and reload device evidence.
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: AppText('チャレンジ署名をGorapeが検証しました。')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: AppText('MCODE-00443')));
       await _refresh();
     } on Object catch (error) {
       // GF-02105 — Surface proof failures in the device detail screen.
-      if (mounted)
+      if (mounted) {
         setState(
           /* GF-00732 — Runs an inline callback in _DeviceDetailScreenState._verifyPossession. */ () =>
               _actionError = error,
         );
+      }
     } finally {
       // GF-02106 — Release the action lock after success or failure.
-      if (mounted)
+      if (mounted) {
         setState(
           /* GF-00733 — Runs an inline callback in _DeviceDetailScreenState._verifyPossession. */ () =>
               _busy = false,
         );
+      }
     }
   }
 
@@ -356,16 +333,13 @@ class _DeviceDetailScreenState extends ConsumerState<DeviceDetailScreen> {
       context: context,
       builder: /* GF-00735 — Runs an inline callback in _DeviceDetailScreenState._revokeDevice. */
           (context) => AlertDialog(
-            title: const AppText('デバイスを失効しますか？'),
-            content: const AppText(
-              'Gorape側でデバイスがrevokedになります。\n'
-              'この端末のローカル鍵も削除されます。元に戻せません。',
-            ),
+            title: const AppText('MCODE-00145'),
+            content: const AppText('MCODE-00466'),
             actions: [
               TextButton(
                 onPressed: /* GF-00736 — Runs an inline callback in _DeviceDetailScreenState._revokeDevice.callback. */
                     () => Navigator.pop(context, false),
-                child: const AppText('キャンセル'),
+                child: const AppText('MCODE-00147'),
               ),
               FilledButton(
                 onPressed: /* GF-00737 — Runs an inline callback in _DeviceDetailScreenState._revokeDevice.callback. */
@@ -373,7 +347,7 @@ class _DeviceDetailScreenState extends ConsumerState<DeviceDetailScreen> {
                 style: FilledButton.styleFrom(
                   backgroundColor: Theme.of(context).colorScheme.error,
                 ),
-                child: const AppText('失効する'),
+                child: const AppText('MCODE-00148'),
               ),
             ],
           ),
@@ -395,22 +369,24 @@ class _DeviceDetailScreenState extends ConsumerState<DeviceDetailScreen> {
       // GF-02110 — Notify the user and close the revoked device detail.
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(const SnackBar(content: AppText('デバイスを失効しました。')));
+      ).showSnackBar(const SnackBar(content: AppText('MCODE-00149')));
       Navigator.of(context).pop();
     } on Object catch (error) {
       // GF-02111 — Keep revocation failures on the current screen.
-      if (mounted)
+      if (mounted) {
         setState(
           /* GF-00739 — Runs an inline callback in _DeviceDetailScreenState._revokeDevice. */ () =>
               _actionError = error,
         );
+      }
     } finally {
       // GF-02112 — Release the action lock after success or failure.
-      if (mounted)
+      if (mounted) {
         setState(
           /* GF-00740 — Runs an inline callback in _DeviceDetailScreenState._revokeDevice. */ () =>
               _busy = false,
         );
+      }
     }
   }
 }

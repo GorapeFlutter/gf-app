@@ -1,15 +1,15 @@
 import 'dart:convert';
 
-/// How a login credential is associated with a device.
+/// Legacy local preference retained for compatibility with saved settings.
 ///
 /// Both modes are requirements of the Flutter client. Keycloak owns passkeys
 /// and MFA; Gorape owns device keys. This abstraction does not invent a
 /// backend policy API.
 enum PasskeyStrategy {
-  /// A passkey may be shared with the user's Keycloak account across devices.
+  /// A provider-managed passkey may be synchronized across devices.
   sharedPasskey,
 
-  /// A dedicated device key is registered with Gorape and used for proof.
+  /// Legacy dedicated OS key registration, separate from Gorape RP passkeys.
   dedicatedDeviceKey,
 }
 

@@ -4,8 +4,9 @@
 # Existing redirect URIs (including the CLI callback
 # http://127.0.0.1:8400/callback) are preserved. The operation is idempotent.
 #
-# The Flutter apps use Authorization Code + PKCE (S256) and a native custom
-# scheme. Keycloak only accepts a redirect URI that is registered on the client.
+# The Flutter apps use Authorization Code + PKCE (S256), native callbacks,
+# desktop loopback callbacks, and a same-origin Web callback. Keycloak only
+# accepts registered redirects and Web origins.
 
 set -euo pipefail
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/lib.sh"
@@ -15,7 +16,12 @@ KEYCLOAK_REALM="${KEYCLOAK_REALM:-gorape}"
 KEYCLOAK_CLIENT_ID="${KEYCLOAK_CLIENT_ID:-gorape-client}"
 KEYCLOAK_ADMIN="${KEYCLOAK_ADMIN:-admin}"
 KEYCLOAK_ADMIN_PASSWORD="${KEYCLOAK_ADMIN_PASSWORD:-admin}"
-DEFAULT_REDIRECT_URI="com.gorapeflutter.gfapp:/oauth2redirect"
+DEFAULT_REDIRECT_URIS=(
+  "com.gorapeflutter.gfapp:/oauth2redirect"
+  "http://127.0.0.1:8401/oauth2redirect"
+  "http://localhost:5000/auth.html"
+)
+DEFAULT_WEB_ORIGINS=("http://localhost:5000")
 
 usage() {
   cat <<EOF
@@ -23,7 +29,9 @@ Usage: ./scripts/keycloak-allow-redirect.sh [options]
 
 Options:
   --uri URI             Redirect URI to add. May be repeated.
-                        Default: $DEFAULT_REDIRECT_URI
+                        Defaults cover Android/iOS/macOS, desktop, and Web dev.
+  --origin ORIGIN       Web origin to add. May be repeated.
+                        Default: http://localhost:5000
   --keycloak-url URL    Keycloak base URL (default: $KEYCLOAK_URL)
   --realm NAME          Realm (default: $KEYCLOAK_REALM)
   --client-id ID        Client (default: $KEYCLOAK_CLIENT_ID)
@@ -36,6 +44,7 @@ EOF
 }
 
 redirect_uris=()
+web_origins=()
 show_only=0
 
 while [[ $# -gt 0 ]]; do
@@ -43,6 +52,11 @@ while [[ $# -gt 0 ]]; do
     --uri)
       [[ $# -ge 2 ]] || die "--uri requires a value"
       redirect_uris+=("$2")
+      shift
+      ;;
+    --origin)
+      [[ $# -ge 2 ]] || die "--origin requires a value"
+      web_origins+=("$2")
       shift
       ;;
     --keycloak-url)
@@ -71,7 +85,10 @@ while [[ $# -gt 0 ]]; do
 done
 
 if [[ ${#redirect_uris[@]} -eq 0 ]]; then
-  redirect_uris=("$DEFAULT_REDIRECT_URI")
+  redirect_uris=("${DEFAULT_REDIRECT_URIS[@]}")
+fi
+if [[ ${#web_origins[@]} -eq 0 ]]; then
+  web_origins=("${DEFAULT_WEB_ORIGINS[@]}")
 fi
 
 require_command curl
@@ -143,40 +160,59 @@ PY
   exit 0
 fi
 
-python3 - "$work_dir/client.json" "$work_dir/updated.json" "$work_dir/changed" "${redirect_uris[@]}" <<'PY'
+python3 - "$work_dir/client.json" "$work_dir/updated.json" "$work_dir/changed" "${redirect_uris[@]}" -- "${web_origins[@]}" <<'PY'
 import json
 import sys
 
-source, destination, status_path, *requested = sys.argv[1:]
+source, destination, status_path, *args = sys.argv[1:]
+separator = args.index("--")
+requested_redirects = args[:separator]
+requested_origins = args[separator + 1:]
 client = json.load(open(source, encoding="utf-8"))
 
-existing = list(client.get("redirectUris") or [])
-merged = list(existing)
-for uri in requested:
-    if uri not in merged:
-        merged.append(uri)
+existing_redirects = list(client.get("redirectUris") or [])
+merged_redirects = list(existing_redirects)
+for uri in requested_redirects:
+    if uri not in merged_redirects:
+        merged_redirects.append(uri)
+
+existing_origins = list(client.get("webOrigins") or [])
+merged_origins = list(existing_origins)
+for origin in requested_origins:
+    if origin not in merged_origins:
+        merged_origins.append(origin)
 
 attributes = dict(client.get("attributes") or {})
 attributes["pkce.code.challenge.method"] = "S256"
 # "+" means reuse redirectUris for post-logout redirects, preserving the CLI.
 attributes.setdefault("post.logout.redirect.uris", "+")
 
-changed = merged != existing or attributes != (client.get("attributes") or {})
-client["redirectUris"] = merged
+changed = (
+    merged_redirects != existing_redirects
+    or merged_origins != existing_origins
+    or attributes != (client.get("attributes") or {})
+)
+client["redirectUris"] = merged_redirects
+client["webOrigins"] = merged_origins
 client["attributes"] = attributes
 json.dump(client, open(destination, "w", encoding="utf-8"), indent=2)
 open(status_path, "w", encoding="utf-8").write("1" if changed else "0")
 
 print("Existing redirect URIs:")
-for uri in existing:
+for uri in existing_redirects:
     print(f"  - {uri}")
-added = [uri for uri in merged if uri not in existing]
+added = [uri for uri in merged_redirects if uri not in existing_redirects]
 if added:
     print("Adding redirect URIs:")
     for uri in added:
         print(f"  + {uri}")
 elif not changed:
     print("No redirect URI changes needed.")
+added_origins = [origin for origin in merged_origins if origin not in existing_origins]
+if added_origins:
+    print("Adding Web origins:")
+    for origin in added_origins:
+        print(f"  + {origin}")
 PY
 
 if [[ "$(cat "$work_dir/changed")" != "1" ]]; then
@@ -202,6 +238,7 @@ client = json.load(open(sys.argv[1], encoding="utf-8"))
 print(json.dumps({
     "clientId": client.get("clientId"),
     "redirectUris": client.get("redirectUris", []),
+    "webOrigins": client.get("webOrigins", []),
     "pkce": client.get("attributes", {}).get("pkce.code.challenge.method"),
     "postLogoutRedirectUris": client.get("attributes", {}).get("post.logout.redirect.uris"),
 }, indent=2))

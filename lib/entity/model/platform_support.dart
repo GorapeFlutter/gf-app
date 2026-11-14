@@ -10,6 +10,7 @@ class PlatformSupport {
     required this.oidcLogin,
     required this.localKeyGeneration,
     required this.attestationFlow,
+    required this.passkeyCeremony,
     required this.note,
   });
 
@@ -17,10 +18,11 @@ class PlatformSupport {
   final bool oidcLogin;
   final bool localKeyGeneration;
   final bool attestationFlow;
+  final bool passkeyCeremony;
   final String note;
 
-  /// Keycloak owns passkeys/MFA. The app only orchestrates the browser flow.
+  /// Keycloak and Gorape are separate WebAuthn relying parties.
   static const passkeyDelegationNote =
-      'パスキーとMFAはKeycloakが担当します。Gorapeはデバイス公開鍵と'
-      '所有証明のみを扱い、パスワードやパスキー秘密情報を保存しません。';
+      'Keycloak用パスキーとは別にGorape RP用パスキーを登録します。'
+      '秘密鍵はOS/browser credential providerに残り、gf-appやGorapeへ送信されません。';
 }

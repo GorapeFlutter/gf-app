@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart' hide Text;
-import '../../l10n/app_text.dart';
+import '../../config/langages/app_text.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../controller/providers.dart';
+import '../../back/controller/providers.dart';
 import '../../entity/model/group.dart';
 import '../../entity/model/project.dart';
 import '../../entity/model/role.dart';
@@ -185,7 +185,7 @@ class _GroupScopeViewState extends ConsumerState<_GroupScopeView> {
                       child: ListTile(
                         contentPadding: EdgeInsets.zero,
                         leading: Icon(Icons.edit, size: 22),
-                        title: AppText('グループを編集'),
+                        title: AppText('MCODE-00233'),
                       ),
                     ),
                     PopupMenuItem(
@@ -193,7 +193,7 @@ class _GroupScopeViewState extends ConsumerState<_GroupScopeView> {
                       child: ListTile(
                         contentPadding: EdgeInsets.zero,
                         leading: Icon(Icons.delete, size: 22),
-                        title: AppText('グループを削除'),
+                        title: AppText('MCODE-00234'),
                       ),
                     ),
                   ],
@@ -221,31 +221,31 @@ class _GroupScopeViewState extends ConsumerState<_GroupScopeView> {
             if (_role == AccessRole.viewer)
               const RoleNotice(
                 role: AccessRole.viewer,
-                scopeLabel: '閲覧者ビュー',
-                message: 'グループ情報と割り当てデバイスを参照できます。追加・削除は表示されません。',
+                scopeLabel: 'MCODE-00261',
+                message: 'MCODE-00401',
               ),
             if (_role == AccessRole.editor)
               const RoleNotice(
                 role: AccessRole.editor,
-                scopeLabel: '編集者ビュー',
-                message: 'グループへのデバイス追加・削除が可能です。グループ編集・削除とロール付与は管理者のみです。',
+                scopeLabel: 'MCODE-00213',
+                message: 'MCODE-00399',
               ),
             SectionCard(
-              title: 'グループ情報',
+              title: 'MCODE-00225',
               icon: Icons.folder_shared_outlined,
               trailing: StatusChip.status(context, _group.status),
               child: Column(
                 children: [
-                  KeyValueRow('名前', _group.name),
-                  KeyValueRow('Slug', _group.slug, monospace: true),
+                  KeyValueRow('MCODE-00215', _group.name),
+                  KeyValueRow('MCODE-00268', _group.slug, monospace: true),
                   KeyValueRow('Group ID', _group.id, monospace: true),
-                  KeyValueRow('作成日時', formatTimestamp(_group.createdAt)),
-                  KeyValueRow('更新日時', formatTimestamp(_group.updatedAt)),
+                  KeyValueRow('MCODE-00226', formatTimestamp(_group.createdAt)),
+                  KeyValueRow('MCODE-00227', formatTimestamp(_group.updatedAt)),
                 ],
               ),
             ),
             SectionCard(
-              title: 'グループデバイス',
+              title: 'MCODE-00228',
               icon: Icons.devices_outlined,
               trailing: Wrap(
                 spacing: 8,
@@ -260,7 +260,7 @@ class _GroupScopeViewState extends ConsumerState<_GroupScopeView> {
                     FilledButton.tonalIcon(
                       onPressed: _busy ? null : _bindDevice,
                       icon: Icon(Icons.add, size: 22),
-                      label: const AppText('追加'),
+                      label: const AppText('MCODE-00229'),
                     ),
                 ],
               ),
@@ -278,9 +278,7 @@ class _GroupScopeViewState extends ConsumerState<_GroupScopeView> {
                     (list) {
                       if (list.isEmpty) {
                         return AppText(
-                          _role.canEdit
-                              ? 'デバイスが割り当てられていません。右上の「追加」から割り当てできます。'
-                              : 'デバイスが割り当てられていません。',
+                          _role.canEdit ? 'MCODE-00231' : 'MCODE-00230',
                         );
                       }
                       return Column(
@@ -319,12 +317,12 @@ class _GroupScopeViewState extends ConsumerState<_GroupScopeView> {
             ),
             if (_role.canAdmin)
               SectionCard(
-                title: 'グループロール',
+                title: 'MCODE-00217',
                 icon: Icons.manage_accounts_outlined,
                 trailing: FilledButton.tonalIcon(
                   onPressed: _busy ? null : _assignGroupRole,
                   icon: const Icon(Icons.person_add_alt_1),
-                  label: const AppText('付与'),
+                  label: const AppText('MCODE-00219'),
                 ),
                 child: _GroupRoleList(
                   groupRef: _refKey,
@@ -342,12 +340,10 @@ class _GroupScopeViewState extends ConsumerState<_GroupScopeView> {
                     const SizedBox(width: 10),
                     Expanded(
                       child: AppText(switch (_role) {
-                        AccessRole.admin =>
-                          '管理者: グループの編集・削除、デバイス割当、グループロール付与が可能です。',
-                        AccessRole.editor =>
-                          '編集者: グループへのデバイス追加・削除が可能です。ロール付与は管理者のみです。',
-                        AccessRole.viewer => '閲覧者: グループ内のデバイスを参照できます。',
-                        AccessRole.none => 'このグループのロールがありません。',
+                        AccessRole.admin => 'MCODE-00262',
+                        AccessRole.editor => 'MCODE-00263',
+                        AccessRole.viewer => 'MCODE-00264',
+                        AccessRole.none => 'MCODE-00224',
                       }, style: Theme.of(context).textTheme.bodySmall),
                     ),
                   ],
@@ -403,13 +399,13 @@ class _GroupScopeViewState extends ConsumerState<_GroupScopeView> {
       context: context,
       builder: /* GF-00780 — Runs an inline callback in _GroupScopeViewState._deleteGroup. */
           (context) => AlertDialog(
-            title: const AppText('グループを削除しますか？'),
-            content: AppText('「${_group.name}」を削除します。元に戻せません。'),
+            title: const AppText('MCODE-00235'),
+            content: AppText('MCODE-00433', parameters: {'name': _group.name}),
             actions: [
               TextButton(
                 onPressed: /* GF-00781 — Runs an inline callback in _GroupScopeViewState._deleteGroup.callback. */
                     () => Navigator.of(context).pop(false),
-                child: const AppText('キャンセル'),
+                child: const AppText('MCODE-00147'),
               ),
               FilledButton(
                 onPressed: /* GF-00782 — Runs an inline callback in _GroupScopeViewState._deleteGroup.callback. */
@@ -417,7 +413,7 @@ class _GroupScopeViewState extends ConsumerState<_GroupScopeView> {
                 style: FilledButton.styleFrom(
                   backgroundColor: Theme.of(context).colorScheme.error,
                 ),
-                child: const AppText('削除する'),
+                child: const AppText('MCODE-00240'),
               ),
             ],
           ),
@@ -520,7 +516,7 @@ class _GroupScopeViewState extends ConsumerState<_GroupScopeView> {
   /// GF-00793 — Handles assign group role in _GroupScopeViewState.
   Future<void> _assignGroupRole() async {
     // GF-02140 — Collect the subject and role to grant.
-    final input = await showRoleBindingDialog(context, title: 'グループロールを付与');
+    final input = await showRoleBindingDialog(context, title: 'MCODE-00242');
     if (input == null || !mounted) return;
     setState(
       /* GF-00794 — Runs an inline callback in _GroupScopeViewState._assignGroupRole. */ () =>
@@ -586,7 +582,11 @@ class _GroupScopeViewState extends ConsumerState<_GroupScopeView> {
     final friendly = friendlyError(error);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: AppText('${friendly.title}: ${friendly.message}'),
+        content: AppText(
+          'MCODE-00500',
+          parameters: {'title': friendly.title, 'message': friendly.message},
+          localizedParameters: const {'title', 'message'},
+        ),
         backgroundColor: Theme.of(context).colorScheme.error,
       ),
     );
@@ -616,7 +616,7 @@ class _GroupRoleList extends ConsumerWidget {
           ),
       data: /* GF-00806 — Runs an inline callback in _GroupRoleList.build. */
           (list) {
-            if (list.isEmpty) return const AppText('グループロールがありません。');
+            if (list.isEmpty) return const AppText('MCODE-00250');
             return Column(
               children: [
                 for (final GroupRoleBinding binding in list)
@@ -637,7 +637,7 @@ class _GroupRoleList extends ConsumerWidget {
                       children: [
                         RoleBadge(role: binding.accessRole),
                         IconButton(
-                          tooltip: tr(context, '削除'),
+                          tooltip: tr(context, 'MCODE-00496'),
                           onPressed: /* GF-00807 — Runs an inline callback in _GroupRoleList.build.callback. */
                               () => onDelete(binding.id),
                           icon: ColorFiltered(

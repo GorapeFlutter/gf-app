@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="referrer" content="no-referrer">
+    <title>Authentication complete</title>
+  </head>
+  <body>
+    <p>Authentication complete. You may close this window.</p>
+    <script>
+      (() => {
+        const message = { 'flutter-web-auth-2': window.location.href };
+        if (window.opener) {
+          window.opener.postMessage(message, window.location.origin);
+          window.close();
+        } else {
+          window.localStorage.setItem('flutter-web-auth-2', window.location.href);
+          window.close();
+        }
+      })();
+    </script>
+  </body>
+</html>

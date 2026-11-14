@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart' hide Text;
-import '../../l10n/app_text.dart';
+import '../../config/langages/app_text.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../controller/providers.dart';
+import '../../back/controller/providers.dart';
 import '../../entity/model/group.dart';
 import '../../entity/model/project.dart';
 import '../../entity/model/role.dart';
@@ -45,13 +45,13 @@ class _GroupManagementScreenState extends ConsumerState<GroupManagementScreen> {
         children: [
           RoleCapabilityCard(
             role: projectRole,
-            scopeLabel: 'プロジェクトのグループ',
+            scopeLabel: 'MCODE-00361',
             footnote:
                 '各グループのロールは、プロジェクトロールとKeycloakのグループ別ロールの'
                 '強い方で表示されます（Gorapeのeffective roleと同じ考え方）。',
           ),
           SectionCard(
-            title: 'グループ一覧',
+            title: 'MCODE-00208',
             icon: Icons.groups_outlined,
             trailing: Wrap(
               spacing: 8,
@@ -66,7 +66,7 @@ class _GroupManagementScreenState extends ConsumerState<GroupManagementScreen> {
                   FilledButton.tonalIcon(
                     onPressed: _busy ? null : _createGroup,
                     icon: Icon(Icons.add, size: 22),
-                    label: const AppText('作成'),
+                    label: const AppText('MCODE-00218'),
                   ),
               ],
             ),
@@ -87,9 +87,7 @@ class _GroupManagementScreenState extends ConsumerState<GroupManagementScreen> {
                       return Padding(
                         padding: const EdgeInsets.symmetric(vertical: 12),
                         child: AppText(
-                          projectRole.canAdmin
-                              ? 'グループがありません。右上の「作成」から追加できます。'
-                              : 'グループが作成されていません。',
+                          projectRole.canAdmin ? 'MCODE-00209' : 'MCODE-00210',
                         ),
                       );
                     }
@@ -112,10 +110,10 @@ class _GroupManagementScreenState extends ConsumerState<GroupManagementScreen> {
               padding: const EdgeInsets.all(16),
               child: AppText(
                 projectRole.canAdmin
-                    ? '管理者: グループの作成・編集・削除、グループロールの付与が可能です。'
+                    ? 'MCODE-00381'
                     : projectRole.canEdit
-                    ? '編集者: グループ内のデバイス割当を変更できます。グループ自体の作成・削除は管理者のみです。'
-                    : '閲覧者: グループとデバイスを参照できます。',
+                    ? 'MCODE-00384'
+                    : 'MCODE-00389',
                 style: Theme.of(context).textTheme.bodySmall,
               ),
             ),
@@ -144,9 +142,11 @@ class _GroupManagementScreenState extends ConsumerState<GroupManagementScreen> {
           );
       if (!mounted) return;
       // GF-02154 — Confirm creation and open the new group's detail screen.
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: AppText('グループ「${input.name}」を作成しました。')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: AppText('MCODE-00432', parameters: {'name': input.name}),
+        ),
+      );
       await Navigator.of(context).push(
         MaterialPageRoute<void>(
           builder: /* GF-00818 — Runs an inline callback in _GroupManagementScreenState._createGroup. */
@@ -158,7 +158,11 @@ class _GroupManagementScreenState extends ConsumerState<GroupManagementScreen> {
       final friendly = friendlyError(error);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: AppText('${friendly.title}: ${friendly.message}'),
+          content: AppText(
+            'MCODE-00500',
+            parameters: {'title': friendly.title, 'message': friendly.message},
+            localizedParameters: const {'title', 'message'},
+          ),
           backgroundColor: Theme.of(context).colorScheme.error,
         ),
       );

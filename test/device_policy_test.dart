@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gf_app/entity/model/policy.dart';
-import 'package:gf_app/repository/policy.dart';
-import 'package:gf_app/repository/secure_store.dart';
+import 'package:gf_app/back/repository/policy.dart';
+import 'package:gf_app/back/repository/secure_store.dart';
 
 void main() {
   group('LocalDevicePolicy', () {

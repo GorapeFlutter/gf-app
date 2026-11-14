@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:gf_app/controller/base.dart';
-import 'package:gf_app/controller/language.dart';
-import 'package:gf_app/l10n/app_text.dart';
-import 'package:gf_app/repository/secure_store.dart';
+import 'package:gf_app/back/controller/base.dart';
+import 'package:gf_app/back/controller/language.dart';
+import 'package:gf_app/config/langages/app_text.dart';
+import 'package:gf_app/config/langages/messages.dart';
+import 'package:gf_app/back/repository/secure_store.dart';
 import 'package:gf_app/ui/screens/settings_screen.dart';
 
 void main() {
@@ -32,11 +33,49 @@ void main() {
       const MaterialApp(
         locale: Locale('en'),
         supportedLocales: [Locale('ja'), Locale('en')],
-        home: Scaffold(body: AppText('デバイス')),
+        home: Scaffold(body: AppText('MCODE-00051')),
       ),
     );
 
     expect(find.text('Devices'), findsOneWidget);
+  });
+
+  test('message catalog uses stable MCODE identifiers', () {
+    expect(
+      appMessageCatalog.keys.every(
+        (code) => RegExp(r'^MCODE-\d{5}$').hasMatch(code),
+      ),
+      isTrue,
+    );
+    expect(appMessageCatalog['MCODE-00441']?.ja, 'パスキー端末を登録');
+    expect(appMessageCatalog['MCODE-00441']?.en, 'Register passkey device');
+  });
+
+  testWidgets('MCODE templates localize interpolated values', (tester) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        locale: Locale('en'),
+        supportedLocales: [Locale('ja'), Locale('en')],
+        home: Scaffold(
+          body: Column(
+            children: [
+              AppText('MCODE-00434', parameters: {'name': 'Pixel'}),
+              AppText(
+                'MCODE-00438',
+                parameters: {'scope': 'MCODE-00182'},
+                localizedParameters: {'scope'},
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+
+    expect(
+      find.text('Revoke Pixel in Gorape? This cannot be undone.'),
+      findsOneWidget,
+    );
+    expect(find.text('Cluster role'), findsOneWidget);
   });
 
   testWidgets('language can be changed from Settings', (tester) async {

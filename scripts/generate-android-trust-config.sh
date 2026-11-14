@@ -170,19 +170,27 @@ destination = pathlib.Path(sys.argv[2])
 text = template.read_text(encoding="utf-8")
 
 anchor = "/app/etc/android/android-attestation-roots.pem"
-pattern = re.compile(r"(?m)^(?P<indent>[ \t]*)attestation:\s*\{[^}]*\}\s*$")
-
-match = pattern.search(text)
-if not match:
-    raise SystemExit(
-        "Could not find an inline 'attestation: {android_trust_anchors: []}' entry "
-        f"in {template}. Adjust the generator for the new config layout."
+block_pattern = re.compile(
+    r"(?m)^(?P<indent>[ \t]*)android_trust_anchors:\s*\[[^\]\n]*\]\s*$"
+)
+match = block_pattern.search(text)
+if match:
+    replacement = f'{match.group("indent")}android_trust_anchors: ["{anchor}"]'
+    text = text[: match.start()] + replacement + text[match.end() :]
+else:
+    inline_pattern = re.compile(
+        r"(?m)^(?P<indent>[ \t]*)attestation:\s*\{[^}]*\}\s*$"
     )
-
-replacement = f'{match.group("indent")}attestation: {{android_trust_anchors: ["{anchor}"]}}'
-text = text[: match.start()] + replacement + text[match.end() :]
+    match = inline_pattern.search(text)
+    if not match:
+        raise SystemExit(
+            "Could not find android_trust_anchors in an attestation config "
+            f"in {template}."
+        )
+    replacement = f'{match.group("indent")}attestation: {{android_trust_anchors: ["{anchor}"]}}'
+    text = text[: match.start()] + replacement + text[match.end() :]
 destination.write_text(text, encoding="utf-8")
-print(f"Set Android trust anchor to {anchor}")
+print(f"Set legacy Android trust anchor to {anchor}")
 PY
 
 if ! grep -q "/app/etc/android/android-attestation-roots.pem" "$server_config"; then

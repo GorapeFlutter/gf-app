@@ -4,10 +4,10 @@ import 'package:flutter/material.dart' hide Text;
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../controller/providers.dart';
+import '../../back/controller/providers.dart';
 import '../../entity/model/connection.dart';
 import '../../entity/model/platform.dart';
-import '../../l10n/app_text.dart';
+import '../../config/langages/app_text.dart';
 import '../widgets/common.dart';
 
 /// Connection, OIDC and Keycloak redirect configuration.
@@ -30,7 +30,7 @@ class SettingsScreen extends ConsumerWidget {
     final connection = ref.watch(connectionSettingsProvider);
     final content = connection.when(
       loading: /* GF-00934 — Runs an inline callback in SettingsScreen.build. */
-          () => const LoadingView(label: '設定を読み込み中...'),
+          () => const LoadingView(label: 'MCODE-00038'),
       error: /* GF-00935 — Runs an inline callback in SettingsScreen.build. */
           (error, _) => Padding(
             padding: const EdgeInsets.all(16),
@@ -46,7 +46,7 @@ class SettingsScreen extends ConsumerWidget {
 
     if (embedded) return content;
     return Scaffold(
-      appBar: AppBar(title: const AppText('接続設定')),
+      appBar: AppBar(title: const AppText('MCODE-00058')),
       body: content,
     );
   }
@@ -123,8 +123,14 @@ class _SettingsFormState extends ConsumerState<_SettingsForm> {
             initialValue: language,
             decoration: InputDecoration(labelText: tr(context, '言語')),
             items: [
-              DropdownMenuItem(value: 'ja', child: const AppText('日本語')),
-              DropdownMenuItem(value: 'en', child: const AppText('English')),
+              DropdownMenuItem(
+                value: 'ja',
+                child: const AppText('MCODE-00049'),
+              ),
+              DropdownMenuItem(
+                value: 'en',
+                child: const AppText('MCODE-00453'),
+              ),
             ],
             onChanged: /* GF-00944 — Runs an inline callback in _SettingsFormState.build. */ (value) {
               if (value == null) return;
@@ -144,11 +150,11 @@ class _SettingsFormState extends ConsumerState<_SettingsForm> {
             },
           ),
         ),
-        AppText('接続設定', style: theme.textTheme.titleLarge),
+        AppText('MCODE-00058', style: theme.textTheme.titleLarge),
         const SizedBox(height: 4),
         AppText(
           'この端末: ${platform.displayName}。'
-          'OIDC IssuerはKeycloakが発行する iss クレームと完全に一致する必要があります。',
+          'MCODE-00330',
           style: theme.textTheme.bodySmall,
         ),
         const SizedBox(height: 16),
@@ -157,7 +163,7 @@ class _SettingsFormState extends ConsumerState<_SettingsForm> {
           const SizedBox(height: 12),
         ],
         SectionCard(
-          title: 'Gorape API',
+          title: 'MCODE-00073',
           icon: Icons.dns_outlined,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -168,15 +174,15 @@ class _SettingsFormState extends ConsumerState<_SettingsForm> {
                 keyboardType: TextInputType.url,
                 decoration: InputDecoration(
                   labelText: 'API Base URL',
-                  hintText: 'http://10.0.2.2:8000',
+                  hintText: 'https://localhost:8443',
                   prefixIcon: Icon(Icons.extension, size: 22),
                 ),
               ),
               const SizedBox(height: 8),
               if (platform == RuntimePlatform.android)
                 AppText(
-                  'Android Emulatorは 10.0.2.2、実機はPCのLAN IPを指定してください。'
-                  'adb reverse を使う場合は localhost:8000 も利用できます。',
+                  'MCODE-00420'
+                  'MCODE-00337',
                   style: theme.textTheme.bodySmall,
                 ),
               const SizedBox(height: 8),
@@ -191,7 +197,7 @@ class _SettingsFormState extends ConsumerState<_SettingsForm> {
                           child: CircularProgressIndicator(strokeWidth: 2),
                         )
                       : const Icon(Icons.monitor_heart_outlined),
-                  label: const AppText('ヘルスチェック'),
+                  label: const AppText('MCODE-00080'),
                 ),
               ),
               if (_healthResult != null) ...[
@@ -202,7 +208,7 @@ class _SettingsFormState extends ConsumerState<_SettingsForm> {
           ),
         ),
         SectionCard(
-          title: 'Keycloak / OIDC',
+          title: 'MCODE-00074',
           icon: Icons.vpn_key_outlined,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -238,17 +244,12 @@ class _SettingsFormState extends ConsumerState<_SettingsForm> {
                 ),
               ),
               const SizedBox(height: 12),
-              AppText(
-                'Authorization Code + PKCE（S256）、scopes: openid profile、'
-                'audience: gorape-api。Gorape APIにはAccess Tokenのみを使用し、'
-                'ID Tokenは送信しません。',
-                style: theme.textTheme.bodySmall,
-              ),
+              AppText('MCODE-00480', style: theme.textTheme.bodySmall),
             ],
           ),
         ),
         SectionCard(
-          title: 'Keycloak Redirect URI許可リスト',
+          title: 'MCODE-00079',
           icon: Icons.rule_outlined,
           trailing: IconButton(
             tooltip: tr(context, 'コピー'),
@@ -259,10 +260,7 @@ class _SettingsFormState extends ConsumerState<_SettingsForm> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const AppText(
-                'Keycloakの gorape-client に以下を登録してください。'
-                '既存CLI用の http://127.0.0.1:8400/callback は変更・削除しません。',
-              ),
+              const AppText('MCODE-00481'),
               const SizedBox(height: 8),
               for (final uri in _redirectAllowList(_edited))
                 Padding(
@@ -276,11 +274,7 @@ class _SettingsFormState extends ConsumerState<_SettingsForm> {
                   ),
                 ),
               const SizedBox(height: 8),
-              AppText(
-                'ローカルKeycloakの例: admin CLIで clients/gorape-client の '
-                'redirectUris に追加します。詳細は README を参照してください。',
-                style: theme.textTheme.bodySmall,
-              ),
+              AppText('MCODE-00482', style: theme.textTheme.bodySmall),
             ],
           ),
         ),
@@ -290,8 +284,7 @@ class _SettingsFormState extends ConsumerState<_SettingsForm> {
             child: Padding(
               padding: const EdgeInsets.all(14),
               child: AppText(
-                'HTTP接続はローカル開発専用です。本番ではHTTPSと'
-                '正規のRedirect URIを使用してください。',
+                'MCODE-00483',
                 style: TextStyle(color: scheme.onErrorContainer),
               ),
             ),
@@ -309,29 +302,29 @@ class _SettingsFormState extends ConsumerState<_SettingsForm> {
                         child: CircularProgressIndicator(strokeWidth: 2),
                       )
                     : const Icon(Icons.save_outlined),
-                label: AppText(_saving ? '保存中...' : '保存'),
+                label: AppText(_saving ? 'MCODE-00086' : 'MCODE-00085'),
               ),
             ),
             const SizedBox(width: 8),
             OutlinedButton.icon(
               onPressed: _saving ? null : _reset,
               icon: const Icon(Icons.restart_alt),
-              label: const AppText('初期値に戻す'),
+              label: const AppText('MCODE-00087'),
             ),
           ],
         ),
         const SizedBox(height: 16),
         SectionCard(
-          title: 'セッション',
+          title: 'MCODE-00088',
           icon: Icons.logout,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               AppText(
                 widget.fromLogin
-                    ? 'ログイン前に接続先を確認できます。保存後に戻ってログインしてください。'
-                    : 'ログアウトするとKeycloakのセッション終了を試行し、'
-                          'ローカルのトークンを削除します。',
+                    ? 'MCODE-00089'
+                    : 'MCODE-00364'
+                          'MCODE-00366',
                 style: theme.textTheme.bodySmall,
               ),
               if (!widget.fromLogin) ...[
@@ -339,7 +332,7 @@ class _SettingsFormState extends ConsumerState<_SettingsForm> {
                 OutlinedButton.icon(
                   onPressed: _saving ? null : _signOut,
                   icon: Icon(Icons.history, size: 22),
-                  label: const AppText('ログアウト'),
+                  label: const AppText('MCODE-00057'),
                 ),
               ],
             ],
@@ -347,8 +340,8 @@ class _SettingsFormState extends ConsumerState<_SettingsForm> {
         ),
         const SizedBox(height: 8),
         AppText(
-          'Access TokenはGorape APIのBearer認証にのみ使用します。'
-          'デバイス秘密鍵はOSキーストアから出ません。',
+          'MCODE-00417'
+          'MCODE-00351',
           textAlign: TextAlign.center,
           style: theme.textTheme.labelSmall?.copyWith(color: scheme.outline),
         ),
@@ -358,7 +351,13 @@ class _SettingsFormState extends ConsumerState<_SettingsForm> {
 
   /// GF-00948 — Handles redirect allow list in _SettingsFormState.
   List<String> _redirectAllowList(ConnectionSettings settings) {
-    return {'http://127.0.0.1:8400/callback', settings.redirectUri}
+    return {
+          'http://127.0.0.1:8400/callback',
+          ConnectionSettings.flutterRedirectUri,
+          ConnectionSettings.desktopRedirectUri,
+          'http://localhost:5000/auth.html',
+          settings.redirectUri,
+        }
         .where(
           /* GF-00949 — Runs an inline callback in _SettingsFormState._redirectAllowList. */ (
             value,
@@ -378,7 +377,7 @@ class _SettingsFormState extends ConsumerState<_SettingsForm> {
     if (!context.mounted) return;
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(const SnackBar(content: AppText('Redirect URIをコピーしました。')));
+    ).showSnackBar(const SnackBar(content: AppText('MCODE-00092')));
   }
 
   /// GF-00951 — Handles save in _SettingsFormState.
@@ -398,7 +397,7 @@ class _SettingsFormState extends ConsumerState<_SettingsForm> {
       // GF-02115 — Confirm the saved settings to the user.
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(const SnackBar(content: AppText('接続設定を保存しました。')));
+      ).showSnackBar(const SnackBar(content: AppText('MCODE-00093')));
     } on Object catch (error) {
       // GF-02116 — Display validation or persistence errors.
       if (mounted)
@@ -441,7 +440,7 @@ class _SettingsFormState extends ConsumerState<_SettingsForm> {
       // GF-02121 — Confirm that defaults have been restored.
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(const SnackBar(content: AppText('初期値に戻しました。')));
+      ).showSnackBar(const SnackBar(content: AppText('MCODE-00094')));
     } on Object catch (error) {
       // GF-02122 — Display reset failures without discarding the form.
       if (mounted)

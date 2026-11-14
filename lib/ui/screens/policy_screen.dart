@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart' hide Text;
-import '../../l10n/app_text.dart';
+import '../../config/langages/app_text.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../controller/providers.dart';
+import '../../back/controller/providers.dart';
 import '../../entity/model/policy.dart';
 import '../widgets/common.dart';
 
@@ -24,14 +24,11 @@ class PolicyScreen extends ConsumerWidget {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        AppText(
-          'デバイスポリシー（ローカルのみ）',
-          style: Theme.of(context).textTheme.titleLarge,
-        ),
+        AppText('MCODE-00152', style: Theme.of(context).textTheme.titleLarge),
         const SizedBox(height: 4),
         AppText(
-          'この画面の値は端末内に保存される希望値です。'
-          'Gorapeバックエンドでは強制されません。',
+          'MCODE-00394'
+          'MCODE-00310',
           style: Theme.of(context).textTheme.bodySmall,
         ),
         const SizedBox(height: 16),
@@ -54,7 +51,7 @@ class PolicyScreen extends ConsumerWidget {
                     const SizedBox(width: 8),
                     Expanded(
                       child: AppText(
-                        'バックエンドAPI未提供',
+                        'MCODE-00154',
                         style: Theme.of(context).textTheme.titleSmall?.copyWith(
                           color: scheme.onTertiaryContainer,
                         ),
@@ -74,7 +71,7 @@ class PolicyScreen extends ConsumerWidget {
         const SizedBox(height: 12),
         policy.when(
           loading: /* GF-00846 — Runs an inline callback in PolicyScreen.build. */
-              () => const LoadingView(label: 'ポリシーを読み込み中...'),
+              () => const LoadingView(label: 'MCODE-00045'),
           error: /* GF-00847 — Runs an inline callback in PolicyScreen.build. */
               (error, _) => ErrorCard(error: error),
           data: /* GF-00848 — Runs an inline callback in PolicyScreen.build. */
@@ -95,7 +92,6 @@ class _PolicyForm extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final controller = ref.read(policyControllerProvider.notifier);
-    final scheme = Theme.of(context).colorScheme;
 
     /// GF-00851 — Handles update in _PolicyForm.build.
     Future<void> update(LocalDevicePolicy next) async {
@@ -104,12 +100,14 @@ class _PolicyForm extends ConsumerWidget {
         if (!context.mounted) return;
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(const SnackBar(content: AppText('ローカルポリシーを保存しました。')));
+        ).showSnackBar(const SnackBar(content: AppText('MCODE-00155')));
       } on Object catch (error) {
         if (!context.mounted) return;
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: AppText('保存に失敗しました: $error')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: AppText('MCODE-00435', parameters: {'message': error}),
+          ),
+        );
       }
     }
 
@@ -117,17 +115,14 @@ class _PolicyForm extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         SectionCard(
-          title: 'ログインとデバイス鍵',
+          title: 'MCODE-00472',
           icon: Icons.key_outlined,
           child: Column(
             children: [
               SwitchListTile(
                 contentPadding: EdgeInsets.zero,
-                title: const AppText('ログイン後の所有証明を推奨'),
-                subtitle: const AppText(
-                  'Keycloakログイン後にチャレンジ署名を促すUIを表示します。'
-                  '（アプリ内の案内のみ）',
-                ),
+                title: const AppText('MCODE-00157'),
+                subtitle: const AppText('MCODE-00454'),
                 value: policy.requireProofAfterLogin,
                 onChanged: /* GF-00852 — Runs an inline callback in _PolicyForm.build. */
                     (value) =>
@@ -136,11 +131,8 @@ class _PolicyForm extends ConsumerWidget {
               const Divider(),
               SwitchListTile(
                 contentPadding: EdgeInsets.zero,
-                title: const AppText('Attestationなしのデバイスを許可'),
-                subtitle: const AppText(
-                  'バックエンドの登録APIはAttestation証拠を要求します。'
-                  'この設定は表示上の希望値であり、登録可否を変えません。',
-                ),
+                title: const AppText('MCODE-00445'),
+                subtitle: const AppText('MCODE-00455'),
                 value: policy.allowDevicesWithoutAttestation,
                 onChanged: /* GF-00853 — Runs an inline callback in _PolicyForm.build. */
                     (value) => update(
@@ -151,64 +143,16 @@ class _PolicyForm extends ConsumerWidget {
           ),
         ),
         SectionCard(
-          title: 'パスキーとデバイス鍵',
+          title: 'MCODE-00473',
           icon: Icons.password_outlined,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              RadioGroup<PasskeyStrategy>(
-                groupValue: policy.passkeyStrategy,
-                onChanged: /* GF-00854 — Runs an inline callback in _PolicyForm.build. */
-                    (value) {
-                      if (value == null) return;
-                      update(policy.copyWith(passkeyStrategy: value));
-                    },
-                child: const Column(
-                  children: [
-                    RadioListTile<PasskeyStrategy>(
-                      contentPadding: EdgeInsets.zero,
-                      value: PasskeyStrategy.dedicatedDeviceKey,
-                      title: AppText('デバイス専用鍵（推奨）'),
-                      subtitle: AppText(
-                        'Gorapeに登録したOS保護鍵で所有証明を行います。'
-                        'Keycloakのパスキーとは独立しています。',
-                      ),
-                    ),
-                    RadioListTile<PasskeyStrategy>(
-                      contentPadding: EdgeInsets.zero,
-                      value: PasskeyStrategy.sharedPasskey,
-                      title: AppText('Keycloakの共有パスキー'),
-                      subtitle: AppText(
-                        'パスキーはKeycloakアカウントに紐づき、複数端末で共有されます。'
-                        'Gorapeのデバイス鍵による所有証明とは別物です。',
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 8),
-              AppText(
-                'パスキー・MFA・アカウント回復はKeycloakの責務です。'
-                'このアプリはパスキーの秘密情報を保存せず、'
-                'Gorape APIにはアクセストークンのみを送信します。',
-                style: TextStyle(fontSize: 12, color: scheme.outline),
-              ),
-            ],
-          ),
+          child: const AppText('MCODE-00456'),
         ),
         SectionCard(
-          title: 'この設定の扱い',
+          title: 'MCODE-00165',
           icon: Icons.lock_outline,
           child: const Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              AppText(
-                '• 値はOSのセキュアストレージに保存されます。\n'
-                '• Gorapeへは送信されません（ポリシーAPIがないため）。\n'
-                '• サーバー側の強制が必要な場合は、Gorapeに'
-                'デバイスポリシーAPIを追加してから接続してください。',
-              ),
-            ],
+            children: [AppText('MCODE-00479')],
           ),
         ),
       ],

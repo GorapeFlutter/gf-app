@@ -56,9 +56,9 @@ DER-encoded (do not convert it to raw `r || s`).
 
 ## Running on an emulator or device
 
-The Android defaults are:
+The Android development defaults are:
 
-- API: `http://10.0.2.2:8000` (emulator host alias)
+- API: `https://localhost:8443` (local server; debug CA is loaded by the runner)
 - OIDC issuer: `http://localhost:8080/realms/gorape`
 
 The issuer must match Keycloak's `iss` claim exactly. The simplest setup that
@@ -73,20 +73,26 @@ The script runs:
 
 ```bash
 adb reverse tcp:8080 tcp:8080
-adb reverse tcp:8000 tcp:8000
+adb reverse tcp:8443 tcp:8443
 flutter run -d <device> --debug \
-  --dart-define=GORAPE_API_BASE_URL=http://localhost:8000 \
+  --dart-define=GORAPE_API_BASE_URL=https://localhost:8443 \
   --dart-define=GORAPE_OIDC_ISSUER=http://localhost:8080/realms/gorape
 ```
+
+For local HTTPS, prefer `./scripts/run-android.sh`; it passes the generated CA
+PEM to the debug Dart client. For manual `flutter run`, add the CA as
+`GORAPE_TLS_CA_CERT_BASE64` or use an OS-trusted certificate.
 
 Useful options:
 
 ```bash
 ./scripts/run-android.sh --device emulator-5554
-./scripts/run-android.sh --api-url http://10.0.2.2:8000   # emulator without reverse for the API
-./scripts/run-android.sh --release
+./scripts/run-android.sh --api-url https://localhost:8443 --tls-ca config/generated/tls/ca.crt
 ./scripts/run-android.sh -- --verbose                      # extra flutter run args
 ```
+
+The generated CA is trusted only by the debug Dart HTTP client. Do not pass a
+development CA to release builds; use a publicly trusted server certificate.
 
 For a physical device without `adb reverse`, use the host's LAN IP for the API
 **and** configure Keycloak with a matching hostname/issuer. Do not change only
@@ -121,7 +127,7 @@ level and status.
 | 422 `attested public key does not match` | The public key sent in `public_key_pem` is not the leaf certificate's key. Regenerate the key and retry. |
 | 422 `attestation challenge` mismatch | The raw decoded challenge was not the exact value passed to `setAttestationChallenge`, or a stale challenge was reused. |
 | `Android Key Attestation did not return a certificate chain` | The Keystore has no attestation support (common on emulators / some ROMs). Use a device with a hardware-backed Keystore. |
-| Login opens Keycloak but returns `invalid_redirect_uri` | The Flutter redirect is not allow-listed. Run `./scripts/keycloak-allow-redirect.sh`. |
+| Login opens Keycloak but returns `invalid_redirect_uri` | The Flutter redirect is not allow-listed. Fresh local realms import redirect URIs from `../gorape/etc/keycloak/gorape-realm.json`; add it manually to an existing realm's `gorape-client` if needed. |
 | Login succeeds but API returns 401 | The token issuer/audience must match `http://localhost:8080/realms/gorape` and `gorape-api`. Check the app's connection settings. |
 | `Cleartext HTTP traffic not permitted` | Only local development hosts are allow-listed in `network_security_config.xml`; use HTTPS or add the dev host. |
 | Key exists but proof fails | The Keystore key may have been invalidated (lock screen change, restore, etc.). Revoke the device and register again. |

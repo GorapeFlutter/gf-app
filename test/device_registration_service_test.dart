@@ -10,16 +10,18 @@ import 'package:gf_app/entity/model/registered_device_key.dart';
 import 'package:gf_app/entity/model/role_binding.dart';
 import 'package:gf_app/entity/request/device.dart';
 import 'package:gf_app/entity/request/group.dart';
+import 'package:gf_app/entity/request/passkey.dart';
 import 'package:gf_app/entity/response/attestation.dart';
 import 'package:gf_app/entity/response/challenge.dart';
-import 'package:gf_app/repository/attestation.dart';
-import 'package:gf_app/repository/device.dart';
-import 'package:gf_app/repository/device_key.dart';
-import 'package:gf_app/repository/gorape.dart';
-import 'package:gf_app/repository/secure_store.dart';
-import 'package:gf_app/share/base64_url.dart';
-import 'package:gf_app/share/error.dart';
-import 'package:gf_app/usecase/device.dart';
+import 'package:gf_app/entity/response/passkey.dart';
+import 'package:gf_app/back/repository/attestation.dart';
+import 'package:gf_app/back/repository/device.dart';
+import 'package:gf_app/back/repository/device_key.dart';
+import 'package:gf_app/back/repository/gorape.dart';
+import 'package:gf_app/back/repository/secure_store.dart';
+import 'package:gf_app/back/share/base64_url.dart';
+import 'package:gf_app/back/share/error.dart';
+import 'package:gf_app/back/usecase/device.dart';
 
 const _projectId = 'project-1';
 const _challengeBytes = [1, 2, 3, 4, 5];
@@ -205,6 +207,33 @@ class FakeGorapeApi implements GorapeApi {
     String projectId,
     String deviceId,
   ) async => const [];
+
+  @override
+  Future<PasskeyRegistrationOptions> createPasskeyRegistrationOptions(
+    String projectId, {
+    required String platform,
+    required String displayName,
+  }) => throw UnimplementedError();
+
+  @override
+  Future<PasskeyRegistrationResult> verifyPasskeyRegistration(
+    String projectId,
+    PasskeyRegistrationVerifyRequest request,
+  ) => throw UnimplementedError();
+
+  @override
+  Future<PasskeyAuthenticationOptions> createPasskeyAuthenticationOptions(
+    String projectId,
+    String deviceId, {
+    required String platform,
+  }) => throw UnimplementedError();
+
+  @override
+  Future<void> verifyPasskeyAuthentication(
+    String projectId,
+    String deviceId,
+    PasskeyAuthenticationVerifyRequest request,
+  ) => throw UnimplementedError();
 }
 
 class FakeDeviceKeyProvider implements DeviceKeyRepository {

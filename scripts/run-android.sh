@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
 # Run gf-app on a connected Android device or emulator.
 #
-# The app reaches the host through adb reverse, so the OIDC issuer stays
-# http://localhost:8080/realms/gorape and matches Keycloak's `iss` claim.
-# This works for both emulators and physical devices. The default connection
-# settings (10.0.2.2 on Android) remain unchanged for manual `flutter run`.
+# The app reaches the host through adb reverse. The Gorape API uses local HTTPS
+# and its development CA is passed to the debug Dart HTTP client. The OIDC
+# issuer remains HTTP on localhost and matches Keycloak's `iss` claim.
 
 set -euo pipefail
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/lib.sh"
@@ -15,20 +14,22 @@ Usage: ./scripts/run-android.sh [options] [-- flutter-run-args...]
 
 Options:
   --device ID       Target device (default: Flutter's selection)
-  --api-url URL     API base URL (default: http://localhost:8000)
+  --api-url URL     API base URL (default: https://localhost:8443)
+  --tls-ca FILE     CA PEM for the API TLS certificate (default: generated CA)
   --issuer URL      OIDC issuer (default: http://localhost:8080/realms/gorape)
   --release         Build/run in release mode
   --skip-checks     Do not require the backend health endpoints to be up
   -h, --help        Show this help
 
 Environment:
-  GORAPE_API_BASE_URL, GORAPE_OIDC_ISSUER
+  GORAPE_API_BASE_URL, GORAPE_OIDC_ISSUER, GORAPE_TLS_CA_FILE
 EOF
 }
 
 device=""
-api_url="${GORAPE_API_BASE_URL:-http://localhost:8000}"
+api_url="${GORAPE_API_BASE_URL:-https://localhost:8443}"
 issuer="${GORAPE_OIDC_ISSUER:-http://localhost:8080/realms/gorape}"
+tls_ca_file="${GORAPE_TLS_CA_FILE:-}"
 flutter_mode="--debug"
 skip_checks=0
 extra_args=()
@@ -43,6 +44,11 @@ while [[ $# -gt 0 ]]; do
     --api-url)
       [[ $# -ge 2 ]] || die "--api-url requires a value"
       api_url="$2"
+      shift
+      ;;
+    --tls-ca)
+      [[ $# -ge 2 ]] || die "--tls-ca requires a file path"
+      tls_ca_file="$2"
       shift
       ;;
     --issuer)
@@ -66,6 +72,18 @@ while [[ $# -gt 0 ]]; do
   shift
 done
 
+if [[ -z "$tls_ca_file" && "$api_url" == https://localhost:8443* ]]; then
+  tls_ca_file="$APP_ROOT/config/generated/tls/ca.crt"
+fi
+tls_ca_arg=""
+if [[ -n "$tls_ca_file" ]]; then
+  [[ -s "$tls_ca_file" ]] || die "TLS CA certificate not found: $tls_ca_file"
+  [[ "$flutter_mode" != "--release" ]] ||
+    die "The local development CA is debug-only; use a publicly trusted certificate for release builds."
+  ca_base64="$(base64 < "$tls_ca_file" | tr -d '\r\n')"
+  tls_ca_arg="--dart-define=GORAPE_TLS_CA_CERT_BASE64=$ca_base64"
+fi
+
 require_command adb
 require_command flutter
 require_command curl
@@ -78,31 +96,43 @@ printf '%s\n' "$devices" | grep -qx "$device" ||
   die "Device '$device' is not connected. Available: $(printf '%s ' $devices)"
 
 if [[ "$skip_checks" != "1" ]]; then
-  curl -fsS --max-time 5 "$api_url/health" >/dev/null 2>&1 ||
-    die "Gorape API is not reachable at $api_url. Start it with ./scripts/gorape-up.sh."
+  if [[ -n "$tls_ca_file" ]]; then
+    curl -fsS --cacert "$tls_ca_file" --max-time 5 "$api_url/health" >/dev/null 2>&1 ||
+      die "Gorape API is not reachable at $api_url using CA $tls_ca_file. Start it with ./scripts/gorape-up.sh --https."
+  else
+    curl -fsS --max-time 5 "$api_url/health" >/dev/null 2>&1 ||
+      die "Gorape API is not reachable at $api_url. Start it with ./scripts/gorape-up.sh."
+  fi
   curl -fsS --max-time 5 \
     "${issuer%/}/.well-known/openid-configuration" >/dev/null 2>&1 ||
     die "Keycloak is not reachable at $issuer. Start it with ./scripts/gorape-up.sh."
 fi
 
 info "Configuring adb reverse for $device"
-# API and OIDC both use localhost from the app's point of view.
+# API and OIDC use localhost from the app's point of view.
 adb -s "$device" reverse tcp:8080 tcp:8080 >/dev/null
 adb -s "$device" reverse tcp:8000 tcp:8000 >/dev/null
-ok "localhost:8080 and localhost:8000 now reach the host"
+adb -s "$device" reverse tcp:8443 tcp:8443 >/dev/null
+ok "localhost:8080, localhost:8000, and localhost:8443 now reach the host"
 
 cd "$APP_ROOT"
 info "Running gf-app on $device"
 if [[ ${#extra_args[@]} -gt 0 ]]; then
-  exec flutter run \
-    -d "$device" \
-    "$flutter_mode" \
-    --dart-define="GORAPE_API_BASE_URL=$api_url" \
-    --dart-define="GORAPE_OIDC_ISSUER=$issuer" \
-    "${extra_args[@]}"
+  run_args=(
+    -d "$device"
+    "$flutter_mode"
+    "--dart-define=GORAPE_API_BASE_URL=$api_url"
+    "--dart-define=GORAPE_OIDC_ISSUER=$issuer"
+  )
+  [[ -z "$tls_ca_arg" ]] || run_args+=("$tls_ca_arg")
+  run_args+=("${extra_args[@]}")
+  exec flutter run "${run_args[@]}"
 fi
-exec flutter run \
-  -d "$device" \
-  "$flutter_mode" \
-  --dart-define="GORAPE_API_BASE_URL=$api_url" \
-  --dart-define="GORAPE_OIDC_ISSUER=$issuer"
+run_args=(
+  -d "$device"
+  "$flutter_mode"
+  "--dart-define=GORAPE_API_BASE_URL=$api_url"
+  "--dart-define=GORAPE_OIDC_ISSUER=$issuer"
+)
+[[ -z "$tls_ca_arg" ]] || run_args+=("$tls_ca_arg")
+exec flutter run "${run_args[@]}"

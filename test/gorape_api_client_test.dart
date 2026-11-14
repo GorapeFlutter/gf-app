@@ -4,8 +4,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:gf_app/entity/model/role.dart';
 import 'package:gf_app/entity/request/device.dart';
 import 'package:gf_app/entity/request/group.dart';
-import 'package:gf_app/repository/gorape.dart';
-import 'package:gf_app/share/error.dart';
+import 'package:gf_app/entity/request/passkey.dart';
+import 'package:gf_app/back/repository/gorape.dart';
+import 'package:gf_app/back/share/error.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 
@@ -141,6 +142,133 @@ void main() {
         'challenge_id': 'challenge-1',
         'signature': 'c2lnbmF0dXJl',
       });
+    });
+
+    test(
+      'runs registration options and forwards the full WebAuthn response',
+      () async {
+        final api = clientWith((request) async {
+          if (request.url.path.endsWith('/options')) {
+            return http.Response(
+              jsonEncode({
+                'challenge_id': 'ceremony-1',
+                'expires_at': '2026-01-01T00:05:00Z',
+                'public_key': {
+                  'challenge': 'Y2hhbGxlbmdl',
+                  'rp': {'id': 'gorape.example', 'name': 'Gorape'},
+                  'user': {
+                    'id': 'dXNlci0x',
+                    'name': 'user@example.test',
+                    'displayName': 'User',
+                  },
+                  'attestation': 'direct',
+                },
+              }),
+              200,
+            );
+          }
+          return http.Response(
+            jsonEncode({
+              'device': {
+                'id': 'device-1',
+                'project_id': 'project-1',
+                'owner_id': 'principal-1',
+                'platform': 'android',
+                'display_name': 'Pixel',
+                'status': 'active',
+                'registered_at': '2026-01-01T00:00:00Z',
+              },
+              'attestation': {
+                'attestation_type': 'android-key',
+                'security_level': 'trusted_environment',
+                'verifier_version': 'gorape-webauthn-v1',
+              },
+            }),
+            201,
+          );
+        });
+
+        final options = await api.createPasskeyRegistrationOptions(
+          'project-1',
+          platform: 'android',
+          displayName: 'Pixel',
+        );
+        final result = await api.verifyPasskeyRegistration(
+          'project-1',
+          const PasskeyRegistrationVerifyRequest(
+            challengeId: 'ceremony-1',
+            platform: 'android',
+            displayName: 'Pixel',
+            credential: {
+              'id': 'credential-id',
+              'type': 'public-key',
+              'response': {
+                'clientDataJSON': 'client-data',
+                'attestationObject': 'attestation-object',
+              },
+            },
+          ),
+        );
+
+        expect(options.publicKey['attestation'], 'direct');
+        expect(result.device.id, 'device-1');
+        expect(result.attestationType, 'android-key');
+        final beginBody = jsonDecode(requests[0].body) as Map<String, dynamic>;
+        expect(beginBody, {'platform': 'android', 'display_name': 'Pixel'});
+        final verifyBody = jsonDecode(requests[1].body) as Map<String, dynamic>;
+        expect(verifyBody['challenge_id'], 'ceremony-1');
+        expect(
+          verifyBody['credential']['response']['attestationObject'],
+          'attestation-object',
+        );
+      },
+    );
+
+    test('uses WebAuthn assertions for device proof', () async {
+      final api = clientWith((request) async {
+        if (request.url.path.endsWith('/options')) {
+          return http.Response(
+            jsonEncode({
+              'challenge_id': 'proof-1',
+              'expires_at': '2026-01-01T00:05:00Z',
+              'public_key': {
+                'challenge': 'Y2hhbGxlbmdl',
+                'rpId': 'gorape.example',
+                'userVerification': 'required',
+              },
+            }),
+            200,
+          );
+        }
+        return http.Response('{"status":"verified"}', 200);
+      });
+
+      final options = await api.createPasskeyAuthenticationOptions(
+        'project-1',
+        'device-1',
+        platform: 'android',
+      );
+      await api.verifyPasskeyAuthentication(
+        'project-1',
+        'device-1',
+        const PasskeyAuthenticationVerifyRequest(
+          challengeId: 'proof-1',
+          credential: {
+            'id': 'credential-id',
+            'type': 'public-key',
+            'response': {
+              'clientDataJSON': 'client-data',
+              'authenticatorData': 'authenticator-data',
+              'signature': 'signature',
+            },
+          },
+        ),
+      );
+
+      expect(options.publicKey['rpId'], 'gorape.example');
+      expect(requests[0].url.path, contains('/devices/device-1/passkeys/'));
+      final body = jsonDecode(requests[1].body) as Map<String, dynamic>;
+      expect(body['credential']['response']['signature'], 'signature');
     });
 
     test('maps 401 to AuthException with guidance', () async {

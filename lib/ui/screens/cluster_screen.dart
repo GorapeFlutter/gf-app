@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart' hide Text;
-import '../../l10n/app_text.dart';
+import '../../config/langages/app_text.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../controller/providers.dart';
+import '../../back/controller/providers.dart';
 import '../../entity/model/project.dart';
 import '../../entity/model/role.dart';
 import '../widgets/common.dart';
@@ -26,7 +26,7 @@ class ClusterScopeScreen extends ConsumerWidget {
       AccessRole.admin => ClusterAdminScreen(onOpenProject: onOpenProject),
       AccessRole.editor => ClusterEditorScreen(onOpenProject: onOpenProject),
       AccessRole.viewer => ClusterViewerScreen(onOpenProject: onOpenProject),
-      AccessRole.none => const RoleNoneScreen(scopeLabel: 'クラスタ'),
+      AccessRole.none => const RoleNoneScreen(scopeLabel: 'MCODE-00182'),
     };
   }
 }
@@ -121,16 +121,14 @@ class _ClusterOverview extends ConsumerWidget {
       children: [
         RoleCapabilityCard(
           role: role,
-          scopeLabel: 'クラスタ（Keycloak realm）',
-          footnote:
-              'クラスタのロールはKeycloakのrealm/clientロールから判定しています。'
-              'Gorapeの実認可はDBのproject/groupロール付与で行われます。',
+          scopeLabel: 'MCODE-00187',
+          footnote: 'MCODE-00486',
         ),
         if (role == AccessRole.viewer)
           const RoleNotice(
             role: AccessRole.viewer,
-            scopeLabel: '閲覧者',
-            message: 'クラスタ情報は参照のみ表示されます。ロールやグループの変更は表示されません。',
+            scopeLabel: 'MCODE-00024',
+            message: 'MCODE-00189',
           ),
         if (showAdminGuide)
           Card(
@@ -149,16 +147,16 @@ class _ClusterOverview extends ConsumerWidget {
                       ),
                       const SizedBox(width: 8),
                       AppText(
-                        '管理者ビュー',
+                        'MCODE-00190',
                         style: Theme.of(context).textTheme.titleSmall,
                       ),
                     ],
                   ),
                   const SizedBox(height: 8),
                   AppText(
-                    'Keycloakでrealmロール admin が付与されています。'
-                    'クラスタ全体のロール確認に加えて、各プロジェクトの管理画面へ移動できます。'
-                    '実際の作成・変更権限はGorapeのproject/groupロール付与に従います。',
+                    'MCODE-00318'
+                    'MCODE-00414'
+                    'MCODE-00373',
                     style: TextStyle(color: scheme.onPrimaryContainer),
                   ),
                 ],
@@ -166,27 +164,27 @@ class _ClusterOverview extends ConsumerWidget {
             ),
           ),
         SectionCard(
-          title: 'サインイン情報',
+          title: 'MCODE-00192',
           icon: Icons.badge_outlined,
           child: Column(
             children: [
-              KeyValueRow('表示名', session?.displayName ?? '—'),
-              KeyValueRow('ユーザー名', session?.username ?? '—'),
-              KeyValueRow('メール', session?.email ?? '—'),
+              KeyValueRow('MCODE-00103', session?.displayName ?? '—'),
+              KeyValueRow('MCODE-00193', session?.username ?? '—'),
+              KeyValueRow('MCODE-00194', session?.email ?? '—'),
               KeyValueRow('Subject', session?.subject ?? '—', monospace: true),
               KeyValueRow('Issuer', session?.issuer ?? '—', monospace: true),
             ],
           ),
         ),
         SectionCard(
-          title: 'Keycloakロール',
+          title: 'MCODE-00195',
           icon: Icons.verified_outlined,
           trailing: StatusChip(
             label: '${snapshot.allRoles.length} 件',
             color: scheme.primary,
           ),
           child: snapshot.allRoles.isEmpty
-              ? const AppText('realm_access/resource_accessにロールがありません。')
+              ? const AppText('MCODE-00196')
               : Wrap(
                   spacing: 8,
                   runSpacing: 8,
@@ -207,7 +205,7 @@ class _ClusterOverview extends ConsumerWidget {
                 ),
         ),
         SectionCard(
-          title: 'Keycloakグループ',
+          title: 'MCODE-00197',
           icon: Icons.groups_outlined,
           trailing: StatusChip(
             label: '${snapshot.groupPaths.length} 件',
@@ -215,8 +213,8 @@ class _ClusterOverview extends ConsumerWidget {
           ),
           child: snapshot.groupPaths.isEmpty
               ? const AppText(
-                  'アクセストークンにgroupsクレームがありません。'
-                  'KeycloakクライアントのGroup Membership mapperを有効にすると表示されます。',
+                  'MCODE-00198'
+                  'MCODE-00323',
                 )
               : Column(
                   children: [
@@ -235,7 +233,7 @@ class _ClusterOverview extends ConsumerWidget {
                 ),
         ),
         SectionCard(
-          title: 'プロジェクト別ロール',
+          title: 'MCODE-00199',
           icon: Icons.folder_copy_outlined,
           trailing: IconButton(
             tooltip: tr(context, '再読み込み'),
@@ -256,7 +254,7 @@ class _ClusterOverview extends ConsumerWidget {
             data: /* GF-00712 — Runs an inline callback in _ClusterOverview.build. */
                 (list) {
                   if (list.isEmpty) {
-                    return const AppText('表示可能なプロジェクトがありません。');
+                    return const AppText('MCODE-00200');
                   }
                   return Column(
                     children: [
@@ -291,12 +289,12 @@ class _ClusterOverview extends ConsumerWidget {
         ),
         if (showClaimDiagnostics)
           SectionCard(
-            title: 'Keycloak属性（gorape_*）',
+            title: 'MCODE-00201',
             icon: Icons.tune_outlined,
             child: snapshot.attributes.isEmpty
                 ? const AppText(
-                    'gorape_*属性がトークンに含まれていません。'
-                    'プロジェクト/グループ固有のロールはrealmロールへフォールバックします。',
+                    'MCODE-00341'
+                    'MCODE-00360',
                   )
                 : Column(
                     children: [
@@ -324,7 +322,7 @@ class _ClusterOverview extends ConsumerWidget {
                     const SizedBox(width: 8),
                     Expanded(
                       child: AppText(
-                        showAdminGuide ? 'ロール表示の切り替え方' : 'ロールの確認方法',
+                        showAdminGuide ? 'MCODE-00202' : 'MCODE-00203',
                         style: Theme.of(context).textTheme.titleSmall,
                       ),
                     ),
@@ -332,10 +330,10 @@ class _ClusterOverview extends ConsumerWidget {
                 ),
                 const SizedBox(height: 8),
                 AppText(
-                  'Keycloakでユーザーにrealmロール admin / editor / viewer を付与するか、'
-                  'gorape_project_role / gorape_group_<slug>_role 属性をアクセストークンへマッピングしてください。'
-                  'ロールを変えると、この画面は管理者・編集者・閲覧者のいずれかに切り替わります。'
-                  '変更後は再ログイン（またはトークン更新）で反映されます。',
+                  'MCODE-00320'
+                  'MCODE-00343'
+                  'MCODE-00367'
+                  'MCODE-00409',
                   style: TextStyle(color: scheme.onSecondaryContainer),
                 ),
               ],
@@ -383,7 +381,10 @@ class _ClaimChip extends StatelessWidget {
         size: 16,
         color: color,
       ),
-      label: AppText('$prefix: $label'),
+      label: AppText(
+        'MCODE-00499',
+        parameters: {'prefix': prefix, 'label': label},
+      ),
       side: BorderSide(color: color.withValues(alpha: 0.35)),
       backgroundColor: color.withValues(alpha: 0.08),
     );

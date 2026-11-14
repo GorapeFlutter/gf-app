@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart' hide Text;
-import '../../l10n/app_text.dart';
+import '../../config/langages/app_text.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../controller/providers.dart';
+import '../../back/controller/providers.dart';
 import '../../entity/model/platform_support.dart';
 import '../../entity/model/role.dart';
-import '../../entity/response/attestation.dart';
 import '../widgets/common.dart';
 import '../widgets/role_badge.dart';
 
@@ -52,160 +51,86 @@ class _RegisterDeviceScreenState extends ConsumerState<RegisterDeviceScreen> {
   Widget build(BuildContext context) {
     final platform = ref.watch(runtimePlatformProvider);
     final support = ref.watch(platformSupportProvider);
-    final devicePlatform = ref.watch(devicePlatformProvider);
-    final availability = ref.watch(deviceKeyAvailabilityProvider);
-    final capabilities = ref.watch(capabilitiesProvider(widget.projectId));
     final role = ref.watch(projectRoleProvider(widget.projectId));
-    final caps = capabilities.value ?? const AttestationCapabilities({});
-    final backendStatus = caps.statusFor(devicePlatform);
-    final backendReady = backendStatus == 'implemented';
-    final localReady = availability.value?.supported == true;
+    final session = ref.watch(authControllerProvider).value;
+    final passkeyAuthenticated = session?.isPasskeyAuthenticated ?? false;
+    final passkeyReady = support.passkeyCeremony;
     final canRegister =
         !_busy &&
         role.canEdit &&
-        localReady &&
-        backendReady &&
+        passkeyAuthenticated &&
+        passkeyReady &&
         _nameController.text.trim().isNotEmpty;
 
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        AppText('Android端末を登録', style: Theme.of(context).textTheme.titleLarge),
+        AppText('MCODE-00441', style: Theme.of(context).textTheme.titleLarge),
         const SizedBox(height: 4),
-        AppText(
-          'サーバーのチャレンジをOS鍵生成にバインドし、公開鍵と'
-          'Key Attestation証明書チェーンをGorapeへ送信します。',
-          style: Theme.of(context).textTheme.bodySmall,
-        ),
+        AppText('MCODE-00467', style: Theme.of(context).textTheme.bodySmall),
         const SizedBox(height: 16),
         if (!role.canEdit)
           RoleNotice(
             role: role,
-            scopeLabel: 'デバイス登録',
+            scopeLabel: 'MCODE-00052',
             message: role == AccessRole.none
                 ? 'Keycloakトークンにこのプロジェクトのロールがありません。'
                       'Gorape側でeditor権限があっても、UIからは登録できません。'
                 : '閲覧者のためデバイスを登録できません。管理者または編集者のロールが必要です。',
+          ),
+        if (role.canEdit && !passkeyAuthenticated)
+          const Card(
+            child: Padding(
+              padding: EdgeInsets.all(12),
+              child: AppText('MCODE-00508'),
+            ),
           ),
         if (_error != null) ...[
           ErrorCard(error: _error!, compact: true),
           const SizedBox(height: 12),
         ],
         SectionCard(
-          title: 'この端末',
-          icon: Icons.phone_android,
+          title: 'MCODE-00099',
+          icon: Icons.key,
           trailing: StatusChip(
             label: platform.displayName,
             color: Theme.of(context).colorScheme.primary,
           ),
-          child: availability.when(
-            loading: /* GF-00911 — Runs an inline callback in _RegisterDeviceScreenState.build. */
-                () => const LinearProgressIndicator(),
-            error: /* GF-00912 — Runs an inline callback in _RegisterDeviceScreenState.build. */
-                (error, _) => ErrorCard(error: error, compact: true),
-            data: /* GF-00913 — Runs an inline callback in _RegisterDeviceScreenState.build. */
-                (value) => Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _CheckLine(
-                      label: 'Keycloakログイン',
-                      ok: support.oidcLogin,
-                      detail: 'Authorization Code + PKCE',
-                    ),
-                    _CheckLine(
-                      label: 'OS保護鍵の生成',
-                      ok: value.supported,
-                      detail: value.supported
-                          ? '${value.hardwareBacked ? "ハードウェア" : "ソフトウェア"}鍵 '
-                                '${value.securityLevel ?? ""}'
-                          : value.reason ?? '未対応',
-                    ),
-                    _CheckLine(
-                      label: 'Attestation証拠',
-                      ok: value.attestationSupported,
-                      detail: value.attestationSupported
-                          ? '証明書チェーン（leaf-first）'
-                          : 'このビルドでは取得できません',
-                    ),
-                    const SizedBox(height: 8),
-                    AppText(
-                      support.note,
-                      style: Theme.of(context).textTheme.bodySmall,
-                    ),
-                  ],
-                ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _CheckLine(
+                label: 'MCODE-00477',
+                ok: passkeyReady,
+                detail: passkeyReady
+                    ? 'OS / browser credential provider'
+                    : '未対応',
+              ),
+              _CheckLine(
+                label: 'MCODE-00478',
+                ok: passkeyReady,
+                detail: passkeyReady ? 'MCODE-00488' : 'MCODE-00497',
+              ),
+              const SizedBox(height: 8),
+              AppText(
+                support.note,
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+              const SizedBox(height: 8),
+              AppText(
+                'MCODE-00468',
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+            ],
           ),
         ),
         SectionCard(
-          title: 'Gorapeバックエンド',
+          title: 'MCODE-00503',
           icon: Icons.cloud_outlined,
-          trailing: IconButton(
-            tooltip: tr(context, 'Verifier対応状況を更新'),
-            onPressed: _busy
-                ? null
-                : /* GF-00914 — Runs an inline callback in _RegisterDeviceScreenState.build. */ () =>
-                      ref
-                          .read(capabilitiesProvider(widget.projectId).notifier)
-                          .reload(),
-            icon: Icon(Icons.refresh, size: 22),
-          ),
-          child: capabilities.when(
-            loading: /* GF-00915 — Runs an inline callback in _RegisterDeviceScreenState.build. */
-                () => const LinearProgressIndicator(),
-            error: /* GF-00916 — Runs an inline callback in _RegisterDeviceScreenState.build. */
-                (error, _) => ErrorCard(
-                  error: error,
-                  compact: true,
-                  onRetry: /* GF-00917 — Runs an inline callback in _RegisterDeviceScreenState.build.callback. */
-                      () => ref
-                          .read(capabilitiesProvider(widget.projectId).notifier)
-                          .reload(),
-                ),
-            data: /* GF-00918 — Runs an inline callback in _RegisterDeviceScreenState.build. */
-                (value) => Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    for (final entry in const [
-                      'android',
-                      'windows',
-                      'ios',
-                      'macos',
-                    ])
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 4),
-                        child: Row(
-                          children: [
-                            SizedBox(
-                              width: 90,
-                              child: AppText(platformLabel(entry)),
-                            ),
-                            StatusChip.status(context, value.statusFor(entry)),
-                            const Spacer(),
-                            AppText(
-                              entry == devicePlatform ? 'この端末' : '',
-                              style: Theme.of(context).textTheme.labelSmall,
-                            ),
-                          ],
-                        ),
-                      ),
-                    if (backendStatus == 'unconfigured') ...[
-                      const SizedBox(height: 10),
-                      AppText(
-                        'Android verifierは "unconfigured" です。Gorapeの '
-                        'android_trust_anchors にGoogle Hardware Attestation Root CAを'
-                        '設定するまで登録は失敗します。',
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.error,
-                          fontSize: 12,
-                        ),
-                      ),
-                    ],
-                  ],
-                ),
-          ),
+          child: const AppText('MCODE-00469'),
         ),
         SectionCard(
-          title: '登録情報',
+          title: 'MCODE-00102',
           icon: Icons.edit_outlined,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -235,14 +160,14 @@ class _RegisterDeviceScreenState extends ConsumerState<RegisterDeviceScreen> {
                     : Icon(Icons.add, size: 22),
                 label: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: AppText(_busy ? '登録しています...' : 'チャレンジを取得して登録'),
+                  child: AppText(_busy ? 'MCODE-00106' : 'MCODE-00485'),
                 ),
               ),
-              if (!localReady)
+              if (!passkeyReady)
                 Padding(
                   padding: const EdgeInsets.only(top: 8),
                   child: AppText(
-                    'このOSではOS保護鍵とAttestationが未実装のため登録できません。',
+                    'MCODE-00470',
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.error,
                       fontSize: 12,
@@ -253,18 +178,7 @@ class _RegisterDeviceScreenState extends ConsumerState<RegisterDeviceScreen> {
                 Padding(
                   padding: const EdgeInsets.only(top: 8),
                   child: AppText(
-                    'デバイス登録にはプロジェクトのeditor以上のロールが必要です。',
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.error,
-                      fontSize: 12,
-                    ),
-                  ),
-                ),
-              if (!backendReady)
-                Padding(
-                  padding: const EdgeInsets.only(top: 8),
-                  child: AppText(
-                    'Gorapeバックエンドのverifierが "implemented" ではないため登録できません。',
+                    'MCODE-00108',
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.error,
                       fontSize: 12,
@@ -277,23 +191,14 @@ class _RegisterDeviceScreenState extends ConsumerState<RegisterDeviceScreen> {
         Card(
           child: ExpansionTile(
             leading: const Icon(Icons.help_outline),
-            title: const AppText('登録フローの詳細'),
+            title: const AppText('MCODE-00109'),
             childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
             children: [
-              const _FlowStep(
-                '1',
-                'POST /devices/registration/challenge で単一使用チャレンジを取得',
-              ),
-              const _FlowStep('2', 'Base64urlを生バイト列へデコード'),
-              const _FlowStep(
-                '3',
-                'KeyGenParameterSpec.setAttestationChallenge に同じバイト列を設定',
-              ),
-              const _FlowStep('4', 'EC P-256公開鍵と証明書チェーン（leaf-first）を送信'),
-              const _FlowStep(
-                '5',
-                'POST /devices/registration/verify が422なら信頼アンカーを確認',
-              ),
+              const _FlowStep('1', 'MCODE-00489'),
+              const _FlowStep('2', 'MCODE-00490'),
+              const _FlowStep('3', 'MCODE-00491'),
+              const _FlowStep('4', 'MCODE-00492'),
+              const _FlowStep('5', 'MCODE-00493'),
               const SizedBox(height: 8),
               AppText(
                 PlatformSupport.passkeyDelegationNote,
@@ -319,7 +224,7 @@ class _RegisterDeviceScreenState extends ConsumerState<RegisterDeviceScreen> {
       // GF-02097 — Invoke the device-registration application flow.
       final result = await ref
           .read(deviceControllerProvider)
-          .register(
+          .registerPasskey(
             projectId: widget.projectId,
             displayName: _nameController.text,
           );
@@ -330,26 +235,25 @@ class _RegisterDeviceScreenState extends ConsumerState<RegisterDeviceScreen> {
         builder: /* GF-00923 — Runs an inline callback in _RegisterDeviceScreenState._register. */
             (context) => AlertDialog(
               icon: const Icon(Icons.verified_user),
-              title: const AppText('デバイスを登録しました'),
+              title: const AppText('MCODE-00110'),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  KeyValueRow('表示名', result.device.displayName),
-                  KeyValueRow('Security Level', result.securityLevel ?? '—'),
+                  KeyValueRow('MCODE-00103', result.device.displayName),
+                  KeyValueRow('Attestation format', result.attestationType),
+                  KeyValueRow('Security Level', result.securityLevel),
+                  KeyValueRow('Verifier', result.verifierVersion),
                   KeyValueRow('Device ID', result.device.id, monospace: true),
                   const SizedBox(height: 8),
-                  const AppText(
-                    'バックエンドがAttestationをverifiedとして記録しました。'
-                    '続けてチャレンジ署名による所有証明を実行できます。',
-                  ),
+                  const AppText('MCODE-00471'),
                 ],
               ),
               actions: [
                 TextButton(
                   onPressed: /* GF-00924 — Runs an inline callback in _RegisterDeviceScreenState._register.callback. */
                       () => Navigator.pop(context),
-                  child: const AppText('一覧へ'),
+                  child: const AppText('MCODE-00112'),
                 ),
                 FilledButton(
                   onPressed: /* GF-00925 — Runs an inline callback in _RegisterDeviceScreenState._register.callback. */
@@ -357,7 +261,7 @@ class _RegisterDeviceScreenState extends ConsumerState<RegisterDeviceScreen> {
                         Navigator.pop(context);
                         widget.onRegistered(result.device.id);
                       },
-                  child: const AppText('デバイス一覧を開く'),
+                  child: const AppText('MCODE-00113'),
                 ),
               ],
             ),
@@ -367,18 +271,20 @@ class _RegisterDeviceScreenState extends ConsumerState<RegisterDeviceScreen> {
       _nameController.clear();
     } on Object catch (error) {
       // GF-02100 — Keep registration failures visible in the form.
-      if (mounted)
+      if (mounted) {
         setState(
           /* GF-00926 — Runs an inline callback in _RegisterDeviceScreenState._register. */ () =>
               _error = error,
         );
+      }
     } finally {
       // GF-02101 — Restore the form's idle state after every outcome.
-      if (mounted)
+      if (mounted) {
         setState(
           /* GF-00927 — Runs an inline callback in _RegisterDeviceScreenState._register. */ () =>
               _busy = false,
         );
+      }
     }
   }
 }

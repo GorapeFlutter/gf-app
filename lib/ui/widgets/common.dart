@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart' hide Text;
-import '../../l10n/app_text.dart';
+import '../../config/langages/app_text.dart';
 
-import '../../share/error.dart';
-import '../../share/friendly_error.dart';
+import '../../back/share/error.dart';
+import '../../back/share/friendly_error.dart';
 
 class ErrorCard extends StatelessWidget {
   /// GF-00978 — Initializes ErrorCard.
@@ -71,7 +71,7 @@ class ErrorCard extends StatelessWidget {
                 child: TextButton.icon(
                   onPressed: onRetry,
                   icon: Icon(Icons.refresh, size: 20),
-                  label: const AppText('再試行'),
+                  label: const AppText('MCODE-00036'),
                 ),
               ),
             ],

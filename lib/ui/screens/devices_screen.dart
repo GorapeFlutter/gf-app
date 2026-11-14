@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart' hide Text;
-import '../../l10n/app_text.dart';
+import '../../config/langages/app_text.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../controller/providers.dart';
+import '../../back/controller/providers.dart';
 import '../../entity/model/device.dart';
 import '../../entity/model/device_ref.dart';
 import '../../entity/model/role.dart';
@@ -27,6 +27,8 @@ class DevicesScreen extends ConsumerWidget {
     final devices = ref.watch(devicesProvider(projectId));
     final role = ref.watch(projectRoleProvider(projectId));
     final canEdit = role.canEdit;
+    final session = ref.watch(authControllerProvider).value;
+    final canRegister = canEdit && (session?.isPasskeyAuthenticated ?? false);
     return RefreshIndicator(
       onRefresh: /* GF-00743 — Runs an inline callback in DevicesScreen.build. */
           () => ref.read(devicesProvider(projectId).notifier).reload(),
@@ -40,7 +42,7 @@ class DevicesScreen extends ConsumerWidget {
                 children: [
                   Expanded(
                     child: AppText(
-                      '登録済みデバイス',
+                      'MCODE-00114',
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                   ),
@@ -61,9 +63,9 @@ class DevicesScreen extends ConsumerWidget {
                     icon: Icon(Icons.refresh, size: 22),
                   ),
                   FilledButton.tonalIcon(
-                    onPressed: canEdit ? onRegister : null,
+                    onPressed: canRegister ? onRegister : null,
                     icon: Icon(Icons.add, size: 22),
-                    label: const AppText('登録'),
+                    label: const AppText('MCODE-00053'),
                   ),
                 ],
               ),
@@ -75,7 +77,7 @@ class DevicesScreen extends ConsumerWidget {
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
                 child: RoleNotice(
                   role: role,
-                  scopeLabel: 'デバイス',
+                  scopeLabel: 'MCODE-00051',
                   message: role == AccessRole.none
                       ? 'Keycloakトークンにこのプロジェクトのロールがありません。'
                             '参照はGorape側の権限に従いますが、登録・失効などの変更操作は無効です。'
@@ -83,10 +85,22 @@ class DevicesScreen extends ConsumerWidget {
                 ),
               ),
             ),
+          if (canEdit && session?.isPasskeyAuthenticated != true)
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                child: const Card(
+                  child: Padding(
+                    padding: EdgeInsets.all(12),
+                    child: AppText('MCODE-00508'),
+                  ),
+                ),
+              ),
+            ),
           if (devices.isLoading && !devices.hasValue)
             const SliverFillRemaining(
               hasScrollBody: false,
-              child: LoadingView(label: 'デバイスを読み込み中...'),
+              child: LoadingView(label: 'MCODE-00043'),
             )
           else if (devices.hasError && !devices.hasValue)
             SliverFillRemaining(
@@ -107,17 +121,17 @@ class DevicesScreen extends ConsumerWidget {
               hasScrollBody: false,
               child: EmptyState(
                 icon: Icons.devices_other_outlined,
-                title: 'デバイスが登録されていません',
-                message: canEdit
-                    ? 'Android実機でOS保護鍵を生成し、Gorapeへ登録してください。\n'
-                          '登録後、チャレンジ署名による所有証明を実行できます。'
-                    : 'このスコープではデバイスを登録できません。'
-                          '管理者または編集者のロールが必要です。',
-                action: canEdit
+                title: 'MCODE-00120',
+                message: !canEdit
+                    ? 'MCODE-00498'
+                    : canRegister
+                    ? 'MCODE-00494'
+                    : 'MCODE-00508',
+                action: canRegister
                     ? FilledButton.icon(
                         onPressed: onRegister,
                         icon: Icon(Icons.add, size: 22),
-                        label: const AppText('デバイスを登録'),
+                        label: const AppText('MCODE-00404'),
                       )
                     : null,
               ),
@@ -179,7 +193,7 @@ class _DeviceTile extends ConsumerWidget {
             if (localKey.value != null) ...[
               const SizedBox(width: 6),
               const StatusChip(
-                label: 'この端末の鍵',
+                label: 'MCODE-00122',
                 color: Colors.teal,
                 icon: Icons.key,
               ),

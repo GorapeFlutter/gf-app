@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart' hide Text;
-import '../../l10n/app_text.dart';
+import '../../config/langages/app_text.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../controller/providers.dart';
+import '../../back/controller/providers.dart';
 import '../../entity/model/platform.dart';
 import '../../entity/model/platform_support.dart';
 import '../../entity/response/attestation.dart';
 import '../widgets/common.dart';
 
-/// OS support matrix plus the backend's live verifier capabilities.
+/// Platform passkey support plus legacy verifier status.
 ///
 /// The app-side support values are static capabilities of this client. The
-/// backend column is fetched from
+/// legacy verifier column is fetched from
 /// `GET /v1/projects/{projectId}/attestation/capabilities` and can report
 /// `unconfigured` even for Android (for example when trust anchors are empty).
 class SupportScreen extends ConsumerWidget {
@@ -48,7 +48,7 @@ class SupportScreen extends ConsumerWidget {
             children: [
               Expanded(
                 child: AppText(
-                  'OS別の対応状況',
+                  'MCODE-00069',
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
               ),
@@ -63,15 +63,14 @@ class SupportScreen extends ConsumerWidget {
             ],
           ),
           AppText(
-            'この端末: ${current.displayName}。'
-            '「アプリ側」はFlutterクライアントの実装状況、'
-            '「Gorape」はバックエンドのVerifier対応状況です。',
+            'MCODE-00495',
+            parameters: {'name': current.displayName},
             style: Theme.of(context).textTheme.bodySmall,
           ),
           const SizedBox(height: 16),
           capabilities.when(
             loading: /* GF-00969 — Runs an inline callback in SupportScreen.build. */
-                () => const LoadingView(label: 'Verifier対応状況を取得中...'),
+                () => const LoadingView(label: 'MCODE-00044'),
             error: /* GF-00970 — Runs an inline callback in SupportScreen.build. */
                 (error, _) => ErrorCard(
                   error: error,
@@ -89,22 +88,15 @@ class SupportScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 16),
           SectionCard(
-            title: 'Android Key Attestation',
+            title: 'MCODE-00474',
             icon: Icons.android,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const AppText(
-                  'Android実機ではAndroid KeystoreにEC P-256鍵を生成し、'
-                  'サーバーのチャレンジをKeyGenParameterSpecへバインドして'
-                  'Key Attestation証明書チェーン（leaf-first）を取得します。'
-                  'GorapeはGoogle Hardware Attestation Root CAまでの'
-                  'チェーンを検証します。',
-                ),
+                const AppText('MCODE-00457'),
                 const SizedBox(height: 8),
                 AppText(
-                  'バックエンドの android_trust_anchors が空の場合、'
-                  'capabilitiesは "unconfigured" を返し、登録は422で失敗します。',
+                  'MCODE-00458',
                   style: TextStyle(
                     fontSize: 12,
                     color: Theme.of(context).colorScheme.error,
@@ -114,26 +106,14 @@ class SupportScreen extends ConsumerWidget {
             ),
           ),
           SectionCard(
-            title: 'iOS / macOS',
+            title: 'MCODE-00501',
             icon: Icons.laptop_mac,
-            child: const AppText(
-              'Keycloakログインはflutter_appauthで対応します。'
-              'ただしGorapeのAttestation VerifierはiOS/macOSを '
-              '"unsupported" として返すため、デバイス登録・所有証明は'
-              '行いません。App AttestやSecure Enclaveを利用するには'
-              'バックエンド側のVerifier追加が必要です。',
-            ),
+            child: const AppText('MCODE-00459'),
           ),
           SectionCard(
-            title: 'Windows / Linux / Web',
+            title: 'MCODE-00502',
             icon: Icons.desktop_windows_outlined,
-            child: const AppText(
-              'Windows TPM、Linux、Webは現行のGorapeバックエンドで'
-              'Attestation対象外です。Windows/Linux/Webでは'
-              'flutter_appauthによるOIDCログインも未対応のため、'
-              'ログイン画面で明示的に案内します。'
-              'iOS/macOS/AndroidのみKeycloakログインを提供します。',
-            ),
+            child: const AppText('MCODE-00460'),
           ),
           Card(
             color: Theme.of(context).colorScheme.secondaryContainer,
@@ -143,7 +123,7 @@ class SupportScreen extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   AppText(
-                    'パスキーとデバイス鍵の役割',
+                    'MCODE-00461',
                     style: Theme.of(context).textTheme.titleSmall,
                   ),
                   const SizedBox(height: 8),
@@ -174,18 +154,19 @@ class _SupportTable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SectionCard(
-      title: '対応マトリクス',
+      title: 'MCODE-00171',
       icon: Icons.grid_on_outlined,
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: DataTable(
           columnSpacing: 18,
           columns: const [
-            DataColumn(label: AppText('プラットフォーム')),
-            DataColumn(label: AppText('ログイン')),
-            DataColumn(label: AppText('OS鍵')),
-            DataColumn(label: AppText('Attestation')),
-            DataColumn(label: AppText('Gorape')),
+            DataColumn(label: AppText('MCODE-00130')),
+            DataColumn(label: AppText('MCODE-00446')),
+            DataColumn(label: AppText('MCODE-00447')),
+            DataColumn(label: AppText('MCODE-00448')),
+            DataColumn(label: AppText('MCODE-00449')),
+            DataColumn(label: AppText('MCODE-00450')),
           ],
           rows: [for (final support in supports) _row(context, support)],
         ),
@@ -207,12 +188,13 @@ class _SupportTable extends StatelessWidget {
               AppText(platformName(support.platform)),
               if (support.platform == current.wireName) ...[
                 const SizedBox(width: 6),
-                StatusChip(label: 'この端末', color: scheme.primary),
+                StatusChip(label: 'MCODE-00099', color: scheme.primary),
               ],
             ],
           ),
         ),
         DataCell(_mark(context, support.oidcLogin)),
+        DataCell(_mark(context, support.passkeyCeremony)),
         DataCell(_mark(context, support.localKeyGeneration)),
         DataCell(_mark(context, support.attestationFlow)),
         DataCell(StatusChip.status(context, backendStatus)),

@@ -39,7 +39,7 @@ docker/localstack.yaml
 
 `docker/server.android-attestation.yaml`はComposeの`!override` tagでserverの`volumes`一覧を置き換えるため、元の`docker/server.yaml`は変更されません。Compose v2.24以降が必要です。
 
-## Android trust anchor
+## Legacy Android Keystore trust anchor
 
 Gorape Android verifierはcontainer内の`Application.Server.Attestation.android_trust_anchors`を読みます。標準設定では一覧が空のため、`GET /v1/projects/{projectId}/attestation/capabilities`は`android: "unconfigured"`を返し、登録はHTTP 422で失敗します。
 
@@ -102,6 +102,63 @@ cat etc/.gorape/client/admin/access_token
 
 CLIは同じ`gorape-client`とredirect URI `http://127.0.0.1:8400/callback`を使います。
 
+## Gorape RP用passkey/attestation
+
+端末登録画面はKeycloak passkeyとは別のGorape RP用WebAuthn ceremonyを実行します。Gorape RP IDはapp buildや認証器とのdomain associationに関わるため、環境間で安易に変更しないでください。
+
+Backend configの例:
+
+```yaml
+Application:
+  Server:
+    webauthn:
+      rp_id: gorape.example.com
+      rp_display_name: Gorape
+      rp_origins:
+        - https://app.gorape.example.com
+        - android:apk-key-hash:BASE64URL_CERTIFICATE_HASH
+      portal_origin: https://app.gorape.example.com
+      browser_api_origin: https://api.gorape.example.com
+      attestation_conveyance: direct
+      user_verification: required
+    web_origins: [https://app.gorape.example.com]
+    attestation:
+      webauthn:
+        allowed_formats: [android-key, tpm, apple]
+        allow_none: false
+        allow_self_attestation: false
+        trust_anchors:
+          android-key: [/app/etc/android/android-attestation-roots.pem]
+          tpm: [/app/etc/tpm/tpm-attestation-roots.pem]
+          apple: [/app/etc/apple/apple-webauthn-roots.pem]
+```
+
+ローカルDockerのRP IDは`gorapeflutter.github.io`です。Keycloakの`localhost`とは別RPで、Android debug signing key由来の`android:apk-key-hash` originを許可します。ローカル試験用にattestation `none`を許可します。Organization Pages repository `../gorapeflutter.github.io`が`https://gorapeflutter.github.io/.well-known/assetlinks.json`を公開し、Android package `com.gorapeflutter.gf_app`と現在のdebug signing certificateを`delegate_permission/common.get_login_creds`および`delegate_permission/common.handle_all_urls`で関連付けます。この構成でPixel 6のGoogle Password Managerによるdebug APKのpasskey登録が成功しました。API接続先は引き続き`https://localhost:8443`で、RP domainとは別です。API用のローカルCAはDigital Asset Linksに使いません。
+
+別のAndroid debug signing keyを使う場合は、Pagesの`assetlinks.json`へSHA-256 certificate fingerprintを追加し、`../gorape/etc/server.yaml.docker`の`webauthn.rp_origins`へ対応する`android:apk-key-hash:`を追加します。その後Pagesを再deployし、server configを再生成してください。
+
+ローカルAPIにもHTTPS listenerを追加する場合（Android RP domain検証とは別です）：
+
+```bash
+./scripts/generate-local-tls.sh [--host <ローカルDNS名>]
+./scripts/gorape-up.sh --https --android-attestation
+curl --cacert config/generated/tls/ca.crt https://localhost:8443/health
+```
+
+ローカルCAと証明書はGit管理対象外の`config/generated/tls/`に生成され、秘密鍵はmode `0600`です。このCAを本番のtrust anchorとして使わないでください。`./scripts/run-android.sh`はdebug Dart clientにこのCAを渡し、API URLを`https://localhost:8443`にします。Android native passkeyのRP関連付けは、別途GitHub Pagesの公開DALで行います。
+
+既定は`allowed_formats: []`、`allow_none: false`、`allow_self_attestation: false`で、RPまたはpolicyの未設定時は登録を拒否します。独自trust anchorはserver containerへmountし、container内のpathをconfigへ指定してください。`android-key`のtrust anchorは、明示設定がなければlegacy `android_trust_anchors`を再利用します。
+
+各platformで同一RP IDへのassociationが必要です。
+
+- **Android:** `https://<rp-id>/.well-known/assetlinks.json`に`delegate_permission/common.get_login_creds`と`delegate_permission/common.handle_all_urls`、package name、debug/release/Play signing certificateのSHA-256 fingerprintsを設定します。
+- **iOS/macOS:** AASAの`webcredentials`にTeam ID + bundle IDを設定し、アプリのAssociated Domains entitlementへ`webcredentials:<rp-id>`を追加します。
+- **Web:** secure originでserveし、RP IDをpage hostまたは親domainにします。
+- **Windows:** Windows WebAuthn APIを利用します。TPM attestationがOS/providerから返る保証はありません。
+- **Linux:** `passkeys` pluginは未対応ですが、gf-appのWeb ceremony pageをChrome/Firefoxで開きます。Gorape本体はUIを提供せず、APIのみです。
+
+`rp_origins`は完全一致のallowlistです。HTTPS originはRP ID配下、HTTPはlocalhost開発のみ、Android native originは`android:apk-key-hash:`の完全な値を登録してください。wildcardは使用できません。Linux browser ceremony pageはgf-app web buildに含まれ、`portal_origin`から配信します。`portal_origin`は`rp_origins`と`web_origins`の両方に登録し、`browser_api_origin`はgf-appのAPI URLと一致させます。Gorape本体はAPIのみで、end-user画面を持ちません。Linux buildには`desktop_webview_window`のGTK/WebKitGTK development librariesが必要ですが、実行時はChrome/Firefox等のsystem browserを使います。`direct`はattestationを要求するpreferenceで、返却を保証しません。Gorapeは応答内の実際のformatとtrust chainを検証します。
+
 ## Keycloak
 
 | 項目 | 値 |
@@ -112,21 +169,19 @@ CLIは同じ`gorape-client`とredirect URI `http://127.0.0.1:8400/callback`を�
 | Scope | `openid profile` |
 | Audience | `gorape-api`（専用audience mapper） |
 | CLI redirect | `http://127.0.0.1:8400/callback`（維持） |
-| Flutter redirect | `com.gorapeflutter.gfapp:/oauth2redirect` |
+| Android/iOS/macOS redirect | `com.gorapeflutter.gfapp:/oauth2redirect` |
+| Windows/Linux redirect | `http://127.0.0.1:8401/oauth2redirect` |
+| Web redirect | 同一originの`/auth.html`（local devは`http://localhost:5000/auth.html`） |
 
-CLI redirectを残したままFlutter redirectを追加します。
+新規ローカルDBでは、Flutter redirect/passwordless WebAuthn/パスキー専用ログインフロー/`gorape-passkey-amr` mapper/登録Required Actionを`../gorape/etc/keycloak/gorape-realm.json`からimportします。「Keycloakパスキーを登録」はWebAuthn Passwordless AIAを使います。「パスキーでログイン」はユーザー名・パスワード欄のない専用フローを要求します。成功したWebAuthn executionが`amr: ["passkey"]`を発行し、Gorapeはこの署名済みclaimがある場合のみデバイス登録・所有証明を許可します。
 
-```bash
-./scripts/keycloak-allow-redirect.sh
-```
+ローカルPostgres containerはschema migration後に`../gorape/scripts/data/postgres/004-gorape-demo-seed.sql`を読み込み、`demo` projectと権限テスト用fixtureを作成します。ローカル環境では`gorape-admin provision apply`は不要です。これらは新規DB初期化時のみ適用されます。tmpfs Postgres containerを再作成するとKeycloak userと登録済みpasskeyも初期化されます。
 
-このscriptはKeycloak Admin API（既定値は`admin` / `admin`）を使い、URI一覧をmergeします。また`pkce.code.challenge.method=S256`を設定し、`post.logout.redirect.uris=+`を維持します。何度実行しても結果は同じです。現在のclientは`--show`で確認できます。
+既存realmではKeycloak Admin Console → realm `gorape` → Clients → `gorape-client`からFlutter redirect URI/Web Originsを追加し、CLI callbackは残してください。Local Webは`flutter run -d chrome --web-port=5000`で起動します。
 
-手動で設定する場合: Keycloak Admin Console → realm `gorape` → Clients → `gorape-client` → Valid redirect URIsに`com.gorapeflutter.gfapp:/oauth2redirect`を追加します。CLI URIは削除しないでください。
+Keycloak/Postgres dataを削除するとrealmとdemo fixtureは設定ファイルから再importされます。test passwordは`../gorape/etc/README.md`を参照し、端末passkeyは再登録してください。
 
-> このscriptが変更するのは稼働中のKeycloak databaseだけです。backendのrealm import file（`etc/keycloak/gorape-realm.json`）は変更しません。`./scripts/gorape-down.sh --volumes`でKeycloak volumeを削除すると、Flutter URIなしでrealmが再importされるためscriptを再実行してください。永続化する場合は、意図を確認したうえでbackend realm JSONにもURIを追加します。
-
-Realmはnative app用custom schemeにも対応しています。redirect URIがallow listにあればauth endpointが受け付けます。PKCE必須のため、appにclient secretは保存しません。
+Realmはnative custom scheme、desktop loopback、同一origin Web callbackに対応します。redirect URIがallow listにあればAuthorization Code + PKCEを開始できます。appにclient secretは保存しません。
 
 ## 起動と停止
 
@@ -180,5 +235,5 @@ services:
 - **`error: duplicate mount point /app/etc/server.yaml`** — Composeがv2.24未満です。upgradeするか、生成overrideを外してbackend標準configを使います。
 - **`Missing …/config/generated/server.yaml`** — 先に`./scripts/generate-android-trust-config.sh`を実行します。`--android-attestation`指定時は生成された2ファイルが必要です。
 - **Capabilitiesが`unconfigured`のまま** — attestation overrideなしでserverを起動しています。`./scripts/gorape-up.sh --android-attestation --no-build`で再起動し、`docker inspect gorape --format '{{json .Mounts}}'`でmountを確認します。
-- **Keycloakが`invalid_redirect_uri`を返す** — `./scripts/keycloak-allow-redirect.sh`を実行し、`--show`の結果を確認します。
+- **Keycloakが`invalid_redirect_uri`を返す** — 新規ローカルDBでは`../gorape/etc/keycloak/gorape-realm.json`のclient importを確認します。既存realmではAdmin Consoleでredirect URIを追加し、CLI URIは残してください。
 - **volume削除後にbackendが起動しない** — 初回boot時のrealm importには最大1分かかる場合があります。health waitを再実行するか`docker logs gorape-keycloak`を確認します。

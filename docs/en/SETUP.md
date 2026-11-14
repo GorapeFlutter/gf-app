@@ -45,7 +45,7 @@ Only then does it append gf-app overrides:
 replace the server `volumes` list, so the original `docker/server.yaml` remains
 untouched. Compose v2.24+ is required.
 
-## Android trust anchors
+## Legacy Android Keystore trust anchors
 
 Gorape's Android verifier reads
 `Application.Server.Attestation.android_trust_anchors`, a list of files inside
@@ -67,8 +67,8 @@ config/generated/android-attestation-roots.pem
 config/generated/server.yaml
 ```
 
-`server.yaml` is a byte-for-byte copy of `gorape/etc/server.yaml.docker` except
-for the attestation line, which becomes:
+`server.yaml` is a copy of `gorape/etc/server.yaml.docker` with only the legacy
+Android trust-anchor setting changed:
 
 ```yaml
 attestation: {android_trust_anchors: ["/app/etc/android/android-attestation-roots.pem"]}
@@ -84,6 +84,104 @@ config/generated/android-attestation-roots.pem    -> /app/etc/android/android-at
 To use a custom root bundle (for example a private enterprise CA), pass
 `--source FILE_OR_URL`. Regenerate after Google rotates the roots, then restart
 the server with `./scripts/gorape-up.sh --android-attestation`.
+
+## Gorape RP passkeys and attestation
+
+The device-registration screen uses a separate WebAuthn ceremony for Gorape.
+Keycloak credentials belong to Keycloak's RP ID and cannot be reused. Set one
+stable Gorape RP ID and exact app/browser origins in the backend config:
+
+```yaml
+Application:
+  Server:
+    webauthn:
+      rp_id: gorape.example.com
+      rp_display_name: Gorape
+      rp_origins:
+        - https://app.gorape.example.com
+        - android:apk-key-hash:BASE64URL_CERTIFICATE_HASH
+      portal_origin: https://app.gorape.example.com
+      browser_api_origin: https://api.gorape.example.com
+      attestation_conveyance: direct
+      user_verification: required
+    web_origins: [https://app.gorape.example.com]
+    attestation:
+      webauthn:
+        allowed_formats: [android-key, tpm, apple]
+        allow_none: false
+        allow_self_attestation: false
+        trust_anchors:
+          android-key: [/app/etc/android/android-attestation-roots.pem]
+          tpm: [/app/etc/tpm/tpm-attestation-roots.pem]
+          apple: [/app/etc/apple/apple-webauthn-roots.pem]
+```
+
+The local Docker config uses RP ID `gorapeflutter.github.io`, distinct from
+Keycloak's `localhost`, and allows the current Android debug
+`android:apk-key-hash` origin. Attestation format `none` is enabled for local
+testing. The organization Pages repository
+`../gorapeflutter.github.io` publishes
+`https://gorapeflutter.github.io/.well-known/assetlinks.json`; its statement
+associates package `com.gorapeflutter.gf_app` with the current debug signing
+certificate with both `delegate_permission/common.get_login_creds` and
+`delegate_permission/common.handle_all_urls`. Android Credential Manager with
+Google Password Manager was verified on Pixel 6 using the debug APK. The API
+endpoint remains `https://localhost:8443`; it is separate
+from the RP domain and its local CA is not used for Digital Asset Links.
+
+For another debug signing key, add its SHA-256 certificate fingerprint to the
+Pages `assetlinks.json` and its `android:apk-key-hash:` value to
+`../gorape/etc/server.yaml.docker`'s `webauthn.rp_origins`, then redeploy Pages
+and regenerate the server config.
+
+For local API HTTPS (separate from the Android RP-domain requirement), run:
+
+```bash
+./scripts/generate-local-tls.sh [--host <local-dns-name>]
+./scripts/gorape-up.sh --https --android-attestation
+curl --cacert config/generated/tls/ca.crt https://localhost:8443/health
+```
+
+This creates a local CA and certificate under the Git-ignored
+`config/generated/tls/`; the private keys are mode `0600`. The CA is for local
+API transport only and must not be used as a production trust anchor. Android's
+native passkey RP association is provided separately by the public Pages site.
+`./scripts/run-android.sh` uses the generated CA for the debug Dart client and
+sets the API URL to `https://localhost:8443`.
+
+The default empty format allowlist, `allow_none: false`, and
+`allow_self_attestation: false` reject registrations. Mount each configured
+trust bundle into the backend container. `android-key` reuses
+`android_trust_anchors` when its WebAuthn-specific list is empty.
+
+The client and RP domain must also be associated on each native platform:
+
+- Android: publish Digital Asset Links with both
+  `delegate_permission/common.get_login_creds` and
+  `delegate_permission/common.handle_all_urls` for the app package and all
+  signing certificate fingerprints at
+  `https://<rp-id>/.well-known/assetlinks.json`.
+- iOS/macOS: publish AASA `webcredentials` entries and add
+  `webcredentials:<rp-id>` to the app's Associated Domains entitlement.
+- Web: serve from a secure origin; the RP ID must be the page host or a parent
+  domain. Register the Web origin and Keycloak CORS origin.
+- Windows: uses the Windows WebAuthn API; TPM attestation is provider-dependent.
+- Linux: use Chrome/Firefox; the gf-app web target supplies a browser ceremony
+  page while Gorape remains an API-only backend.
+
+`direct` is a conveyance preference, not a guarantee. The server verifies the
+actual `fmt` and certificate chain. `rp_origins` are exact values: HTTPS origins
+must be under the RP ID, HTTP is only allowed for localhost development, and
+native Android origins must be explicitly listed. Do not use wildcards.
+`portal_origin` must be in both `rp_origins` and `web_origins`; `browser_api_origin`
+must match the Gorape API URL configured in gf-app. The Linux ceremony page is
+hosted by gf-app; Gorape serves only APIs. Windows/Linux use the
+`http://127.0.0.1:8401/oauth2redirect` system-browser callback. For local Web
+development, run Flutter on port 5000 and register
+`http://localhost:5000/auth.html` plus `http://localhost:5000` as redirect/origin.
+Linux builds need GTK/WebKitGTK development packages from
+`desktop_webview_window`, while OIDC/passkey flows open the installed system
+browser.
 
 ### Verify the verifier is active
 
@@ -129,27 +227,32 @@ Realm and client:
 | Scopes | `openid profile` |
 | Audience | `gorape-api` (dedicated audience mapper) |
 | CLI redirect | `http://127.0.0.1:8400/callback` (preserved) |
-| Flutter redirect | `com.gorapeflutter.gfapp:/oauth2redirect` |
+| Android/iOS/macOS redirect | `com.gorapeflutter.gfapp:/oauth2redirect` |
+| Windows/Linux redirect | `http://127.0.0.1:8401/oauth2redirect` |
+| Web redirect | Same-origin `/auth.html` (local development: `http://localhost:5000/auth.html`) |
 
-Add the Flutter redirect while keeping the CLI redirect:
+On a fresh local database, redirect URIs, passwordless WebAuthn, the passkey-only
+login flow, the `gorape-passkey-amr` mapper, and the registration required action
+are imported from `../gorape/etc/keycloak/gorape-realm.json`. The **Register a
+Keycloak passkey** button uses the WebAuthn Passwordless AIA. **Sign in with a
+passkey** requests the dedicated flow without username/password forms. Its
+successful WebAuthn execution emits `amr: ["passkey"]`; Gorape only permits
+device registration and proof when the signed access token contains that claim.
 
-```bash
-./scripts/keycloak-allow-redirect.sh
-```
+The local PostgreSQL container loads `../gorape/scripts/data/postgres/004-gorape-demo-seed.sql`
+after the schema migrations. It creates the `demo` project and permission test
+fixtures, so no `gorape-admin provision apply` step is needed for the local
+stack. These files are applied only when a fresh database is initialized.
+Recreating the local tmpfs Postgres container also resets Keycloak users and
+registered passkeys.
 
-The script talks to the Keycloak Admin API (`admin` / `admin` by default), merges
-the URI list, ensures `pkce.code.challenge.method=S256`, keeps
-`post.logout.redirect.uris=+`, and is idempotent. Use `--show` to inspect the
-current client.
+For an already-existing realm, add Flutter redirect URIs/Web Origins through
+Keycloak Admin Console → realm `gorape` → Clients → `gorape-client`, preserving
+the CLI callback. Local Web runs at `http://localhost:5000/auth.html`.
 
-Manual alternative: Keycloak Admin Console → realm `gorape` → Clients →
-`gorape-client` → Valid redirect URIs → add
-`com.gorapeflutter.gfapp:/oauth2redirect` and save. Do not remove the CLI URI.
-
-> The script changes the running Keycloak database only. The realm import file
-> in the backend (`etc/keycloak/gorape-realm.json`) is not edited. If you remove
-> the Keycloak volume (`./scripts/gorape-down.sh --volumes`), the realm is
-> re-imported without the Flutter URI and you must run the script again. To make
+If you remove the Keycloak/Postgres data, the realm and demo fixture are
+re-imported from these files. Test passwords are documented in
+`../gorape/etc/README.md`; device passkeys must be registered again.
 > it permanent, intentionally add the URI to the backend realm JSON.
 
 The realm also supports native-app custom schemes; the auth endpoint accepts the
@@ -221,9 +324,10 @@ same release so the mounted config matches the image's expected schema.
   `./scripts/gorape-up.sh --android-attestation --no-build`, then check the
   container mounts:
   `docker inspect gorape --format '{{json .Mounts}}'`.
-- **Keycloak returns `invalid_redirect_uri`** — run
-  `./scripts/keycloak-allow-redirect.sh` and confirm the URI appears in
-  `--show` output.
+ - **Keycloak returns `invalid_redirect_uri`** — on a fresh local database,
+   confirm the imported client configuration in
+   `../gorape/etc/keycloak/gorape-realm.json`; for an existing realm, add the
+   redirect URI through Keycloak Admin Console without removing the CLI URI.
 - **Backend cannot start after deleting volumes** — Keycloak imports the realm
   on first boot; give it up to a minute, then rerun the health wait or check
   `docker logs gorape-keycloak`.

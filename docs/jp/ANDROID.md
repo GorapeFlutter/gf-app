@@ -40,9 +40,9 @@ Gorapeは`ecdsa.VerifyASN1`で検証します。signatureをraw `r || s`へ変�
 
 ## Emulatorまたは端末での起動
 
-Androidの既定値:
+Android開発環境の既定値:
 
-- API: `http://10.0.2.2:8000`（emulatorからhostへ接続するalias）
+- API: `https://localhost:8443`（local server。debug runnerが開発CAを設定）
 - OIDC issuer: `http://localhost:8080/realms/gorape`
 
 IssuerはKeycloakがtokenに設定する`iss`と完全一致する必要があります。emulatorと実機の両方で利用する場合、APIとissuerの両方をlocalhostにして`adb reverse`を使う方法が簡単です。
@@ -55,20 +55,23 @@ IssuerはKeycloakがtokenに設定する`iss`と完全一致する必要があ�
 
 ```bash
 adb reverse tcp:8080 tcp:8080
-adb reverse tcp:8000 tcp:8000
+adb reverse tcp:8443 tcp:8443
 flutter run -d <device> --debug \
-  --dart-define=GORAPE_API_BASE_URL=http://localhost:8000 \
+  --dart-define=GORAPE_API_BASE_URL=https://localhost:8443 \
   --dart-define=GORAPE_OIDC_ISSUER=http://localhost:8080/realms/gorape
 ```
+
+ローカルHTTPSでは`./scripts/run-android.sh`を使ってください。生成CAのPEMをdebug Dart clientへ渡します。手動で`flutter run`する場合は`GORAPE_TLS_CA_CERT_BASE64`を追加するか、OSが信頼する証明書を使います。
 
 便利なoption:
 
 ```bash
 ./scripts/run-android.sh --device emulator-5554
-./scripts/run-android.sh --api-url http://10.0.2.2:8000   # APIにadb reverseを使わないemulator
-./scripts/run-android.sh --release
+./scripts/run-android.sh --api-url https://localhost:8443 --tls-ca config/generated/tls/ca.crt
 ./scripts/run-android.sh -- --verbose                      # flutter runへ追加引数を渡す
 ```
+
+生成CAを信頼するのはdebug Dart HTTP clientだけです。release buildでは開発CAを使わず、公的に信頼されたserver certificateを使用してください。
 
 実機で`adb reverse`を使わない場合、APIにはhostのLAN IPを指定し、Keycloakも一致するhostname/issuerで設定します。Keycloakが別hostの`iss`を発行しない限り、App側のissuerだけを変更しないでください。
 
@@ -99,7 +102,7 @@ curl -s -H "Authorization: Bearer $TOKEN" \
 | 422 `attested public key does not match` | `public_key_pem`の公開鍵がleaf certificateの鍵と一致しません。鍵を再生成して再試行します。 |
 | 422 `attestation challenge` mismatch | decodeしたchallengeが`setAttestationChallenge`へ渡したbytesと異なるか、古いchallengeを再利用しています。 |
 | `Android Key Attestation did not return a certificate chain` | Keystoreがattestationに対応していない可能性があります（emulatorや一部ROMなど）。hardware-backed Keystore搭載端末を使います。 |
-| Login後に`invalid_redirect_uri` | Flutter redirectがallow listにありません。`./scripts/keycloak-allow-redirect.sh`を実行します。 |
+| Login後に`invalid_redirect_uri` | Flutter redirectがallow listにありません。新規ローカルrealmは`../gorape/etc/keycloak/gorape-realm.json`からimportされます。既存realmでは`gorape-client`へ手動追加します。 |
 | Login成功後にAPIが401 | token issuer/audienceが`http://localhost:8080/realms/gorape`と`gorape-api`に一致する必要があります。接続設定を確認します。 |
 | `Cleartext HTTP traffic not permitted` | `network_security_config.xml`で許可されたlocal開発host以外を使っています。HTTPSにするか開発hostを追加します。 |
 | 鍵はあるがproofに失敗 | 画面lock変更やrestoreなどでKeystore鍵が無効化された可能性があります。deviceを失効して再登録します。 |

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart' hide Text;
-import '../../l10n/app_text.dart';
+import '../../config/langages/app_text.dart';
 
 import '../../entity/model/device.dart';
 import '../../entity/model/group.dart';
@@ -72,7 +72,7 @@ class _GroupFormDialogState extends State<_GroupFormDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: AppText(_editing ? 'グループを編集' : 'グループを作成'),
+      title: AppText(_editing ? 'MCODE-00233' : 'MCODE-00236'),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -106,10 +106,13 @@ class _GroupFormDialogState extends State<_GroupFormDialog> {
                   border: OutlineInputBorder(),
                 ),
                 items: const [
-                  DropdownMenuItem(value: 'active', child: AppText('active')),
+                  DropdownMenuItem(
+                    value: 'active',
+                    child: AppText('MCODE-00451'),
+                  ),
                   DropdownMenuItem(
                     value: 'inactive',
-                    child: AppText('inactive'),
+                    child: AppText('MCODE-00452'),
                   ),
                 ],
                 onChanged: /* GF-01017 — Runs an inline callback in _GroupFormDialogState.build. */
@@ -133,11 +136,11 @@ class _GroupFormDialogState extends State<_GroupFormDialog> {
         TextButton(
           onPressed: /* GF-01019 — Runs an inline callback in _GroupFormDialogState.build. */
               () => Navigator.of(context).pop(),
-          child: const AppText('キャンセル'),
+          child: const AppText('MCODE-00147'),
         ),
         FilledButton(
           onPressed: _submit,
-          child: AppText(_editing ? '保存' : '作成'),
+          child: AppText(_editing ? 'MCODE-00085' : 'MCODE-00218'),
         ),
       ],
     );
@@ -253,7 +256,7 @@ class _RoleBindingDialogState extends State<_RoleBindingDialog> {
             ),
             const SizedBox(height: 8),
             AppText(
-              '自分のロールは変更できません。最後のプロジェクト管理者も削除できません。',
+              'MCODE-00243',
               style: Theme.of(context).textTheme.bodySmall,
             ),
             if (_error != null) ...[
@@ -270,7 +273,7 @@ class _RoleBindingDialogState extends State<_RoleBindingDialog> {
         TextButton(
           onPressed: /* GF-01032 — Runs an inline callback in _RoleBindingDialogState.build. */
               () => Navigator.of(context).pop(),
-          child: const AppText('キャンセル'),
+          child: const AppText('MCODE-00147'),
         ),
         FilledButton(
           onPressed: /* GF-01033 — Runs an inline callback in _RoleBindingDialogState.build. */
@@ -287,7 +290,7 @@ class _RoleBindingDialogState extends State<_RoleBindingDialog> {
                   context,
                 ).pop(RoleBindingInput(subject: subject, role: _role));
               },
-          child: const AppText('付与'),
+          child: const AppText('MCODE-00219'),
         ),
       ],
     );
@@ -303,11 +306,11 @@ Future<String?> showGroupDevicePicker(
     context: context,
     builder: /* GF-01036 — Runs an inline callback in top level.showGroupDevicePicker. */
         (context) => AlertDialog(
-          title: const AppText('グループにデバイスを追加'),
+          title: const AppText('MCODE-00248'),
           content: SizedBox(
             width: 420,
             child: devices.isEmpty
-                ? const AppText('追加できるデバイスがありません。')
+                ? const AppText('MCODE-00249')
                 : SingleChildScrollView(
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
@@ -331,7 +334,7 @@ Future<String?> showGroupDevicePicker(
             TextButton(
               onPressed: /* GF-01038 — Runs an inline callback in top level.showGroupDevicePicker.callback. */
                   () => Navigator.of(context).pop(),
-              child: const AppText('閉じる'),
+              child: const AppText('MCODE-00062'),
             ),
           ],
         ),

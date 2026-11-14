@@ -1,4 +1,4 @@
-import '../../share/jwt.dart';
+import '../../back/share/jwt.dart';
 import 'auth_tokens.dart';
 
 /// A locally held, server-validated session.
@@ -14,6 +14,13 @@ class AuthSession {
   /// GF-00253 — Computes AuthSession.claims.
   Map<String, dynamic> get claims =>
       JwtClaims.decodeUnverified(tokens.accessToken);
+
+  /// The client-side view is advisory; Gorape independently verifies this
+  /// signed access-token claim before device registration or proof operations.
+  bool get isPasskeyAuthenticated {
+    final methods = claims['amr'];
+    return methods is List && methods.whereType<String>().contains('passkey');
+  }
 
   /// GF-00254 — Computes AuthSession.subject.
   String get subject => _claim('sub') ?? 'unknown';

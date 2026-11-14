@@ -1,4 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:gf_app/back/repository/secure_store.dart';
+import 'package:gf_app/back/usecase/connection.dart';
 import 'package:gf_app/config/connection.dart';
 import 'package:gf_app/entity/model/auth_tokens.dart';
 import 'package:gf_app/entity/model/connection.dart';
@@ -6,17 +8,46 @@ import 'package:gf_app/entity/model/platform.dart';
 
 void main() {
   group('ConnectionSettings', () {
-    test('uses emulator API host on Android and localhost elsewhere', () {
+    test('uses the local HTTPS API and platform-specific OIDC redirects', () {
       final config = newConnectionConfig();
       final android = config.defaultsFor(RuntimePlatform.android);
       final macos = config.defaultsFor(RuntimePlatform.macos);
+      final windows = config.defaultsFor(RuntimePlatform.windows);
+      final linux = config.defaultsFor(RuntimePlatform.linux);
+      final web = config.defaultsFor(RuntimePlatform.web);
 
-      expect(android.apiBaseUrl, 'http://10.0.2.2:8000');
-      expect(macos.apiBaseUrl, 'http://localhost:8000');
+      expect(android.apiBaseUrl, 'https://localhost:8443');
+      expect(macos.apiBaseUrl, 'https://localhost:8443');
       expect(android.issuer, 'http://localhost:8080/realms/gorape');
       expect(android.clientId, 'gorape-client');
       expect(android.redirectUri, ConnectionSettings.flutterRedirectUri);
+      expect(windows.redirectUri, ConnectionSettings.desktopRedirectUri);
+      expect(linux.redirectUri, ConnectionSettings.desktopRedirectUri);
+      expect(web.redirectUri, 'http://localhost:8080/auth.html');
       expect(android.scopes, ['openid', 'profile']);
+    });
+
+    test('migrates the saved local HTTP API endpoint to HTTPS', () async {
+      final store = MemorySecureStore({
+        ConnectionUsecaseImpl.storageKey: ConnectionSettings(
+          apiBaseUrl: 'http://localhost:8000/',
+          issuer: 'http://localhost:8080/realms/gorape',
+          clientId: 'gorape-client',
+          redirectUri: ConnectionSettings.flutterRedirectUri,
+        ).encode(),
+      });
+      final usecase = newConnectionUsecase(store, newConnectionConfig());
+
+      final settings = await usecase.load(RuntimePlatform.android);
+
+      expect(settings.apiBaseUrl, 'https://localhost:8443');
+      expect(
+        ConnectionSettings.decode(
+          store.values[ConnectionUsecaseImpl.storageKey]!,
+        ).apiBaseUrl,
+        'https://localhost:8443',
+      );
+      expect(settings.issuer, 'http://localhost:8080/realms/gorape');
     });
 
     test('validates required fields', () {

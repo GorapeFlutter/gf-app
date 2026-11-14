@@ -1,0 +1,12 @@
+# Optional direct TLS listener for local development.
+# Keys are generated locally and mounted read-only; they are never in the image.
+services:
+  server:
+    ports:
+      - "8443:8443"
+    environment:
+      GORAPE_TLS_CERT_FILE: /app/etc/tls/server.crt
+      GORAPE_TLS_KEY_FILE: /app/etc/tls/server.key
+    volumes:
+      - ${GORAPE_TLS_CERT:?run scripts/generate-local-tls.sh first}:/app/etc/tls/server.crt:ro
+      - ${GORAPE_TLS_KEY:?run scripts/generate-local-tls.sh first}:/app/etc/tls/server.key:ro
