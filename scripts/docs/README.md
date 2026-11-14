@@ -1,8 +1,9 @@
 # Documentation developer tools
 
 - `link_gf_ids.py` resolves GF IDs to source-comment lines and links them to the
-  `main` branch on GitHub. It skips fenced code blocks (including Mermaid
-  diagrams), refreshes stale line numbers, and supports `--check`:
+  canonical `https://github.com/GorapeFlutter/gf-app/` `main` branch. It skips
+  fenced code blocks (including Mermaid diagrams), refreshes stale line numbers,
+  and supports `--check`:
 
   ```bash
   python3 scripts/docs/link_gf_ids.py

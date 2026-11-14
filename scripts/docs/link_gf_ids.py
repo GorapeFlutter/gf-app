@@ -4,17 +4,19 @@
 from __future__ import annotations
 
 import argparse
+import os
 import re
-import subprocess
 import sys
 from collections import defaultdict
 from pathlib import Path
+from urllib.parse import urlsplit
 
 
 ID_RE = re.compile(r"GF-\d{5}")
 FENCE_RE = re.compile(r"^ {0,3}(`{3,}|~{3,})")
 INLINE_CODE_RE = re.compile(r"(`+)([^`]*?)\1")
 GITHUB_LINK_RE = re.compile(r"\[(GF-\d{5})\]\(https://github\.com/[^)]+\)")
+DEFAULT_GITHUB_ROOT = "https://github.com/GorapeFlutter/gf-app"
 
 FLOW_SOURCE = {
     "GF-00001": "lib/app.dart",
@@ -33,14 +35,16 @@ FLOW_SOURCE = {
 }
 
 
-def github_root(repo: Path) -> str:
-    remote = subprocess.check_output(
-        ["git", "remote", "get-url", "origin"], cwd=repo, text=True
-    ).strip()
+def github_root() -> str:
+    remote = os.environ.get("GF_DOCS_GITHUB_ROOT", DEFAULT_GITHUB_ROOT).strip()
     if remote.startswith("git@github.com:"):
         remote = "https://github.com/" + remote.removeprefix("git@github.com:")
     elif remote.startswith("ssh://git@github.com/"):
         remote = "https://github.com/" + remote.removeprefix("ssh://git@github.com/")
+    parsed = urlsplit(remote.rstrip("/"))
+    if parsed.hostname == "github.com":
+        path = parsed.path.strip("/").removesuffix(".git")
+        return f"https://github.com/{path}"
     return remote.removesuffix(".git").rstrip("/")
 
 
@@ -170,7 +174,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--ref",
-        default="main",
+        default=os.environ.get("GF_DOCS_GITHUB_REF", "main"),
         help="GitHub branch, tag, or commit to link to (default: main)",
     )
     parser.add_argument(
@@ -182,7 +186,7 @@ def main() -> int:
 
     repo = Path(__file__).resolve().parents[2]
     docs = repo / "docs/_locales"
-    github = github_root(repo)
+    github = github_root()
     locations = source_comment_locations(repo)
     markdown_files = sorted(docs.rglob("*.md"))
     changed: list[str] = []
