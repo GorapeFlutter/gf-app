@@ -77,21 +77,25 @@ sequenceDiagram
     App->>Config: Load settings GF-02066–GF-02068
     Config->>Store: Read saved settings GF-02067
     App->>Auth: Restore saved session GF-00001 / GF-00135
-    Auth->>Store: Read and decode tokens GF-02000
-    alt Valid session GF-02002
-        Auth-->>App: AuthSession
-        App-->>UI: Show AppShell GF-02040
-    else Malformed token
-        Auth->>Store: Delete malformed session GF-02001
-        App-->>UI: Show LoginScreen GF-02041
-    else Expired token
-        opt Refresh token available GF-02003
-            Auth->>Store: Save refreshed tokens
+    alt Session token exists
+        Auth->>Store: Read and decode tokens GF-02000
+        alt Valid access token GF-02002
             Auth-->>App: AuthSession
             App-->>UI: Show AppShell GF-02040
-        else Refresh unavailable or failed GF-02004
-            Auth->>Store: Delete expired session
-            App-->>UI: Show LoginScreen GF-02041
+        else Invalid access token
+            alt Malformed token
+                Auth->>Store: Delete malformed session GF-02001
+                App-->>UI: Show LoginScreen GF-02041
+            else Expired token
+                alt Refresh succeeds GF-02003
+                    Auth->>Store: Save refreshed tokens
+                    Auth-->>App: AuthSession
+                    App-->>UI: Show AppShell GF-02040
+                else Refresh unavailable or failed GF-02004
+                    Auth->>Store: Delete expired session
+                    App-->>UI: Show LoginScreen GF-02041
+                end
+            end
         end
     else No saved session
         Auth-->>App: null

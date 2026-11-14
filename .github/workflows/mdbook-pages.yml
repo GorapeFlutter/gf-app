@@ -41,7 +41,6 @@ jobs:
       - name: Install mdBook and preprocessors
         run: |
           cargo install mdbook --version 0.5.4 --locked
-          cargo install mdbook-tabs --version 1.0.4 --locked
           cargo install mdbook-mermaid --version 0.17.1 --locked
 
       - name: Verify GF ID source links
@@ -56,7 +55,7 @@ jobs:
       - name: Upload GitHub Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: build/mdbook
+          path: build/docs-site
 
   deploy:
     if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'

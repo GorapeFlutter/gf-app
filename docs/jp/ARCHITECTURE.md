@@ -70,21 +70,25 @@ sequenceDiagram
     App->>Config: 接続設定を読み込む GF-02066–GF-02068
     Config->>Store: 保存済み設定を読む GF-02067
     App->>Auth: 保存済みセッションを復元 GF-00001 / GF-00135
-    Auth->>Store: tokenを読み・decode GF-02000
-    alt 有効なsession GF-02002
-        Auth-->>App: AuthSession
-        App-->>UI: AppShellを表示 GF-02040
-    else malformed token
-        Auth->>Store: sessionを削除 GF-02001
-        App-->>UI: LoginScreenを表示 GF-02041
-    else expired token
-        opt refresh tokenが使用可能 GF-02003
-            Auth->>Store: 更新tokenを保存
+    alt session tokenあり
+        Auth->>Store: tokenを読み・decode GF-02000
+        alt access token有効 GF-02002
             Auth-->>App: AuthSession
             App-->>UI: AppShellを表示 GF-02040
-        else refresh不可 / refresh失敗 GF-02004
-            Auth->>Store: 期限切れsessionを削除
-            App-->>UI: LoginScreenを表示 GF-02041
+        else access token無効
+            alt malformed token
+                Auth->>Store: sessionを削除 GF-02001
+                App-->>UI: LoginScreenを表示 GF-02041
+            else expired token
+                alt refresh成功 GF-02003
+                    Auth->>Store: 更新tokenを保存
+                    Auth-->>App: AuthSession
+                    App-->>UI: AppShellを表示 GF-02040
+                else refresh不可 / refresh失敗 GF-02004
+                    Auth->>Store: 期限切れsessionを削除
+                    App-->>UI: LoginScreenを表示 GF-02041
+                end
+            end
         end
     else sessionなし
         Auth-->>App: null

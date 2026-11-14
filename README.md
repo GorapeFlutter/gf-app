@@ -290,16 +290,18 @@ missing while the AOT snapshot exists.
 
 ## Further documentation
 
-- The [mdBook](docs/book.toml) is the documentation site. English is the default;
-  select **日本語** in the language tabs to switch chapters. Install the tools
-  and build the book:
+- The mdBook documentation is published as separate English and Japanese books
+  at `https://gorapeflutter.github.io/gf-app/en/` and
+  `https://gorapeflutter.github.io/gf-app/jp/`, each with an independent table
+  of contents. The root URL is a language chooser. Install the tools and build
+  both books:
   ```bash
   cargo install mdbook
-  cargo install mdbook-tabs
   cargo install mdbook-mermaid
   scripts/docs/build-book.sh
   ```
-  Open `build/mdbook/index.html`.
+  Open `build/docs-site/index.html` to choose a language, or open the `en/` and
+  `jp/` subdirectories directly.
 - Before the first deployment, a repository administrator must enable Pages in
   **Settings → Pages → Build and deployment → Source → GitHub Actions**. GitHub
   does not allow the workflow's `GITHUB_TOKEN` to create the Pages site. After
@@ -307,13 +309,5 @@ missing while the AOT snapshot exists.
   to `main` at `https://gorapeflutter.github.io/gf-app/`.
 - `scripts/docs/link_gf_ids.py` links documentation IDs to their source-comment
   line on GitHub. It skips fenced diagrams; run it after moving ID comments.
-- [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — layer overview, process IDs
-  (`GF-XXXXX`) and Mermaid diagrams in English and Japanese.
-- [`docs/FUNCTION_INDEX.md`](docs/FUNCTION_INDEX.md) — IDs for every handwritten
-  Dart function, callback, and Android native function.
-- [`docs/PROCESS_INDEX.md`](docs/PROCESS_INDEX.md) — IDs for logical steps inside
-  multi-stage functions.
-- [`docs/SETUP.md`](docs/SETUP.md) — Docker/Keycloak/trust-anchor details and
-  verification commands.
-- [`docs/ANDROID.md`](docs/ANDROID.md) — Android registration flow, emulator
-  networking and attestation troubleshooting.
+- English chapter sources: [`docs/en/`](docs/en/)
+- 日本語章のソース: [`docs/jp/`](docs/jp/)

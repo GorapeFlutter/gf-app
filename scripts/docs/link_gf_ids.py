@@ -185,7 +185,7 @@ def main() -> int:
     args = parser.parse_args()
 
     repo = Path(__file__).resolve().parents[2]
-    docs = repo / "docs/_locales"
+    docs = repo / "docs"
     github = github_root()
     locations = source_comment_locations(repo)
     markdown_files = sorted(docs.rglob("*.md"))

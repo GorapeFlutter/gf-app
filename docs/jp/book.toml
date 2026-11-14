@@ -1,0 +1,13 @@
+[book]
+title = "gf-app ドキュメント"
+authors = ["Gorapeflutter"]
+language = "ja"
+src = "."
+
+[preprocessor.mermaid]
+command = "mdbook-mermaid"
+after = ["links"]
+
+[output.html]
+site-url = "/gf-app/jp/"
+additional-js = ["../shared/mermaid.min.js", "../shared/mermaid-init.js"]
