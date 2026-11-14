@@ -17,10 +17,12 @@ enum ManagementScope { cluster, project, groups }
 /// the selected project, and the groups inside that project. Each scope renders
 /// the admin/editor/viewer screen matching the role in the Keycloak token.
 class ManagementScreen extends ConsumerStatefulWidget {
+  /// GF-00832 — Initializes ManagementScreen.
   const ManagementScreen({super.key, required this.project});
 
   final Project? project;
 
+  /// GF-00833 — Creates the state object for ManagementScreen.
   @override
   ConsumerState<ManagementScreen> createState() => _ManagementScreenState();
 }
@@ -28,12 +30,14 @@ class ManagementScreen extends ConsumerStatefulWidget {
 class _ManagementScreenState extends ConsumerState<ManagementScreen> {
   ManagementScope _scope = ManagementScope.project;
 
+  /// GF-00834 — Initializes state for _ManagementScreenState.
   @override
   void initState() {
     super.initState();
     if (widget.project == null) _scope = ManagementScope.cluster;
   }
 
+  /// GF-00835 — Synchronizes _ManagementScreenState state after its widget changes.
   @override
   void didUpdateWidget(covariant ManagementScreen oldWidget) {
     super.didUpdateWidget(oldWidget);
@@ -42,6 +46,7 @@ class _ManagementScreenState extends ConsumerState<ManagementScreen> {
     }
   }
 
+  /// GF-00836 — Builds the widget or value for _ManagementScreenState.
   @override
   Widget build(BuildContext context) {
     final project = widget.project;
@@ -72,19 +77,26 @@ class _ManagementScreenState extends ConsumerState<ManagementScreen> {
             ],
             selected: {_scope},
             showSelectedIcon: false,
-            onSelectionChanged: (selection) =>
-                setState(() => _scope = selection.first),
+            onSelectionChanged: /* GF-00837 — Runs an inline callback in _ManagementScreenState.build. */
+                (selection) => setState(
+                  /* GF-00838 — Runs an inline callback in _ManagementScreenState.build.callback. */ () =>
+                      _scope = selection.first,
+                ),
           ),
         ),
         Expanded(
           child: switch (_scope) {
             ManagementScope.cluster => ClusterScopeScreen(
-              onOpenProject: (target) => _openProject(target),
+              onOpenProject: /* GF-00839 — Runs an inline callback in _ManagementScreenState.build. */
+                  (target) => _openProject(target),
             ),
             ManagementScope.project when project != null => ProjectScopeScreen(
               project: project,
-              onOpenGroups: () =>
-                  setState(() => _scope = ManagementScope.groups),
+              onOpenGroups: /* GF-00840 — Runs an inline callback in _ManagementScreenState.build. */
+                  () => setState(
+                    /* GF-00841 — Runs an inline callback in _ManagementScreenState.build.callback. */ () =>
+                        _scope = ManagementScope.groups,
+                  ),
             ),
             ManagementScope.groups when project != null =>
               GroupManagementScreen(project: project),
@@ -99,8 +111,12 @@ class _ManagementScreenState extends ConsumerState<ManagementScreen> {
     );
   }
 
+  /// GF-00842 — Handles open project in _ManagementScreenState.
   void _openProject(Project target) {
     ref.read(selectedProjectIdProvider.notifier).select(target.id);
-    setState(() => _scope = ManagementScope.project);
+    setState(
+      /* GF-00843 — Runs an inline callback in _ManagementScreenState._openProject. */ () =>
+          _scope = ManagementScope.project,
+    );
   }
 }

@@ -15,10 +15,12 @@ import '../widgets/common.dart';
 /// `GET /v1/projects/{projectId}/attestation/capabilities` and can report
 /// `unconfigured` even for Android (for example when trust anchors are empty).
 class SupportScreen extends ConsumerWidget {
+  /// GF-00965 — Initializes SupportScreen.
   const SupportScreen({super.key, required this.projectId});
 
   final String projectId;
 
+  /// GF-00966 — Builds the widget or value for SupportScreen.
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final current = ref.watch(runtimePlatformProvider);
@@ -36,8 +38,8 @@ class SupportScreen extends ConsumerWidget {
     ];
 
     return RefreshIndicator(
-      onRefresh: () =>
-          ref.read(capabilitiesProvider(projectId).notifier).reload(),
+      onRefresh: /* GF-00967 — Runs an inline callback in SupportScreen.build. */
+          () => ref.read(capabilitiesProvider(projectId).notifier).reload(),
       child: ListView(
         physics: const AlwaysScrollableScrollPhysics(),
         padding: const EdgeInsets.all(16),
@@ -52,8 +54,10 @@ class SupportScreen extends ConsumerWidget {
               ),
               IconButton(
                 tooltip: tr(context, 'バックエンド対応状況を更新'),
-                onPressed: () =>
-                    ref.read(capabilitiesProvider(projectId).notifier).reload(),
+                onPressed: /* GF-00968 — Runs an inline callback in SupportScreen.build. */
+                    () => ref
+                        .read(capabilitiesProvider(projectId).notifier)
+                        .reload(),
                 icon: Icon(Icons.refresh, size: 22),
               ),
             ],
@@ -66,17 +70,22 @@ class SupportScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 16),
           capabilities.when(
-            loading: () => const LoadingView(label: 'Verifier対応状況を取得中...'),
-            error: (error, _) => ErrorCard(
-              error: error,
-              onRetry: () =>
-                  ref.read(capabilitiesProvider(projectId).notifier).reload(),
-            ),
-            data: (value) => _SupportTable(
-              current: current,
-              backend: value,
-              supports: supports,
-            ),
+            loading: /* GF-00969 — Runs an inline callback in SupportScreen.build. */
+                () => const LoadingView(label: 'Verifier対応状況を取得中...'),
+            error: /* GF-00970 — Runs an inline callback in SupportScreen.build. */
+                (error, _) => ErrorCard(
+                  error: error,
+                  onRetry: /* GF-00971 — Runs an inline callback in SupportScreen.build.callback. */
+                      () => ref
+                          .read(capabilitiesProvider(projectId).notifier)
+                          .reload(),
+                ),
+            data: /* GF-00972 — Runs an inline callback in SupportScreen.build. */
+                (value) => _SupportTable(
+                  current: current,
+                  backend: value,
+                  supports: supports,
+                ),
           ),
           const SizedBox(height: 16),
           SectionCard(
@@ -150,6 +159,7 @@ class SupportScreen extends ConsumerWidget {
 }
 
 class _SupportTable extends StatelessWidget {
+  /// GF-00973 — Initializes _SupportTable.
   const _SupportTable({
     required this.current,
     required this.backend,
@@ -160,6 +170,7 @@ class _SupportTable extends StatelessWidget {
   final AttestationCapabilities backend;
   final List<PlatformSupport> supports;
 
+  /// GF-00974 — Builds the widget or value for _SupportTable.
   @override
   Widget build(BuildContext context) {
     return SectionCard(
@@ -182,6 +193,7 @@ class _SupportTable extends StatelessWidget {
     );
   }
 
+  /// GF-00975 — Handles row in _SupportTable.
   DataRow _row(BuildContext context, PlatformSupport support) {
     final scheme = Theme.of(context).colorScheme;
     final backendStatus = backend.statusFor(support.platform);
@@ -208,6 +220,7 @@ class _SupportTable extends StatelessWidget {
     );
   }
 
+  /// GF-00976 — Handles mark in _SupportTable.
   Widget _mark(BuildContext context, bool supported) {
     return Icon(
       supported ? Icons.check_circle : Icons.remove_circle_outline,
@@ -216,5 +229,6 @@ class _SupportTable extends StatelessWidget {
     );
   }
 
+  /// GF-00977 — Handles platform name in _SupportTable.
   static String platformName(String platform) => platformLabel(platform);
 }

@@ -14,6 +14,7 @@ import '../widgets/common.dart';
 ///
 /// Values are stored locally; they are not part of the Gorape API contract.
 class SettingsScreen extends ConsumerWidget {
+  /// GF-00932 — Initializes SettingsScreen.
   const SettingsScreen({
     super.key,
     this.fromLogin = false,
@@ -23,20 +24,24 @@ class SettingsScreen extends ConsumerWidget {
   final bool fromLogin;
   final bool embedded;
 
+  /// GF-00933 — Builds the widget or value for SettingsScreen.
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final connection = ref.watch(connectionSettingsProvider);
     final content = connection.when(
-      loading: () => const LoadingView(label: '設定を読み込み中...'),
-      error: (error, _) => Padding(
-        padding: const EdgeInsets.all(16),
-        child: ErrorCard(
-          error: error,
-          onRetry: () => ref.invalidate(connectionSettingsProvider),
-        ),
-      ),
-      data: (settings) =>
-          _SettingsForm(settings: settings, fromLogin: fromLogin),
+      loading: /* GF-00934 — Runs an inline callback in SettingsScreen.build. */
+          () => const LoadingView(label: '設定を読み込み中...'),
+      error: /* GF-00935 — Runs an inline callback in SettingsScreen.build. */
+          (error, _) => Padding(
+            padding: const EdgeInsets.all(16),
+            child: ErrorCard(
+              error: error,
+              onRetry: /* GF-00936 — Runs an inline callback in SettingsScreen.build.callback. */
+                  () => ref.invalidate(connectionSettingsProvider),
+            ),
+          ),
+      data: /* GF-00937 — Runs an inline callback in SettingsScreen.build. */
+          (settings) => _SettingsForm(settings: settings, fromLogin: fromLogin),
     );
 
     if (embedded) return content;
@@ -48,11 +53,13 @@ class SettingsScreen extends ConsumerWidget {
 }
 
 class _SettingsForm extends ConsumerStatefulWidget {
+  /// GF-00938 — Initializes _SettingsForm.
   const _SettingsForm({required this.settings, required this.fromLogin});
 
   final ConnectionSettings settings;
   final bool fromLogin;
 
+  /// GF-00939 — Creates the state object for _SettingsForm.
   @override
   ConsumerState<_SettingsForm> createState() => _SettingsFormState();
 }
@@ -67,6 +74,7 @@ class _SettingsFormState extends ConsumerState<_SettingsForm> {
   String? _healthResult;
   Object? _error;
 
+  /// GF-00940 — Initializes state for _SettingsFormState.
   @override
   void initState() {
     super.initState();
@@ -78,6 +86,7 @@ class _SettingsFormState extends ConsumerState<_SettingsForm> {
     );
   }
 
+  /// GF-00941 — Releases resources owned by _SettingsFormState.
   @override
   void dispose() {
     _apiController.dispose();
@@ -87,6 +96,7 @@ class _SettingsFormState extends ConsumerState<_SettingsForm> {
     super.dispose();
   }
 
+  /// GF-00942 — Computes _SettingsFormState._edited.
   ConnectionSettings get _edited => widget.settings.copyWith(
     apiBaseUrl: _apiController.text,
     issuer: _issuerController.text,
@@ -94,6 +104,7 @@ class _SettingsFormState extends ConsumerState<_SettingsForm> {
     redirectUri: _redirectController.text,
   );
 
+  /// GF-00943 — Builds the widget or value for _SettingsFormState.
   @override
   Widget build(BuildContext context) {
     final platform = ref.watch(runtimePlatformProvider);
@@ -115,15 +126,20 @@ class _SettingsFormState extends ConsumerState<_SettingsForm> {
               DropdownMenuItem(value: 'ja', child: const AppText('日本語')),
               DropdownMenuItem(value: 'en', child: const AppText('English')),
             ],
-            onChanged: (value) {
+            onChanged: /* GF-00944 — Runs an inline callback in _SettingsFormState.build. */ (value) {
               if (value == null) return;
               unawaited(
-                ref
-                    .read(languageProvider.notifier)
-                    .setLanguage(value)
-                    .catchError((Object error) {
-                      if (mounted) setState(() => _error = error);
-                    }),
+                ref.read(languageProvider.notifier).setLanguage(value).catchError(
+                  /* GF-00945 — Runs an inline callback in _SettingsFormState.build.callback. */ (
+                    Object error,
+                  ) {
+                    if (mounted)
+                      setState(
+                        /* GF-00946 — Runs an inline callback in _SettingsFormState.build.callback.callback. */ () =>
+                            _error = error,
+                      );
+                  },
+                ),
               );
             },
           ),
@@ -236,7 +252,8 @@ class _SettingsFormState extends ConsumerState<_SettingsForm> {
           icon: Icons.rule_outlined,
           trailing: IconButton(
             tooltip: tr(context, 'コピー'),
-            onPressed: () => _copyRedirectUris(context, _edited),
+            onPressed: /* GF-00947 — Runs an inline callback in _SettingsFormState.build. */
+                () => _copyRedirectUris(context, _edited),
             icon: const Icon(Icons.copy_all_outlined),
           ),
           child: Column(
@@ -339,13 +356,18 @@ class _SettingsFormState extends ConsumerState<_SettingsForm> {
     );
   }
 
+  /// GF-00948 — Handles redirect allow list in _SettingsFormState.
   List<String> _redirectAllowList(ConnectionSettings settings) {
-    return {
-      'http://127.0.0.1:8400/callback',
-      settings.redirectUri,
-    }.where((value) => value.isNotEmpty).toList(growable: false);
+    return {'http://127.0.0.1:8400/callback', settings.redirectUri}
+        .where(
+          /* GF-00949 — Runs an inline callback in _SettingsFormState._redirectAllowList. */ (
+            value,
+          ) => value.isNotEmpty,
+        )
+        .toList(growable: false);
   }
 
+  /// GF-00950 — Handles copy redirect uris in _SettingsFormState.
   Future<void> _copyRedirectUris(
     BuildContext context,
     ConnectionSettings settings,
@@ -359,72 +381,124 @@ class _SettingsFormState extends ConsumerState<_SettingsForm> {
     ).showSnackBar(const SnackBar(content: AppText('Redirect URIをコピーしました。')));
   }
 
+  /// GF-00951 — Handles save in _SettingsFormState.
   Future<void> _save() async {
-    setState(() {
-      _saving = true;
-      _error = null;
-      _healthResult = null;
-    });
+    // GF-02113 — Clear feedback state and mark settings as saving.
+    setState(
+      /* GF-00952 — Runs an inline callback in _SettingsFormState._save. */ () {
+        _saving = true;
+        _error = null;
+        _healthResult = null;
+      },
+    );
     try {
+      // GF-02114 — Validate and persist connection settings through the controller.
       await ref.read(connectionSettingsProvider.notifier).save(_edited);
       if (!mounted) return;
+      // GF-02115 — Confirm the saved settings to the user.
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(content: AppText('接続設定を保存しました。')));
     } on Object catch (error) {
-      if (mounted) setState(() => _error = error);
+      // GF-02116 — Display validation or persistence errors.
+      if (mounted)
+        setState(
+          /* GF-00953 — Runs an inline callback in _SettingsFormState._save. */ () =>
+              _error = error,
+        );
     } finally {
-      if (mounted) setState(() => _saving = false);
+      // GF-02117 — Clear the saving state for every outcome.
+      if (mounted)
+        setState(
+          /* GF-00954 — Runs an inline callback in _SettingsFormState._save. */ () =>
+              _saving = false,
+        );
     }
   }
 
+  /// GF-00955 — Handles reset in _SettingsFormState.
   Future<void> _reset() async {
-    setState(() {
-      _saving = true;
-      _error = null;
-      _healthResult = null;
-    });
+    // GF-02118 — Start reset feedback and prevent concurrent settings actions.
+    setState(
+      /* GF-00956 — Runs an inline callback in _SettingsFormState._reset. */ () {
+        _saving = true;
+        _error = null;
+        _healthResult = null;
+      },
+    );
     try {
+      // GF-02119 — Remove the saved override and load platform defaults.
       await ref.read(connectionSettingsProvider.notifier).reset();
       final settings = ref.read(connectionSettingsProvider).value;
       if (settings != null) {
+        // GF-02120 — Synchronize all text fields with the reset configuration.
         _apiController.text = settings.apiBaseUrl;
         _issuerController.text = settings.issuer;
         _clientIdController.text = settings.clientId;
         _redirectController.text = settings.redirectUri;
       }
       if (!mounted) return;
+      // GF-02121 — Confirm that defaults have been restored.
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(content: AppText('初期値に戻しました。')));
     } on Object catch (error) {
-      if (mounted) setState(() => _error = error);
+      // GF-02122 — Display reset failures without discarding the form.
+      if (mounted)
+        setState(
+          /* GF-00957 — Runs an inline callback in _SettingsFormState._reset. */ () =>
+              _error = error,
+        );
     } finally {
-      if (mounted) setState(() => _saving = false);
+      // GF-02123 — Clear the saving state for every outcome.
+      if (mounted)
+        setState(
+          /* GF-00958 — Runs an inline callback in _SettingsFormState._reset. */ () =>
+              _saving = false,
+        );
     }
   }
 
+  /// GF-00959 — Handles check health in _SettingsFormState.
   Future<void> _checkHealth() async {
-    setState(() {
-      _checkingHealth = true;
-      _healthResult = null;
-      _error = null;
-    });
+    // GF-02124 — Start the health check and clear stale results.
+    setState(
+      /* GF-00960 — Runs an inline callback in _SettingsFormState._checkHealth. */ () {
+        _checkingHealth = true;
+        _healthResult = null;
+        _error = null;
+      },
+    );
     try {
+      // GF-02125 — Query the configured Gorape endpoint.
       final body = await ref.read(connectionHealthControllerProvider).check();
       if (!mounted) return;
-      setState(() {
-        _healthResult =
-            '応答: ${body['service'] ?? 'unknown'} / '
-            '${body['status'] ?? 'unknown'}';
-      });
+      // GF-02126 — Format and show the health response.
+      setState(
+        /* GF-00961 — Runs an inline callback in _SettingsFormState._checkHealth. */ () {
+          _healthResult =
+              '応答: ${body['service'] ?? 'unknown'} / '
+              '${body['status'] ?? 'unknown'}';
+        },
+      );
     } on Object catch (error) {
-      if (mounted) setState(() => _error = error);
+      // GF-02127 — Display health-check transport or API errors.
+      if (mounted)
+        setState(
+          /* GF-00962 — Runs an inline callback in _SettingsFormState._checkHealth. */ () =>
+              _error = error,
+        );
     } finally {
-      if (mounted) setState(() => _checkingHealth = false);
+      // GF-02128 — Clear the health-check progress state.
+      if (mounted)
+        setState(
+          /* GF-00963 — Runs an inline callback in _SettingsFormState._checkHealth. */ () =>
+              _checkingHealth = false,
+        );
     }
   }
 
+  /// GF-00964 — Handles sign out in _SettingsFormState.
   Future<void> _signOut() async {
     await ref.read(authControllerProvider.notifier).signOut();
   }

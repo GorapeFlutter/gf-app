@@ -2,6 +2,7 @@ import 'error.dart';
 
 /// A presentation-friendly view of an arbitrary error.
 class FriendlyError {
+  /// GF-00662 — Initializes FriendlyError.
   const FriendlyError({
     required this.title,
     required this.message,
@@ -14,6 +15,7 @@ class FriendlyError {
   final String? guidance;
   final bool canRetry;
 
+  /// GF-00663 — Handles from in FriendlyError.
   static FriendlyError from(Object error) {
     if (error is AppException) {
       return FriendlyError(

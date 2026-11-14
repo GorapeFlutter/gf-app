@@ -1,5 +1,6 @@
 /// A Gorape project returned by `GET /v1/projects`.
 class Project {
+  /// GF-00314 — Initializes Project.
   const Project({
     required this.id,
     required this.slug,
@@ -20,8 +21,10 @@ class Project {
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
+  /// GF-00315 — Computes Project.isActive.
   bool get isActive => status == 'active';
 
+  /// GF-00316 — Initializes Project.fromJson.
   factory Project.fromJson(Map<String, dynamic> json) {
     final issuer = _string(json['oidc_issuer'] ?? json['issuer']);
     final configuredRealm = _string(json['keycloak_realm'] ?? json['realm']);
@@ -39,6 +42,7 @@ class Project {
     );
   }
 
+  /// GF-00317 — Handles realm from issuer in Project.
   static String _realmFromIssuer(String issuer) {
     final segments = Uri.tryParse(issuer)?.pathSegments;
     if (segments == null) return '';
@@ -47,6 +51,7 @@ class Project {
     return segments[realmsIndex + 1];
   }
 
+  /// GF-00318 — Serializes data in Project.
   Map<String, dynamic> toJson() => {
     'id': id,
     'slug': slug,
@@ -58,9 +63,11 @@ class Project {
     'updated_at': updatedAt?.toIso8601String(),
   };
 
+  /// GF-00319 — Handles string in Project.
   static String _string(Object? value, {String fallback = ''}) =>
       value is String ? value : fallback;
 
+  /// GF-00320 — Handles date in Project.
   static DateTime? _date(Object? value) =>
       value is String ? DateTime.tryParse(value) : null;
 }

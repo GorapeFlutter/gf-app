@@ -5,10 +5,13 @@ import '../share/gorape_colors.dart';
 abstract final class AppTheme {
   static const _seed = GorapeColors.pink;
 
+  /// GF-00668 — Handles light in AppTheme.
   static ThemeData light() => _build(Brightness.light);
 
+  /// GF-00669 — Handles dark in AppTheme.
   static ThemeData dark() => _build(Brightness.dark);
 
+  /// GF-00670 — Handles build in AppTheme.
   static ThemeData _build(Brightness brightness) {
     final scheme = ColorScheme.fromSeed(
       seedColor: _seed,

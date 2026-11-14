@@ -2,14 +2,18 @@ import '../entity/model/connection.dart';
 import '../entity/model/platform.dart';
 
 abstract interface class ConnectionConfig {
+  /// GF-00111 — Handles defaults for in ConnectionConfig.
   ConnectionSettings defaultsFor(RuntimePlatform platform);
 
+  /// GF-00112 — Handles defaults from environment in ConnectionConfig.
   ConnectionSettings defaultsFromEnvironment(RuntimePlatform platform);
 }
 
 final class ConnectionConfigImpl implements ConnectionConfig {
+  /// GF-00113 — Initializes ConnectionConfigImpl.
   const ConnectionConfigImpl();
 
+  /// GF-00114 — Handles defaults for in ConnectionConfigImpl.
   @override
   ConnectionSettings defaultsFor(RuntimePlatform platform) {
     return ConnectionSettings(
@@ -24,6 +28,7 @@ final class ConnectionConfigImpl implements ConnectionConfig {
     );
   }
 
+  /// GF-00115 — Handles defaults from environment in ConnectionConfigImpl.
   @override
   ConnectionSettings defaultsFromEnvironment(RuntimePlatform platform) {
     const apiOverride = String.fromEnvironment('GORAPE_API_BASE_URL');
@@ -42,4 +47,5 @@ final class ConnectionConfigImpl implements ConnectionConfig {
   }
 }
 
+/// GF-00116 — Creates an instance for new connection config.
 ConnectionConfig newConnectionConfig() => const ConnectionConfigImpl();

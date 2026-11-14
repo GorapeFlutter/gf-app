@@ -3,6 +3,7 @@
 /// Field names match `components.schemas.RegistrationVerify` in the Gorape
 /// OpenAPI 3.1 contract.
 class RegistrationVerifyRequest {
+  /// GF-00375 — Initializes RegistrationVerifyRequest.
   const RegistrationVerifyRequest({
     required this.challengeId,
     required this.platform,
@@ -21,6 +22,7 @@ class RegistrationVerifyRequest {
   final String algorithm;
   final Map<String, dynamic> evidence;
 
+  /// GF-00376 — Serializes data in RegistrationVerifyRequest.
   Map<String, dynamic> toJson() => {
     'challenge_id': challengeId,
     'platform': platform,
@@ -34,6 +36,7 @@ class RegistrationVerifyRequest {
 
 /// Payload for `POST /v1/projects/{projectId}/devices/{deviceId}/verify`.
 class ProofVerifyRequest {
+  /// GF-00377 — Initializes ProofVerifyRequest.
   const ProofVerifyRequest({
     required this.challengeId,
     required this.signature,
@@ -44,6 +47,7 @@ class ProofVerifyRequest {
   /// Base64url encoded signature.
   final String signature;
 
+  /// GF-00378 — Serializes data in ProofVerifyRequest.
   Map<String, dynamic> toJson() => {
     'challenge_id': challengeId,
     'signature': signature,

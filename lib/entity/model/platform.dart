@@ -10,6 +10,7 @@ enum RuntimePlatform {
   web,
   unknown;
 
+  /// GF-00301 — Computes RuntimePlatform.wireName.
   String get wireName => switch (this) {
     RuntimePlatform.android => 'android',
     RuntimePlatform.ios => 'ios',
@@ -20,6 +21,7 @@ enum RuntimePlatform {
     RuntimePlatform.unknown => 'unknown',
   };
 
+  /// GF-00302 — Computes RuntimePlatform.displayName.
   String get displayName => switch (this) {
     RuntimePlatform.android => 'Android',
     RuntimePlatform.ios => 'iOS',
@@ -30,6 +32,7 @@ enum RuntimePlatform {
     RuntimePlatform.unknown => 'Unknown',
   };
 
+  /// GF-00303 — Computes RuntimePlatform.isApple.
   bool get isApple =>
       this == RuntimePlatform.ios || this == RuntimePlatform.macos;
 }

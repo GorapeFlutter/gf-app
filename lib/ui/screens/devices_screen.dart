@@ -11,6 +11,7 @@ import '../widgets/role_badge.dart';
 import 'device_detail_screen.dart';
 
 class DevicesScreen extends ConsumerWidget {
+  /// GF-00741 — Initializes DevicesScreen.
   const DevicesScreen({
     super.key,
     required this.projectId,
@@ -20,13 +21,15 @@ class DevicesScreen extends ConsumerWidget {
   final String projectId;
   final VoidCallback onRegister;
 
+  /// GF-00742 — Builds the widget or value for DevicesScreen.
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final devices = ref.watch(devicesProvider(projectId));
     final role = ref.watch(projectRoleProvider(projectId));
     final canEdit = role.canEdit;
     return RefreshIndicator(
-      onRefresh: () => ref.read(devicesProvider(projectId).notifier).reload(),
+      onRefresh: /* GF-00743 — Runs an inline callback in DevicesScreen.build. */
+          () => ref.read(devicesProvider(projectId).notifier).reload(),
       child: CustomScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
         slivers: [
@@ -51,8 +54,10 @@ class DevicesScreen extends ConsumerWidget {
                     ),
                   IconButton(
                     tooltip: tr(context, '再読み込み'),
-                    onPressed: () =>
-                        ref.read(devicesProvider(projectId).notifier).reload(),
+                    onPressed: /* GF-00744 — Runs an inline callback in DevicesScreen.build. */
+                        () => ref
+                            .read(devicesProvider(projectId).notifier)
+                            .reload(),
                     icon: Icon(Icons.refresh, size: 22),
                   ),
                   FilledButton.tonalIcon(
@@ -90,8 +95,10 @@ class DevicesScreen extends ConsumerWidget {
                 padding: const EdgeInsets.all(16),
                 child: ErrorCard(
                   error: devices.error!,
-                  onRetry: () =>
-                      ref.read(devicesProvider(projectId).notifier).reload(),
+                  onRetry: /* GF-00745 — Runs an inline callback in DevicesScreen.build. */
+                      () => ref
+                          .read(devicesProvider(projectId).notifier)
+                          .reload(),
                 ),
               ),
             )
@@ -118,14 +125,16 @@ class DevicesScreen extends ConsumerWidget {
           else
             SliverList.separated(
               itemCount: devices.value!.length,
-              separatorBuilder: (_, _) => const SizedBox(height: 8),
-              itemBuilder: (context, index) {
-                final device = devices.value![index];
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: _DeviceTile(projectId: projectId, device: device),
-                );
-              },
+              separatorBuilder: /* GF-00746 — Runs an inline callback in DevicesScreen.build. */
+                  (_, _) => const SizedBox(height: 8),
+              itemBuilder: /* GF-00747 — Runs an inline callback in DevicesScreen.build. */
+                  (context, index) {
+                    final device = devices.value![index];
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: _DeviceTile(projectId: projectId, device: device),
+                    );
+                  },
             ),
           const SliverToBoxAdapter(child: SizedBox(height: 24)),
         ],
@@ -135,11 +144,13 @@ class DevicesScreen extends ConsumerWidget {
 }
 
 class _DeviceTile extends ConsumerWidget {
+  /// GF-00748 — Initializes _DeviceTile.
   const _DeviceTile({required this.projectId, required this.device});
 
   final String projectId;
   final Device device;
 
+  /// GF-00749 — Builds the widget or value for _DeviceTile.
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final keyRef = DeviceRef(projectId: projectId, deviceId: device.id);
@@ -185,14 +196,15 @@ class _DeviceTile extends ConsumerWidget {
         ),
         isThreeLine: true,
         trailing: const Icon(Icons.chevron_right),
-        onTap: () {
+        onTap: /* GF-00750 — Runs an inline callback in _DeviceTile.build. */ () {
           Navigator.of(context).push(
             MaterialPageRoute<void>(
-              builder: (_) => DeviceDetailScreen(
-                projectId: projectId,
-                deviceId: device.id,
-                initialDevice: device,
-              ),
+              builder: /* GF-00751 — Runs an inline callback in _DeviceTile.build.callback. */
+                  (_) => DeviceDetailScreen(
+                    projectId: projectId,
+                    deviceId: device.id,
+                    initialDevice: device,
+                  ),
             ),
           );
         },
@@ -200,6 +212,7 @@ class _DeviceTile extends ConsumerWidget {
     );
   }
 
+  /// GF-00752 — Handles platform icon in _DeviceTile.
   IconData _platformIcon(String platform) {
     return switch (platform) {
       'android' => Icons.android,

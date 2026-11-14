@@ -5,6 +5,7 @@ import '../../share/error.dart';
 import '../../share/friendly_error.dart';
 
 class ErrorCard extends StatelessWidget {
+  /// GF-00978 — Initializes ErrorCard.
   const ErrorCard({
     super.key,
     required this.error,
@@ -16,6 +17,7 @@ class ErrorCard extends StatelessWidget {
   final VoidCallback? onRetry;
   final bool compact;
 
+  /// GF-00979 — Builds the widget or value for ErrorCard.
   @override
   Widget build(BuildContext context) {
     final friendly = FriendlyError.from(error);
@@ -81,6 +83,7 @@ class ErrorCard extends StatelessWidget {
 }
 
 class EmptyState extends StatelessWidget {
+  /// GF-00980 — Initializes EmptyState.
   const EmptyState({
     super.key,
     required this.icon,
@@ -94,6 +97,7 @@ class EmptyState extends StatelessWidget {
   final String message;
   final Widget? action;
 
+  /// GF-00981 — Builds the widget or value for EmptyState.
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -127,6 +131,7 @@ class EmptyState extends StatelessWidget {
 }
 
 class StatusChip extends StatelessWidget {
+  /// GF-00982 — Initializes StatusChip.
   const StatusChip({
     super.key,
     required this.label,
@@ -138,6 +143,7 @@ class StatusChip extends StatelessWidget {
   final Color color;
   final IconData? icon;
 
+  /// GF-00983 — Initializes StatusChip.status.
   factory StatusChip.status(BuildContext context, String status) {
     final scheme = Theme.of(context).colorScheme;
     final normalized = status.toLowerCase();
@@ -150,6 +156,7 @@ class StatusChip extends StatelessWidget {
     return StatusChip(label: status, color: color);
   }
 
+  /// GF-00984 — Builds the widget or value for StatusChip.
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -181,6 +188,7 @@ class StatusChip extends StatelessWidget {
 }
 
 class KeyValueRow extends StatelessWidget {
+  /// GF-00985 — Initializes KeyValueRow.
   const KeyValueRow(
     this.label,
     this.value, {
@@ -192,6 +200,7 @@ class KeyValueRow extends StatelessWidget {
   final String value;
   final bool monospace;
 
+  /// GF-00986 — Builds the widget or value for KeyValueRow.
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -226,6 +235,7 @@ class KeyValueRow extends StatelessWidget {
 }
 
 class SectionCard extends StatelessWidget {
+  /// GF-00987 — Initializes SectionCard.
   const SectionCard({
     super.key,
     required this.title,
@@ -239,6 +249,7 @@ class SectionCard extends StatelessWidget {
   final IconData? icon;
   final Widget? trailing;
 
+  /// GF-00988 — Builds the widget or value for SectionCard.
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -273,10 +284,12 @@ class SectionCard extends StatelessWidget {
 }
 
 class LoadingView extends StatelessWidget {
+  /// GF-00989 — Initializes LoadingView.
   const LoadingView({super.key, this.label = '読み込み中...'});
 
   final String label;
 
+  /// GF-00990 — Builds the widget or value for LoadingView.
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -295,14 +308,18 @@ class LoadingView extends StatelessWidget {
   }
 }
 
+/// GF-00991 — Handles format timestamp in top level.
 String formatTimestamp(DateTime? value) {
   if (value == null) return '—';
   final local = value.toLocal();
+
+  /// GF-00992 — Handles two in top level.formatTimestamp.
   String two(int v) => v.toString().padLeft(2, '0');
   return '${local.year}-${two(local.month)}-${two(local.day)} '
       '${two(local.hour)}:${two(local.minute)}';
 }
 
+/// GF-00993 — Handles platform label in top level.
 String platformLabel(String platform) {
   return switch (platform) {
     'android' => 'Android',
@@ -314,8 +331,10 @@ String platformLabel(String platform) {
   };
 }
 
+/// GF-00994 — Handles friendly error in top level.
 FriendlyError friendlyError(Object error) => FriendlyError.from(error);
 
+/// GF-00995 — Handles as app exception in top level.
 AppException asAppException(Object error) {
   if (error is AppException) return error;
   return UnknownAppException(error.toString());

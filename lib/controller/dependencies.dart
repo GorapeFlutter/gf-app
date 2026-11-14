@@ -21,86 +21,105 @@ import 'auth.dart';
 import 'base.dart';
 import 'connection.dart';
 
-final gorapeApiProvider = Provider<GorapeApi>((ref) {
-  final platform = ref.watch(runtimePlatformProvider);
-  final settings =
-      ref.watch(connectionSettingsProvider).value ??
-      ref.watch(connectionConfigProvider).defaultsFromEnvironment(platform);
-  final client = http.Client();
-  ref.onDispose(client.close);
-  return newGorapeApi(
-    baseUrl: settings.apiBaseUrl,
-    httpClient: client,
-    accessTokenProvider: ref.watch(accessTokenProvider),
-    refreshAccessToken: () async {
-      final auth = ref.read(authControllerProvider.notifier);
-      final refreshed = await auth.refreshSession();
-      if (!refreshed) await auth.handleUnauthorized();
-      return refreshed;
-    },
-  );
-});
+final gorapeApiProvider = Provider<GorapeApi>(
+  /* GF-00162 — Runs an inline callback in top level. */ (ref) {
+    final platform = ref.watch(runtimePlatformProvider);
+    final settings =
+        ref.watch(connectionSettingsProvider).value ??
+        ref.watch(connectionConfigProvider).defaultsFromEnvironment(platform);
+    final client = http.Client();
+    ref.onDispose(client.close);
+    return newGorapeApi(
+      baseUrl: settings.apiBaseUrl,
+      httpClient: client,
+      accessTokenProvider: ref.watch(accessTokenProvider),
+      refreshAccessToken: /* GF-00163 — Runs an inline callback in top level.callback. */
+          () async {
+            final auth = ref.read(authControllerProvider.notifier);
+            final refreshed = await auth.refreshSession();
+            if (!refreshed) await auth.handleUnauthorized();
+            return refreshed;
+          },
+    );
+  },
+);
 
 final projectRepositoryProvider = Provider<ProjectRepository>(
-  (ref) => newProjectRepository(ref.watch(gorapeApiProvider)),
+  /* GF-00164 — Runs an inline callback in top level. */ (ref) =>
+      newProjectRepository(ref.watch(gorapeApiProvider)),
 );
 final projectUsecaseProvider = Provider<ProjectUsecase>(
-  (ref) => newProjectUsecase(ref.watch(projectRepositoryProvider)),
+  /* GF-00165 — Runs an inline callback in top level. */ (ref) =>
+      newProjectUsecase(ref.watch(projectRepositoryProvider)),
 );
 
 final deviceRepositoryProvider = Provider<DeviceRepository>(
-  (ref) => newDeviceRepository(ref.watch(gorapeApiProvider)),
+  /* GF-00166 — Runs an inline callback in top level. */ (ref) =>
+      newDeviceRepository(ref.watch(gorapeApiProvider)),
 );
 final attestationRepositoryProvider = Provider<AttestationRepository>(
-  (ref) => newAttestationRepository(ref.watch(gorapeApiProvider)),
+  /* GF-00167 — Runs an inline callback in top level. */ (ref) =>
+      newAttestationRepository(ref.watch(gorapeApiProvider)),
 );
 final attestationUsecaseProvider = Provider<AttestationUsecase>(
-  (ref) => newAttestationUsecase(ref.watch(attestationRepositoryProvider)),
+  /* GF-00168 — Runs an inline callback in top level. */ (ref) =>
+      newAttestationUsecase(ref.watch(attestationRepositoryProvider)),
 );
 
 final deviceKeyRepositoryProvider = Provider<DeviceKeyRepository>(
-  (ref) => newDeviceKeyRepository(ref.watch(runtimePlatformProvider)),
+  /* GF-00169 — Runs an inline callback in top level. */ (ref) =>
+      newDeviceKeyRepository(ref.watch(runtimePlatformProvider)),
 );
 final deviceKeyStoreRepositoryProvider = Provider<DeviceKeyStoreRepository>(
-  (ref) => newDeviceKeyStoreRepository(ref.watch(secureStoreProvider)),
+  /* GF-00170 — Runs an inline callback in top level. */ (ref) =>
+      newDeviceKeyStoreRepository(ref.watch(secureStoreProvider)),
 );
 final deviceUsecaseProvider = Provider<DeviceUsecase>(
-  (ref) => newDeviceUsecase(
-    deviceRepository: ref.watch(deviceRepositoryProvider),
-    attestationRepository: ref.watch(attestationRepositoryProvider),
-    keyRepository: ref.watch(deviceKeyRepositoryProvider),
-    keyStoreRepository: ref.watch(deviceKeyStoreRepositoryProvider),
-  ),
+  /* GF-00171 — Runs an inline callback in top level. */ (ref) =>
+      newDeviceUsecase(
+        deviceRepository: ref.watch(deviceRepositoryProvider),
+        attestationRepository: ref.watch(attestationRepositoryProvider),
+        keyRepository: ref.watch(deviceKeyRepositoryProvider),
+        keyStoreRepository: ref.watch(deviceKeyStoreRepositoryProvider),
+      ),
 );
 
 final groupRepositoryProvider = Provider<GroupRepository>(
-  (ref) => newGroupRepository(ref.watch(gorapeApiProvider)),
+  /* GF-00172 — Runs an inline callback in top level. */ (ref) =>
+      newGroupRepository(ref.watch(gorapeApiProvider)),
 );
 final groupUsecaseProvider = Provider<GroupUsecase>(
-  (ref) => newGroupUsecase(ref.watch(groupRepositoryProvider)),
+  /* GF-00173 — Runs an inline callback in top level. */ (ref) =>
+      newGroupUsecase(ref.watch(groupRepositoryProvider)),
 );
 
 final roleRepositoryProvider = Provider<RoleRepository>(
-  (ref) => newRoleRepository(ref.watch(gorapeApiProvider)),
+  /* GF-00174 — Runs an inline callback in top level. */ (ref) =>
+      newRoleRepository(ref.watch(gorapeApiProvider)),
 );
 final roleUsecaseProvider = Provider<RoleUsecase>(
-  (ref) => newRoleUsecase(ref.watch(roleRepositoryProvider)),
+  /* GF-00175 — Runs an inline callback in top level. */ (ref) =>
+      newRoleUsecase(ref.watch(roleRepositoryProvider)),
 );
 
 final policyRepositoryProvider = Provider<DevicePolicyRepository>(
-  (ref) => newDevicePolicyRepository(ref.watch(secureStoreProvider)),
+  /* GF-00176 — Runs an inline callback in top level. */ (ref) =>
+      newDevicePolicyRepository(ref.watch(secureStoreProvider)),
 );
 final policyUsecaseProvider = Provider<DevicePolicyUsecase>(
-  (ref) => newDevicePolicyUsecase(ref.watch(policyRepositoryProvider)),
+  /* GF-00177 — Runs an inline callback in top level. */ (ref) =>
+      newDevicePolicyUsecase(ref.watch(policyRepositoryProvider)),
 );
 
 final connectionRepositoryProvider = Provider<ConnectionRepository>(
-  (ref) => newConnectionRepository(ref.watch(gorapeApiProvider)),
+  /* GF-00178 — Runs an inline callback in top level. */ (ref) =>
+      newConnectionRepository(ref.watch(gorapeApiProvider)),
 );
 final connectionHealthUsecaseProvider = Provider<ConnectionHealthUsecase>(
-  (ref) => newConnectionHealthUsecase(ref.watch(connectionRepositoryProvider)),
+  /* GF-00179 — Runs an inline callback in top level. */ (ref) =>
+      newConnectionHealthUsecase(ref.watch(connectionRepositoryProvider)),
 );
 final connectionHealthControllerProvider = Provider<ConnectionHealthController>(
-  (ref) =>
+  /* GF-00180 — Runs an inline callback in top level. */ (ref) =>
       newConnectionHealthController(ref.watch(connectionHealthUsecaseProvider)),
 );

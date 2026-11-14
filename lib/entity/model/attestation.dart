@@ -1,5 +1,6 @@
 /// One attestation verification record.
 class AttestationRecord {
+  /// GF-00250 — Initializes AttestationRecord.
   const AttestationRecord({
     required this.id,
     required this.projectId,
@@ -22,6 +23,7 @@ class AttestationRecord {
   final DateTime verifiedAt;
   final String? evidenceReference;
 
+  /// GF-00251 — Initializes AttestationRecord.fromJson.
   factory AttestationRecord.fromJson(Map<String, dynamic> json) {
     return AttestationRecord(
       id: json['id'] as String? ?? '',

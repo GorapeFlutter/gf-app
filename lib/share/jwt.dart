@@ -6,6 +6,7 @@ import 'dart:convert';
 /// validates the access token server-side. Signature verification is not
 /// performed here on purpose (the client does not own the realm keys).
 abstract final class JwtClaims {
+  /// GF-00664 — Handles decode unverified in JwtClaims.
   static Map<String, dynamic> decodeUnverified(String token) {
     final parts = token.split('.');
     if (parts.length != 3) return const {};
@@ -18,6 +19,7 @@ abstract final class JwtClaims {
     }
   }
 
+  /// GF-00665 — Handles pad in JwtClaims.
   static String _pad(String value) {
     final remainder = value.length % 4;
     if (remainder == 0) return value;

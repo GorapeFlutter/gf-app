@@ -14,17 +14,25 @@ enum AccessRole {
   editor(2, '編集者'),
   admin(3, '管理者');
 
+  /// GF-00326 — Initializes AccessRole.
   const AccessRole(this.rank, this.label);
 
   final int rank;
   final String label;
 
+  /// GF-00327 — Handles at least in AccessRole.
   bool atLeast(AccessRole other) => rank >= other.rank;
 
+  /// GF-00328 — Computes AccessRole.canView.
   bool get canView => atLeast(viewer);
+
+  /// GF-00329 — Computes AccessRole.canEdit.
   bool get canEdit => atLeast(editor);
+
+  /// GF-00330 — Computes AccessRole.canAdmin.
   bool get canAdmin => atLeast(admin);
 
+  /// GF-00331 — Computes AccessRole.description.
   String get description => switch (this) {
     AccessRole.admin => 'グループ作成・ロール付与・デバイス失効など、このスコープの管理操作をすべて実行できます。',
     AccessRole.editor => 'デバイスの登録・失効、グループへのデバイス割当を実行できます。グループ設定とロール付与は変更できません。',
@@ -32,6 +40,7 @@ enum AccessRole {
     AccessRole.none => 'このスコープのロールがKeycloakトークンに含まれていません。',
   };
 
+  /// GF-00332 — Handles from name in AccessRole.
   static AccessRole? fromName(Object? value) {
     if (value is Iterable) {
       AccessRole? best;
@@ -71,6 +80,7 @@ enum AccessRole {
     return null;
   }
 
+  /// GF-00333 — Handles best in AccessRole.
   static AccessRole best(Iterable<AccessRole?> roles) {
     var result = AccessRole.none;
     for (final role in roles) {
@@ -80,6 +90,7 @@ enum AccessRole {
   }
 }
 
+/// GF-00009 — Parses Keycloak claims into cluster, project, and group roles.
 /// Keycloak claims relevant to Gorape RBAC.
 ///
 /// Supported conventions (all optional):
@@ -92,6 +103,7 @@ enum AccessRole {
 /// - `gorape_group_roles` as a JSON object or claim map keyed by slug/path.
 /// - `gorape_project_<slug>_role` / `gorape_group_<slug>_role` attributes.
 class RoleSnapshot {
+  /// GF-00334 — Initializes RoleSnapshot.
   const RoleSnapshot({
     this.realmRoles = const [],
     this.clientRoles = const [],
@@ -116,8 +128,10 @@ class RoleSnapshot {
   final AccessRole projectFallback;
   final AccessRole groupFallback;
 
+  /// GF-00335 — Computes RoleSnapshot.allRoles.
   List<String> get allRoles => _unique([...realmRoles, ...clientRoles]);
 
+  /// GF-00336 — Handles project role for in RoleSnapshot.
   AccessRole projectRoleFor(Iterable<String> keys) {
     return AccessRole.best([
       clusterRole,
@@ -126,6 +140,7 @@ class RoleSnapshot {
     ]);
   }
 
+  /// GF-00337 — Handles group role for in RoleSnapshot.
   AccessRole groupRoleFor(
     Iterable<String> keys, {
     AccessRole projectRole = AccessRole.none,
@@ -137,8 +152,11 @@ class RoleSnapshot {
     ]);
   }
 
+  /// GF-00338 — Initializes RoleSnapshot.fromClaims.
   factory RoleSnapshot.fromClaims(Map<String, dynamic> claims) {
+    // GF-02075 — Normalize Keycloak user attributes before resolving roles.
     final attributes = _extractAttributes(claims);
+    // GF-02076 — Collect realm and client roles from token claims.
     final realmRoles = _unique([
       ..._strings(_asMap(claims['realm_access'])['roles']),
       ..._strings(claims['roles']),
@@ -152,6 +170,7 @@ class RoleSnapshot {
     clientRoles.addAll(_strings(claims['client_roles']));
 
     final roles = [...realmRoles, ...clientRoles];
+    // GF-02077 — Resolve cluster-wide role claims and role-name fallbacks.
     final explicitCluster = _valueOf(claims, attributes, const [
       'gorape_cluster_role',
       'cluster_role',
@@ -162,6 +181,7 @@ class RoleSnapshot {
       for (final role in roles) AccessRole.fromName(role),
     ]);
 
+    // GF-02078 — Build project-specific roles from maps and user attributes.
     final projectRoles = <String, AccessRole>{};
     final projectFallback =
         AccessRole.fromName(
@@ -189,6 +209,7 @@ class RoleSnapshot {
       suffix: '_role',
     );
 
+    // GF-02079 — Build group-specific roles from maps and user attributes.
     final groupRoles = <String, AccessRole>{};
     final groupFallback =
         AccessRole.fromName(
@@ -217,6 +238,7 @@ class RoleSnapshot {
       ignore: const {'gorape_group_role', 'gorape_group_roles'},
     );
 
+    // GF-02080 — Interpret group paths that also encode authorization roles.
     final groupPaths = <String>[];
     final rawGroups = claims['groups'] ?? claims['gorape_groups'];
     if (rawGroups is List) {
@@ -250,6 +272,7 @@ class RoleSnapshot {
       }
     }
 
+    // GF-02081 — Publish one immutable role snapshot for UI access decisions.
     return RoleSnapshot(
       realmRoles: realmRoles,
       clientRoles: _unique(clientRoles),
@@ -263,6 +286,7 @@ class RoleSnapshot {
     );
   }
 
+  /// GF-00339 — Handles merge role map in RoleSnapshot.
   static void _mergeRoleMap(
     Map<String, AccessRole> target,
     Map<String, dynamic> source,
@@ -274,6 +298,7 @@ class RoleSnapshot {
     }
   }
 
+  /// GF-00340 — Handles merge attribute roles in RoleSnapshot.
   static void _mergeAttributeRoles(
     Map<String, AccessRole> target,
     Map<String, Object?> attributes, {
@@ -293,11 +318,20 @@ class RoleSnapshot {
     }
   }
 
+  /// GF-00341 — Handles merge group path role in RoleSnapshot.
   static void _mergeGroupPathRole(Map<String, AccessRole> target, String path) {
     final segments = path
         .split('/')
-        .map((segment) => segment.trim())
-        .where((segment) => segment.isNotEmpty)
+        .map(
+          /* GF-00342 — Runs an inline callback in RoleSnapshot._mergeGroupPathRole. */ (
+            segment,
+          ) => segment.trim(),
+        )
+        .where(
+          /* GF-00343 — Runs an inline callback in RoleSnapshot._mergeGroupPathRole. */ (
+            segment,
+          ) => segment.isNotEmpty,
+        )
         .toList(growable: false);
     if (segments.length < 2) return;
     final role = AccessRole.fromName(segments.last);
@@ -308,6 +342,7 @@ class RoleSnapshot {
     _mergeRole(target, groupSegments.last, role);
   }
 
+  /// GF-00344 — Handles merge authorization path roles in RoleSnapshot.
   static void _mergeAuthorizationPathRoles(
     Map<String, AccessRole> projectRoles,
     Map<String, AccessRole> groupRoles,
@@ -315,8 +350,16 @@ class RoleSnapshot {
   ) {
     final segments = path
         .split('/')
-        .map((segment) => segment.trim())
-        .where((segment) => segment.isNotEmpty)
+        .map(
+          /* GF-00345 — Runs an inline callback in RoleSnapshot._mergeAuthorizationPathRoles. */ (
+            segment,
+          ) => segment.trim(),
+        )
+        .where(
+          /* GF-00346 — Runs an inline callback in RoleSnapshot._mergeAuthorizationPathRoles. */ (
+            segment,
+          ) => segment.isNotEmpty,
+        )
         .toList(growable: false);
 
     if (segments.length >= 5 &&
@@ -344,6 +387,7 @@ class RoleSnapshot {
     _mergeGroupPathRole(groupRoles, path);
   }
 
+  /// GF-00347 — Handles merge role in RoleSnapshot.
   static void _mergeRole(
     Map<String, AccessRole> target,
     Object? key,
@@ -357,6 +401,7 @@ class RoleSnapshot {
     }
   }
 
+  /// GF-00348 — Handles lookup in RoleSnapshot.
   static AccessRole? _lookup(Map<String, AccessRole> roles, Object? key) {
     final normalized = _normalizeKey(key);
     if (normalized.isEmpty) return null;
@@ -364,7 +409,11 @@ class RoleSnapshot {
     if (direct != null) return direct;
     final segments = normalized
         .split('/')
-        .where((segment) => segment.isNotEmpty)
+        .where(
+          /* GF-00349 — Runs an inline callback in RoleSnapshot._lookup. */ (
+            segment,
+          ) => segment.isNotEmpty,
+        )
         .toList(growable: false);
     if (segments.length > 1) {
       final last = roles[segments.last];
@@ -373,6 +422,7 @@ class RoleSnapshot {
     return null;
   }
 
+  /// GF-00350 — Handles normalize key in RoleSnapshot.
   static String _normalizeKey(Object? value) {
     return (value?.toString() ?? '')
         .trim()
@@ -381,14 +431,20 @@ class RoleSnapshot {
         .replaceAll(RegExp(r'/+$'), '');
   }
 
+  /// GF-00351 — Handles last segment in RoleSnapshot.
   static String _lastSegment(String value) {
     final segments = value
         .split('/')
-        .where((segment) => segment.trim().isNotEmpty)
+        .where(
+          /* GF-00352 — Runs an inline callback in RoleSnapshot._lastSegment. */ (
+            segment,
+          ) => segment.trim().isNotEmpty,
+        )
         .toList(growable: false);
     return segments.isEmpty ? '' : segments.last;
   }
 
+  /// GF-00353 — Handles extract attributes in RoleSnapshot.
   static Map<String, Object?> _extractAttributes(Map<String, dynamic> claims) {
     final result = <String, Object?>{};
     for (final entry in claims.entries) {
@@ -408,6 +464,7 @@ class RoleSnapshot {
     return result;
   }
 
+  /// GF-00354 — Handles value of in RoleSnapshot.
   static Object? _valueOf(
     Map<String, dynamic> claims,
     Map<String, Object?> attributes,
@@ -424,6 +481,7 @@ class RoleSnapshot {
     return null;
   }
 
+  /// GF-00355 — Handles first value in RoleSnapshot.
   static Object? _firstValue(Object? value) {
     if (value is List) {
       final items = [
@@ -437,6 +495,7 @@ class RoleSnapshot {
     return value;
   }
 
+  /// GF-00356 — Handles strings in RoleSnapshot.
   static List<String> _strings(Object? value) {
     if (value == null) return const [];
     if (value is String) {
@@ -445,23 +504,42 @@ class RoleSnapshot {
     }
     if (value is Iterable) {
       return value
-          .map((item) => item?.toString().trim() ?? '')
-          .where((item) => item.isNotEmpty)
+          .map(
+            /* GF-00357 — Runs an inline callback in RoleSnapshot._strings. */ (
+              item,
+            ) => item?.toString().trim() ?? '',
+          )
+          .where(
+            /* GF-00358 — Runs an inline callback in RoleSnapshot._strings. */ (
+              item,
+            ) => item.isNotEmpty,
+          )
           .toList(growable: false);
     }
     return const [];
   }
 
+  /// GF-00359 — Handles as map in RoleSnapshot.
   static Map<String, dynamic> _asMap(Object? value) {
     if (value is Map<String, dynamic>) return value;
     if (value is Map) {
-      return value.map((key, item) => MapEntry(key.toString(), item));
+      return value.map(
+        /* GF-00360 — Runs an inline callback in RoleSnapshot._asMap. */ (
+          key,
+          item,
+        ) => MapEntry(key.toString(), item),
+      );
     }
     if (value is String && value.trim().isNotEmpty) {
       try {
         final decoded = jsonDecode(value);
         if (decoded is Map) {
-          return decoded.map((key, item) => MapEntry(key.toString(), item));
+          return decoded.map(
+            /* GF-00361 — Runs an inline callback in RoleSnapshot._asMap. */ (
+              key,
+              item,
+            ) => MapEntry(key.toString(), item),
+          );
         }
       } on FormatException {
         // Ignore malformed JSON claims; role resolution falls back safely.
@@ -470,6 +548,7 @@ class RoleSnapshot {
     return const {};
   }
 
+  /// GF-00362 — Handles unique in RoleSnapshot.
   static List<String> _unique(Iterable<String> values) {
     final seen = <String>{};
     final result = <String>[];
@@ -482,6 +561,7 @@ class RoleSnapshot {
 }
 
 extension ProjectAccessKeys on Project {
+  /// GF-00363 — Computes ProjectAccessKeys.accessKeys.
   Iterable<String> get accessKeys => [
     id,
     slug,
@@ -492,6 +572,7 @@ extension ProjectAccessKeys on Project {
 }
 
 extension GroupAccessKeys on Group {
+  /// GF-00364 — Computes GroupAccessKeys.accessKeys.
   Iterable<String> get accessKeys => [
     id,
     slug,

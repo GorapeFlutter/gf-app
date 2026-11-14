@@ -14,10 +14,12 @@ import 'group_detail_screen.dart';
 
 /// Group list for the selected project, with per-group effective roles.
 class GroupManagementScreen extends ConsumerStatefulWidget {
+  /// GF-00808 — Initializes GroupManagementScreen.
   const GroupManagementScreen({super.key, required this.project});
 
   final Project project;
 
+  /// GF-00809 — Creates the state object for GroupManagementScreen.
   @override
   ConsumerState<GroupManagementScreen> createState() =>
       _GroupManagementScreenState();
@@ -26,6 +28,7 @@ class GroupManagementScreen extends ConsumerStatefulWidget {
 class _GroupManagementScreenState extends ConsumerState<GroupManagementScreen> {
   bool _busy = false;
 
+  /// GF-00810 — Builds the widget or value for _GroupManagementScreenState.
   @override
   Widget build(BuildContext context) {
     final snapshot = ref.watch(roleSnapshotProvider);
@@ -34,8 +37,8 @@ class _GroupManagementScreenState extends ConsumerState<GroupManagementScreen> {
     final scheme = Theme.of(context).colorScheme;
 
     return RefreshIndicator(
-      onRefresh: () =>
-          ref.read(groupsProvider(widget.project.id).notifier).reload(),
+      onRefresh: /* GF-00811 — Runs an inline callback in _GroupManagementScreenState.build. */
+          () => ref.read(groupsProvider(widget.project.id).notifier).reload(),
       child: ListView(
         physics: const AlwaysScrollableScrollPhysics(),
         padding: const EdgeInsets.all(16),
@@ -68,35 +71,39 @@ class _GroupManagementScreenState extends ConsumerState<GroupManagementScreen> {
               ],
             ),
             child: groups.when(
-              loading: () => const LinearProgressIndicator(),
-              error: (error, _) => ErrorCard(
-                error: error,
-                onRetry: () => ref
-                    .read(groupsProvider(widget.project.id).notifier)
-                    .reload(),
-              ),
-              data: (list) {
-                if (list.isEmpty) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    child: AppText(
-                      projectRole.canAdmin
-                          ? 'グループがありません。右上の「作成」から追加できます。'
-                          : 'グループが作成されていません。',
-                    ),
-                  );
-                }
-                return Column(
-                  children: [
-                    for (final group in list)
-                      _GroupListTile(
-                        project: widget.project,
-                        group: group,
-                        projectRole: projectRole,
-                      ),
-                  ],
-                );
-              },
+              loading: /* GF-00812 — Runs an inline callback in _GroupManagementScreenState.build. */
+                  () => const LinearProgressIndicator(),
+              error: /* GF-00813 — Runs an inline callback in _GroupManagementScreenState.build. */
+                  (error, _) => ErrorCard(
+                    error: error,
+                    onRetry: /* GF-00814 — Runs an inline callback in _GroupManagementScreenState.build.callback. */
+                        () => ref
+                            .read(groupsProvider(widget.project.id).notifier)
+                            .reload(),
+                  ),
+              data: /* GF-00815 — Runs an inline callback in _GroupManagementScreenState.build. */
+                  (list) {
+                    if (list.isEmpty) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        child: AppText(
+                          projectRole.canAdmin
+                              ? 'グループがありません。右上の「作成」から追加できます。'
+                              : 'グループが作成されていません。',
+                        ),
+                      );
+                    }
+                    return Column(
+                      children: [
+                        for (final group in list)
+                          _GroupListTile(
+                            project: widget.project,
+                            group: group,
+                            projectRole: projectRole,
+                          ),
+                      ],
+                    );
+                  },
             ),
           ),
           Card(
@@ -118,11 +125,17 @@ class _GroupManagementScreenState extends ConsumerState<GroupManagementScreen> {
     );
   }
 
+  /// GF-00816 — Handles create group in _GroupManagementScreenState.
   Future<void> _createGroup() async {
+    // GF-02152 — Collect group details and stop when the dialog is cancelled.
     final input = await showGroupFormDialog(context);
     if (input == null || !mounted) return;
-    setState(() => _busy = true);
+    setState(
+      /* GF-00817 — Runs an inline callback in _GroupManagementScreenState._createGroup. */ () =>
+          _busy = true,
+    );
     try {
+      // GF-02153 — Create the group and retain its server-generated record.
       final group = await ref
           .read(groupControllerProvider)
           .create(
@@ -130,13 +143,14 @@ class _GroupManagementScreenState extends ConsumerState<GroupManagementScreen> {
             GroupCreateRequest(slug: input.slug, name: input.name),
           );
       if (!mounted) return;
+      // GF-02154 — Confirm creation and open the new group's detail screen.
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: AppText('グループ「${input.name}」を作成しました。')));
       await Navigator.of(context).push(
         MaterialPageRoute<void>(
-          builder: (_) =>
-              GroupScopeScreen(project: widget.project, group: group),
+          builder: /* GF-00818 — Runs an inline callback in _GroupManagementScreenState._createGroup. */
+              (_) => GroupScopeScreen(project: widget.project, group: group),
         ),
       );
     } on Object catch (error) {
@@ -149,12 +163,17 @@ class _GroupManagementScreenState extends ConsumerState<GroupManagementScreen> {
         ),
       );
     } finally {
-      if (mounted) setState(() => _busy = false);
+      if (mounted)
+        setState(
+          /* GF-00819 — Runs an inline callback in _GroupManagementScreenState._createGroup. */ () =>
+              _busy = false,
+        );
     }
   }
 }
 
 class _GroupListTile extends ConsumerWidget {
+  /// GF-00820 — Initializes _GroupListTile.
   const _GroupListTile({
     required this.project,
     required this.group,
@@ -165,6 +184,7 @@ class _GroupListTile extends ConsumerWidget {
   final Group group;
   final AccessRole projectRole;
 
+  /// GF-00821 — Builds the widget or value for _GroupListTile.
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final snapshot = ref.watch(roleSnapshotProvider);
@@ -190,11 +210,13 @@ class _GroupListTile extends ConsumerWidget {
         ),
         subtitle: AppText(group.slug),
         trailing: RoleBadge(role: role),
-        onTap: () => Navigator.of(context).push(
-          MaterialPageRoute<void>(
-            builder: (_) => GroupScopeScreen(project: project, group: group),
-          ),
-        ),
+        onTap: /* GF-00822 — Runs an inline callback in _GroupListTile.build. */
+            () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: /* GF-00823 — Runs an inline callback in _GroupListTile.build.callback. */
+                    (_) => GroupScopeScreen(project: project, group: group),
+              ),
+            ),
       ),
     );
   }

@@ -13,10 +13,12 @@ import '../widgets/role_badge.dart';
 /// The concrete screen is chosen from the role resolved from the Keycloak
 /// token, so realm/client role changes switch the UI without code changes.
 class ClusterScopeScreen extends ConsumerWidget {
+  /// GF-00698 — Initializes ClusterScopeScreen.
   const ClusterScopeScreen({super.key, this.onOpenProject});
 
   final ValueChanged<Project>? onOpenProject;
 
+  /// GF-00699 — Builds the widget or value for ClusterScopeScreen.
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final role = ref.watch(clusterRoleProvider);
@@ -31,10 +33,12 @@ class ClusterScopeScreen extends ConsumerWidget {
 
 /// Realm administrator: sees identity, claims, and cluster-wide role data.
 class ClusterAdminScreen extends StatelessWidget {
+  /// GF-00700 — Initializes ClusterAdminScreen.
   const ClusterAdminScreen({super.key, this.onOpenProject});
 
   final ValueChanged<Project>? onOpenProject;
 
+  /// GF-00701 — Builds the widget or value for ClusterAdminScreen.
   @override
   Widget build(BuildContext context) {
     return _ClusterOverview(
@@ -48,10 +52,12 @@ class ClusterAdminScreen extends StatelessWidget {
 
 /// Realm editor: operational overview without cluster administration tools.
 class ClusterEditorScreen extends StatelessWidget {
+  /// GF-00702 — Initializes ClusterEditorScreen.
   const ClusterEditorScreen({super.key, this.onOpenProject});
 
   final ValueChanged<Project>? onOpenProject;
 
+  /// GF-00703 — Builds the widget or value for ClusterEditorScreen.
   @override
   Widget build(BuildContext context) {
     return _ClusterOverview(
@@ -65,10 +71,12 @@ class ClusterEditorScreen extends StatelessWidget {
 
 /// Realm viewer: read-only overview of the signed-in identity and claims.
 class ClusterViewerScreen extends StatelessWidget {
+  /// GF-00704 — Initializes ClusterViewerScreen.
   const ClusterViewerScreen({super.key, this.onOpenProject});
 
   final ValueChanged<Project>? onOpenProject;
 
+  /// GF-00705 — Builds the widget or value for ClusterViewerScreen.
   @override
   Widget build(BuildContext context) {
     return _ClusterOverview(
@@ -87,6 +95,7 @@ class ClusterViewerScreen extends StatelessWidget {
 /// identity, realm/client roles, group memberships and the roles projected onto
 /// each visible project.
 class _ClusterOverview extends ConsumerWidget {
+  /// GF-00706 — Initializes _ClusterOverview.
   const _ClusterOverview({
     required this.role,
     required this.onOpenProject,
@@ -99,6 +108,7 @@ class _ClusterOverview extends ConsumerWidget {
   final bool showClaimDiagnostics;
   final bool showAdminGuide;
 
+  /// GF-00707 — Builds the widget or value for _ClusterOverview.
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final session = ref.watch(authControllerProvider).value;
@@ -229,48 +239,54 @@ class _ClusterOverview extends ConsumerWidget {
           icon: Icons.folder_copy_outlined,
           trailing: IconButton(
             tooltip: tr(context, '再読み込み'),
-            onPressed: () => ref.read(projectsProvider.notifier).reload(),
+            onPressed: /* GF-00708 — Runs an inline callback in _ClusterOverview.build. */
+                () => ref.read(projectsProvider.notifier).reload(),
             icon: Icon(Icons.refresh, size: 22),
           ),
           child: projects.when(
-            loading: () => const LinearProgressIndicator(),
-            error: (error, _) => ErrorCard(
-              error: error,
-              compact: true,
-              onRetry: () => ref.read(projectsProvider.notifier).reload(),
-            ),
-            data: (list) {
-              if (list.isEmpty) {
-                return const AppText('表示可能なプロジェクトがありません。');
-              }
-              return Column(
-                children: [
-                  for (final item in list)
-                    ListTile(
-                      contentPadding: EdgeInsets.zero,
-                      leading: const Icon(Icons.folder_outlined),
-                      title: AppText(item.name),
-                      subtitle: AppText(item.slug),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          RoleBadge(
-                            role: snapshot.projectRoleFor(item.accessKeys),
+            loading: /* GF-00709 — Runs an inline callback in _ClusterOverview.build. */
+                () => const LinearProgressIndicator(),
+            error: /* GF-00710 — Runs an inline callback in _ClusterOverview.build. */
+                (error, _) => ErrorCard(
+                  error: error,
+                  compact: true,
+                  onRetry: /* GF-00711 — Runs an inline callback in _ClusterOverview.build.callback. */
+                      () => ref.read(projectsProvider.notifier).reload(),
+                ),
+            data: /* GF-00712 — Runs an inline callback in _ClusterOverview.build. */
+                (list) {
+                  if (list.isEmpty) {
+                    return const AppText('表示可能なプロジェクトがありません。');
+                  }
+                  return Column(
+                    children: [
+                      for (final item in list)
+                        ListTile(
+                          contentPadding: EdgeInsets.zero,
+                          leading: const Icon(Icons.folder_outlined),
+                          title: AppText(item.name),
+                          subtitle: AppText(item.slug),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              RoleBadge(
+                                role: snapshot.projectRoleFor(item.accessKeys),
+                              ),
+                              if (onOpenProject != null)
+                                const Padding(
+                                  padding: EdgeInsets.only(left: 4),
+                                  child: Icon(Icons.chevron_right),
+                                ),
+                            ],
                           ),
-                          if (onOpenProject != null)
-                            const Padding(
-                              padding: EdgeInsets.only(left: 4),
-                              child: Icon(Icons.chevron_right),
-                            ),
-                        ],
-                      ),
-                      onTap: onOpenProject == null
-                          ? null
-                          : () => onOpenProject!(item),
-                    ),
-                ],
-              );
-            },
+                          onTap: onOpenProject == null
+                              ? null
+                              : /* GF-00713 — Runs an inline callback in _ClusterOverview.build.callback. */ () =>
+                                    onOpenProject!(item),
+                        ),
+                    ],
+                  );
+                },
           ),
         ),
         if (showClaimDiagnostics)
@@ -330,6 +346,7 @@ class _ClusterOverview extends ConsumerWidget {
     );
   }
 
+  /// GF-00714 — Handles role or dash in _ClusterOverview.
   Widget _roleOrDash(BuildContext context, AccessRole role) {
     if (role == AccessRole.none) {
       return AppText(
@@ -342,6 +359,7 @@ class _ClusterOverview extends ConsumerWidget {
 }
 
 class _ClaimChip extends StatelessWidget {
+  /// GF-00715 — Initializes _ClaimChip.
   const _ClaimChip({
     required this.label,
     required this.role,
@@ -352,6 +370,7 @@ class _ClaimChip extends StatelessWidget {
   final AccessRole? role;
   final String prefix;
 
+  /// GF-00716 — Builds the widget or value for _ClaimChip.
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;

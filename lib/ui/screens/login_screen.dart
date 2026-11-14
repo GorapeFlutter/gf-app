@@ -8,6 +8,7 @@ import '../../entity/model/platform_support.dart';
 import '../widgets/common.dart';
 
 class LoginScreen extends StatelessWidget {
+  /// GF-00824 — Initializes LoginScreen.
   const LoginScreen({
     super.key,
     required this.settings,
@@ -41,30 +42,34 @@ class LoginScreen extends StatelessWidget {
       '&redirect_uri=com.gorapeflutter.gfapp:/oauth2redirect'
       '&response_type=code&scope=openid';
 
+  /// GF-00825 — Handles show registration dialog in LoginScreen.
   void _showRegistrationDialog(BuildContext context) {
     showDialog<void>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const AppText('アカウント登録'),
-        content: const Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            AppText('以下のURLをブラウザで開いてアカウントを登録してください。'),
-            SizedBox(height: 12),
-            SelectableText(registrationUrl),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const AppText('閉じる'),
+      builder: /* GF-00826 — Runs an inline callback in LoginScreen._showRegistrationDialog. */
+          (context) => AlertDialog(
+            title: const AppText('アカウント登録'),
+            content: const Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                AppText('以下のURLをブラウザで開いてアカウントを登録してください。'),
+                SizedBox(height: 12),
+                SelectableText(registrationUrl),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: /* GF-00827 — Runs an inline callback in LoginScreen._showRegistrationDialog.callback. */
+                    () => Navigator.of(context).pop(),
+                child: const AppText('閉じる'),
+              ),
+            ],
           ),
-        ],
-      ),
     );
   }
 
+  /// GF-00828 — Builds the widget or value for LoginScreen.
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -156,7 +161,8 @@ class LoginScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 12),
                   TextButton.icon(
-                    onPressed: () => _showRegistrationDialog(context),
+                    onPressed: /* GF-00829 — Runs an inline callback in LoginScreen.build. */
+                        () => _showRegistrationDialog(context),
                     icon: const Icon(Icons.person_add_alt, size: 22),
                     label: const AppText('アカウント登録'),
                   ),
@@ -298,11 +304,13 @@ class LoginScreen extends StatelessWidget {
 }
 
 class _SupportLine extends StatelessWidget {
+  /// GF-00830 — Initializes _SupportLine.
   const _SupportLine({required this.label, required this.supported});
 
   final String label;
   final bool supported;
 
+  /// GF-00831 — Builds the widget or value for _SupportLine.
   @override
   Widget build(BuildContext context) {
     return Padding(

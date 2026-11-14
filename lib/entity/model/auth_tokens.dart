@@ -5,6 +5,7 @@ import 'dart:convert';
 /// Only [accessToken] is used as an API credential. [idToken] exists for
 /// logout hints and local display, never for Gorape API authentication.
 class AuthTokens {
+  /// GF-00261 — Initializes AuthTokens.
   const AuthTokens({
     required this.accessToken,
     this.idToken,
@@ -19,14 +20,17 @@ class AuthTokens {
   final DateTime? expiresAt;
   final List<String> scopes;
 
+  /// GF-00262 — Checks whether is expired.
   bool isExpired({Duration skew = const Duration(seconds: 30)}) {
     final expiry = expiresAt;
     if (expiry == null) return false;
     return DateTime.now().add(skew).isAfter(expiry);
   }
 
+  /// GF-00263 — Computes AuthTokens.canRefresh.
   bool get canRefresh => refreshToken != null && refreshToken!.isNotEmpty;
 
+  /// GF-00264 — Serializes data in AuthTokens.
   Map<String, dynamic> toJson() => {
     'access_token': accessToken,
     'id_token': idToken,
@@ -35,6 +39,7 @@ class AuthTokens {
     'scopes': scopes,
   };
 
+  /// GF-00265 — Initializes AuthTokens.fromJson.
   factory AuthTokens.fromJson(Map<String, dynamic> json) {
     final accessToken = json['access_token'];
     if (accessToken is! String || accessToken.isEmpty) {
@@ -53,8 +58,10 @@ class AuthTokens {
     );
   }
 
+  /// GF-00266 — Serializes data in AuthTokens.
   String encode() => jsonEncode(toJson());
 
+  /// GF-00267 — Initializes AuthTokens.decode.
   factory AuthTokens.decode(String value) {
     final decoded = jsonDecode(value);
     if (decoded is! Map<String, dynamic>) {

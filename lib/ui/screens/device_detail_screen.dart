@@ -10,6 +10,7 @@ import '../widgets/common.dart';
 import '../widgets/role_badge.dart';
 
 class DeviceDetailScreen extends ConsumerStatefulWidget {
+  /// GF-00717 — Initializes DeviceDetailScreen.
   const DeviceDetailScreen({
     super.key,
     required this.projectId,
@@ -21,6 +22,7 @@ class DeviceDetailScreen extends ConsumerStatefulWidget {
   final String deviceId;
   final Device? initialDevice;
 
+  /// GF-00718 — Creates the state object for DeviceDetailScreen.
   @override
   ConsumerState<DeviceDetailScreen> createState() => _DeviceDetailScreenState();
 }
@@ -29,9 +31,11 @@ class _DeviceDetailScreenState extends ConsumerState<DeviceDetailScreen> {
   bool _busy = false;
   Object? _actionError;
 
+  /// GF-00719 — Computes _DeviceDetailScreenState._refKey.
   DeviceRef get _refKey =>
       DeviceRef(projectId: widget.projectId, deviceId: widget.deviceId);
 
+  /// GF-00720 — Builds the widget or value for _DeviceDetailScreenState.
   @override
   Widget build(BuildContext context) {
     final detail = ref.watch(deviceDetailProvider(_refKey));
@@ -111,9 +115,12 @@ class _DeviceDetailScreenState extends ConsumerState<DeviceDetailScreen> {
                     title: 'この端末の鍵',
                     icon: Icons.key_outlined,
                     child: localKey.when(
-                      loading: () => const LinearProgressIndicator(),
-                      error: (error, _) => AppText('$error'),
-                      data: (key) => key == null
+                      loading: /* GF-00721 — Runs an inline callback in _DeviceDetailScreenState.build. */
+                          () => const LinearProgressIndicator(),
+                      error: /* GF-00722 — Runs an inline callback in _DeviceDetailScreenState.build. */
+                          (error, _) => AppText('$error'),
+                      data: /* GF-00723 — Runs an inline callback in _DeviceDetailScreenState.build. */
+                          (key) => key == null
                           ? AppText(
                               'この端末には該当デバイスの秘密鍵がありません。\n'
                               '他端末で登録されたデバイスは表示・失効のみ可能です。',
@@ -194,21 +201,30 @@ class _DeviceDetailScreenState extends ConsumerState<DeviceDetailScreen> {
                       tooltip: tr(context, '最新の記録を取得'),
                       onPressed: _busy
                           ? null
-                          : () => ref
-                                .read(attestationsProvider(_refKey).notifier)
-                                .reload(),
+                          : /* GF-00724 — Runs an inline callback in _DeviceDetailScreenState.build. */ () =>
+                                ref
+                                    .read(
+                                      attestationsProvider(_refKey).notifier,
+                                    )
+                                    .reload(),
                       icon: Icon(Icons.refresh, size: 22),
                     ),
                     child: attestations.when(
-                      loading: () => const LinearProgressIndicator(),
-                      error: (error, _) => ErrorCard(
-                        error: error,
-                        compact: true,
-                        onRetry: () => ref
-                            .read(attestationsProvider(_refKey).notifier)
-                            .reload(),
-                      ),
-                      data: (records) => records.isEmpty
+                      loading: /* GF-00725 — Runs an inline callback in _DeviceDetailScreenState.build. */
+                          () => const LinearProgressIndicator(),
+                      error: /* GF-00726 — Runs an inline callback in _DeviceDetailScreenState.build. */
+                          (error, _) => ErrorCard(
+                            error: error,
+                            compact: true,
+                            onRetry: /* GF-00727 — Runs an inline callback in _DeviceDetailScreenState.build.callback. */
+                                () => ref
+                                    .read(
+                                      attestationsProvider(_refKey).notifier,
+                                    )
+                                    .reload(),
+                          ),
+                      data: /* GF-00728 — Runs an inline callback in _DeviceDetailScreenState.build. */
+                          (records) => records.isEmpty
                           ? const AppText('Attestation記録はありません。')
                           : Column(
                               children: [
@@ -281,6 +297,7 @@ class _DeviceDetailScreenState extends ConsumerState<DeviceDetailScreen> {
     );
   }
 
+  /// GF-00729 — Handles refresh in _DeviceDetailScreenState.
   Future<void> _refresh() async {
     ref.invalidate(deviceDetailProvider(_refKey));
     ref.invalidate(attestationsProvider(_refKey));
@@ -292,12 +309,17 @@ class _DeviceDetailScreenState extends ConsumerState<DeviceDetailScreen> {
     }
   }
 
+  /// GF-00730 — Handles verify possession in _DeviceDetailScreenState.
   Future<void> _verifyPossession() async {
-    setState(() {
-      _busy = true;
-      _actionError = null;
-    });
+    // GF-02102 — Clear the previous action error and lock duplicate submissions.
+    setState(
+      /* GF-00731 — Runs an inline callback in _DeviceDetailScreenState._verifyPossession. */ () {
+        _busy = true;
+        _actionError = null;
+      },
+    );
     try {
+      // GF-02103 — Run the challenge-signing ownership proof.
       await ref
           .read(deviceControllerProvider)
           .provePossession(
@@ -305,59 +327,90 @@ class _DeviceDetailScreenState extends ConsumerState<DeviceDetailScreen> {
             deviceId: widget.deviceId,
           );
       if (!mounted) return;
+      // GF-02104 — Report verified proof and reload device evidence.
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: AppText('チャレンジ署名をGorapeが検証しました。')),
       );
       await _refresh();
     } on Object catch (error) {
-      if (mounted) setState(() => _actionError = error);
+      // GF-02105 — Surface proof failures in the device detail screen.
+      if (mounted)
+        setState(
+          /* GF-00732 — Runs an inline callback in _DeviceDetailScreenState._verifyPossession. */ () =>
+              _actionError = error,
+        );
     } finally {
-      if (mounted) setState(() => _busy = false);
+      // GF-02106 — Release the action lock after success or failure.
+      if (mounted)
+        setState(
+          /* GF-00733 — Runs an inline callback in _DeviceDetailScreenState._verifyPossession. */ () =>
+              _busy = false,
+        );
     }
   }
 
+  /// GF-00734 — Handles revoke device in _DeviceDetailScreenState.
   Future<void> _revokeDevice() async {
+    // GF-02107 — Require explicit confirmation before irreversible revocation.
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const AppText('デバイスを失効しますか？'),
-        content: const AppText(
-          'Gorape側でデバイスがrevokedになります。\n'
-          'この端末のローカル鍵も削除されます。元に戻せません。',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const AppText('キャンセル'),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.pop(context, true),
-            style: FilledButton.styleFrom(
-              backgroundColor: Theme.of(context).colorScheme.error,
+      builder: /* GF-00735 — Runs an inline callback in _DeviceDetailScreenState._revokeDevice. */
+          (context) => AlertDialog(
+            title: const AppText('デバイスを失効しますか？'),
+            content: const AppText(
+              'Gorape側でデバイスがrevokedになります。\n'
+              'この端末のローカル鍵も削除されます。元に戻せません。',
             ),
-            child: const AppText('失効する'),
+            actions: [
+              TextButton(
+                onPressed: /* GF-00736 — Runs an inline callback in _DeviceDetailScreenState._revokeDevice.callback. */
+                    () => Navigator.pop(context, false),
+                child: const AppText('キャンセル'),
+              ),
+              FilledButton(
+                onPressed: /* GF-00737 — Runs an inline callback in _DeviceDetailScreenState._revokeDevice.callback. */
+                    () => Navigator.pop(context, true),
+                style: FilledButton.styleFrom(
+                  backgroundColor: Theme.of(context).colorScheme.error,
+                ),
+                child: const AppText('失効する'),
+              ),
+            ],
           ),
-        ],
-      ),
     );
     if (confirmed != true || !mounted) return;
-    setState(() {
-      _busy = true;
-      _actionError = null;
-    });
+    // GF-02108 — Clear old errors and mark the revoke action as active.
+    setState(
+      /* GF-00738 — Runs an inline callback in _DeviceDetailScreenState._revokeDevice. */ () {
+        _busy = true;
+        _actionError = null;
+      },
+    );
     try {
+      // GF-02109 — Revoke the backend record and clean up the local key.
       await ref
           .read(deviceControllerProvider)
           .revoke(projectId: widget.projectId, deviceId: widget.deviceId);
       if (!mounted) return;
+      // GF-02110 — Notify the user and close the revoked device detail.
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(content: AppText('デバイスを失効しました。')));
       Navigator.of(context).pop();
     } on Object catch (error) {
-      if (mounted) setState(() => _actionError = error);
+      // GF-02111 — Keep revocation failures on the current screen.
+      if (mounted)
+        setState(
+          /* GF-00739 — Runs an inline callback in _DeviceDetailScreenState._revokeDevice. */ () =>
+              _actionError = error,
+        );
     } finally {
-      if (mounted) setState(() => _busy = false);
+      // GF-02112 — Release the action lock after success or failure.
+      if (mounted)
+        setState(
+          /* GF-00740 — Runs an inline callback in _DeviceDetailScreenState._revokeDevice. */ () =>
+              _busy = false,
+        );
     }
   }
 }

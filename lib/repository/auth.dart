@@ -12,41 +12,52 @@ import '../share/error.dart';
 
 /// Platform OIDC adapter.
 abstract interface class AuthRepository {
+  /// GF-00411 — Computes AuthRepository.isSupported.
   bool get isSupported;
 
+  /// GF-00412 — Computes AuthRepository.unsupportedReason.
   String? get unsupportedReason;
 
+  /// GF-00413 — Handles sign in in AuthRepository.
   Future<AuthTokens> signIn({bool forceLogin = false});
 
+  /// GF-00414 — Handles refresh in AuthRepository.
   Future<AuthTokens> refresh(AuthTokens tokens);
 
+  /// GF-00415 — Handles sign out in AuthRepository.
   Future<void> signOut(AuthTokens tokens);
 }
 
 final class UnsupportedAuthRepository implements AuthRepository {
+  /// GF-00416 — Initializes UnsupportedAuthRepository.
   const UnsupportedAuthRepository(this.unsupportedReason);
 
   @override
   final String? unsupportedReason;
 
+  /// GF-00417 — Computes UnsupportedAuthRepository.isSupported.
   @override
   bool get isSupported => false;
 
+  /// GF-00418 — Handles sign in in UnsupportedAuthRepository.
   @override
   Future<AuthTokens> signIn({bool forceLogin = false}) {
     throw StateError('OIDC is not supported on this platform');
   }
 
+  /// GF-00419 — Handles refresh in UnsupportedAuthRepository.
   @override
   Future<AuthTokens> refresh(AuthTokens tokens) {
     throw StateError('OIDC is not supported on this platform');
   }
 
+  /// GF-00420 — Handles sign out in UnsupportedAuthRepository.
   @override
   Future<void> signOut(AuthTokens tokens) async {}
 }
 
 final class AppAuthRepository implements AuthRepository {
+  /// GF-00421 — Initializes AppAuthRepository.
   AppAuthRepository({
     required ConnectionSettings settings,
     FlutterAppAuth? appAuth,
@@ -61,15 +72,21 @@ final class AppAuthRepository implements AuthRepository {
   final http.Client _http;
   final Duration discoveryTimeout;
 
+  /// GF-00422 — Computes AppAuthRepository._allowInsecure.
   bool get _allowInsecure => _settings.usesInsecureTransport;
+
+  /// GF-00423 — Computes AppAuthRepository._issuerUsesHttp.
   bool get _issuerUsesHttp => Uri.tryParse(_settings.issuer)?.scheme == 'http';
 
+  /// GF-00424 — Computes AppAuthRepository.isSupported.
   @override
   bool get isSupported => true;
 
+  /// GF-00425 — Computes AppAuthRepository.unsupportedReason.
   @override
   String? get unsupportedReason => null;
 
+  /// GF-00426 — Handles sign in in AppAuthRepository.
   @override
   Future<AuthTokens> signIn({bool forceLogin = false}) async {
     try {
@@ -97,6 +114,7 @@ final class AppAuthRepository implements AuthRepository {
     }
   }
 
+  /// GF-00427 — Handles refresh in AppAuthRepository.
   @override
   Future<AuthTokens> refresh(AuthTokens tokens) async {
     final refreshToken = tokens.refreshToken;
@@ -129,6 +147,7 @@ final class AppAuthRepository implements AuthRepository {
     }
   }
 
+  /// GF-00428 — Handles sign out in AppAuthRepository.
   @override
   Future<void> signOut(AuthTokens tokens) async {
     final idToken = tokens.idToken;
@@ -156,6 +175,7 @@ final class AppAuthRepository implements AuthRepository {
     }
   }
 
+  /// GF-00429 — Handles fetch service configuration in AppAuthRepository.
   Future<AuthorizationServiceConfiguration?>
   _fetchServiceConfiguration() async {
     var issuer = _settings.issuer.trim();
@@ -188,6 +208,7 @@ final class AppAuthRepository implements AuthRepository {
     }
   }
 
+  /// GF-00430 — Handles tokens from in AppAuthRepository.
   AuthTokens _tokensFrom(TokenResponse response) {
     final accessToken = response.accessToken;
     if (accessToken == null || accessToken.isEmpty) {
@@ -205,6 +226,7 @@ final class AppAuthRepository implements AuthRepository {
     );
   }
 
+  /// GF-00431 — Handles platform error in AppAuthRepository.
   AuthException _platformError(FlutterAppAuthPlatformException error) {
     final details = error.platformErrorDetails;
     final code = details.error ?? details.code ?? error.code;
@@ -224,6 +246,7 @@ final class AppAuthRepository implements AuthRepository {
   }
 }
 
+/// GF-00432 — Creates an instance for new auth repository.
 AuthRepository newAuthRepository(
   ConnectionSettings settings,
   RuntimePlatform platform, {

@@ -13,8 +13,10 @@ import 'settings_screen.dart';
 import 'support_screen.dart';
 
 class AppShell extends ConsumerStatefulWidget {
+  /// GF-00671 — Initializes AppShell.
   const AppShell({super.key});
 
+  /// GF-00672 — Creates the state object for AppShell.
   @override
   ConsumerState<AppShell> createState() => _AppShellState();
 }
@@ -24,6 +26,7 @@ class _AppShellState extends ConsumerState<AppShell> {
 
   static const _titles = ['デバイス', 'デバイス登録', '対応状況', 'デバイスポリシー', '管理', '設定'];
 
+  /// GF-00673 — Builds the widget or value for _AppShellState.
   @override
   Widget build(BuildContext context) {
     final projects = ref.watch(projectsProvider);
@@ -58,57 +61,61 @@ class _AppShellState extends ConsumerState<AppShell> {
                   child: AppText(project.name, overflow: TextOverflow.ellipsis),
                 ),
                 tooltip: tr(context, 'プロジェクトを切り替え'),
-                onPressed: () => _showProjectSheet(context),
+                onPressed: /* GF-00674 — Runs an inline callback in _AppShellState.build. */
+                    () => _showProjectSheet(context),
               ),
             ),
           PopupMenuButton<String>(
             tooltip: tr(context, 'アカウント'),
             icon: const Icon(Icons.account_circle_outlined),
-            onSelected: (value) async {
-              switch (value) {
-                case 'settings':
-                  await Navigator.of(context).push(
-                    MaterialPageRoute<void>(
-                      builder: (_) => const SettingsScreen(),
+            onSelected: /* GF-00675 — Runs an inline callback in _AppShellState.build. */
+                (value) async {
+                  switch (value) {
+                    case 'settings':
+                      await Navigator.of(context).push(
+                        MaterialPageRoute<void>(
+                          builder: /* GF-00676 — Runs an inline callback in _AppShellState.build.callback. */
+                              (_) => const SettingsScreen(),
+                        ),
+                      );
+                      break;
+                    case 'signout':
+                      await ref.read(authControllerProvider.notifier).signOut();
+                      break;
+                  }
+                },
+            itemBuilder: /* GF-00677 — Runs an inline callback in _AppShellState.build. */
+                (context) => [
+                  PopupMenuItem(
+                    enabled: false,
+                    child: ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      leading: const Icon(Icons.person_outline),
+                      title: AppText(session?.displayName ?? 'Signed in'),
+                      subtitle: AppText(
+                        session?.email ?? session?.subject ?? '',
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
-                  );
-                  break;
-                case 'signout':
-                  await ref.read(authControllerProvider.notifier).signOut();
-                  break;
-              }
-            },
-            itemBuilder: (context) => [
-              PopupMenuItem(
-                enabled: false,
-                child: ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  leading: const Icon(Icons.person_outline),
-                  title: AppText(session?.displayName ?? 'Signed in'),
-                  subtitle: AppText(
-                    session?.email ?? session?.subject ?? '',
-                    overflow: TextOverflow.ellipsis,
                   ),
-                ),
-              ),
-              const PopupMenuDivider(),
-              PopupMenuItem(
-                value: 'settings',
-                child: ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  leading: Icon(Icons.settings, size: 22),
-                  title: AppText('接続設定'),
-                ),
-              ),
-              PopupMenuItem(
-                value: 'signout',
-                child: ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  leading: Icon(Icons.history, size: 22),
-                  title: AppText('ログアウト'),
-                ),
-              ),
-            ],
+                  const PopupMenuDivider(),
+                  PopupMenuItem(
+                    value: 'settings',
+                    child: ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      leading: Icon(Icons.settings, size: 22),
+                      title: AppText('接続設定'),
+                    ),
+                  ),
+                  PopupMenuItem(
+                    value: 'signout',
+                    child: ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      leading: Icon(Icons.history, size: 22),
+                      title: AppText('ログアウト'),
+                    ),
+                  ),
+                ],
           ),
           const SizedBox(width: 8),
         ],
@@ -116,7 +123,11 @@ class _AppShellState extends ConsumerState<AppShell> {
       body: _buildBody(projects, project),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _index,
-        onDestinationSelected: (value) => setState(() => _index = value),
+        onDestinationSelected: /* GF-00678 — Runs an inline callback in _AppShellState.build. */
+            (value) => setState(
+              /* GF-00679 — Runs an inline callback in _AppShellState.build.callback. */ () =>
+                  _index = value,
+            ),
         destinations: [
           NavigationDestination(
             icon: Icon(Icons.devices, size: 22),
@@ -153,6 +164,7 @@ class _AppShellState extends ConsumerState<AppShell> {
     );
   }
 
+  /// GF-00680 — Handles build body in _AppShellState.
   Widget _buildBody(AsyncValue<List<Project>> projects, Project? project) {
     if (projects.isLoading && !projects.hasValue) {
       return const LoadingView(label: 'プロジェクトを読み込み中...');
@@ -162,7 +174,8 @@ class _AppShellState extends ConsumerState<AppShell> {
         padding: const EdgeInsets.all(16),
         child: ErrorCard(
           error: projects.error!,
-          onRetry: () => ref.read(projectsProvider.notifier).reload(),
+          onRetry: /* GF-00681 — Runs an inline callback in _AppShellState._buildBody. */
+              () => ref.read(projectsProvider.notifier).reload(),
         ),
       );
     }
@@ -189,14 +202,19 @@ class _AppShellState extends ConsumerState<AppShell> {
           spacing: 8,
           children: [
             FilledButton.icon(
-              onPressed: () => ref.read(projectsProvider.notifier).reload(),
+              onPressed: /* GF-00682 — Runs an inline callback in _AppShellState._buildBody. */
+                  () => ref.read(projectsProvider.notifier).reload(),
               icon: Icon(Icons.refresh, size: 22),
               label: const AppText('再読み込み'),
             ),
             OutlinedButton.icon(
-              onPressed: () => Navigator.of(context).push(
-                MaterialPageRoute<void>(builder: (_) => const SettingsScreen()),
-              ),
+              onPressed: /* GF-00683 — Runs an inline callback in _AppShellState._buildBody. */
+                  () => Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: /* GF-00684 — Runs an inline callback in _AppShellState._buildBody.callback. */
+                          (_) => const SettingsScreen(),
+                    ),
+                  ),
               icon: Icon(Icons.settings, size: 22),
               label: const AppText('接続設定'),
             ),
@@ -208,12 +226,24 @@ class _AppShellState extends ConsumerState<AppShell> {
     return switch (_index) {
       0 => DevicesScreen(
         projectId: activeProject.id,
-        onRegister: () => setState(() => _index = 1),
+        onRegister: /* GF-00685 — Runs an inline callback in _AppShellState._buildBody. */
+            () => setState(
+              /* GF-00686 — Runs an inline callback in _AppShellState._buildBody.callback. */ () =>
+                  _index = 1,
+            ),
       ),
       1 => RegisterDeviceScreen(
         projectId: activeProject.id,
-        onRegistered: (_) => setState(() => _index = 0),
-        onOpenDevices: () => setState(() => _index = 0),
+        onRegistered: /* GF-00687 — Runs an inline callback in _AppShellState._buildBody. */
+            (_) => setState(
+              /* GF-00688 — Runs an inline callback in _AppShellState._buildBody.callback. */ () =>
+                  _index = 0,
+            ),
+        onOpenDevices: /* GF-00689 — Runs an inline callback in _AppShellState._buildBody. */
+            () => setState(
+              /* GF-00690 — Runs an inline callback in _AppShellState._buildBody.callback. */ () =>
+                  _index = 0,
+            ),
       ),
       2 => SupportScreen(projectId: activeProject.id),
       3 => const PolicyScreen(),
@@ -221,19 +251,23 @@ class _AppShellState extends ConsumerState<AppShell> {
     };
   }
 
+  /// GF-00691 — Handles show project sheet in _AppShellState.
   Future<void> _showProjectSheet(BuildContext context) async {
     await showModalBottomSheet<void>(
       context: context,
       showDragHandle: true,
       isScrollControlled: true,
-      builder: (context) => const _ProjectSheet(),
+      builder: /* GF-00692 — Runs an inline callback in _AppShellState._showProjectSheet. */
+          (context) => const _ProjectSheet(),
     );
   }
 }
 
 class _ProjectSheet extends ConsumerWidget {
+  /// GF-00693 — Initializes _ProjectSheet.
   const _ProjectSheet();
 
+  /// GF-00694 — Builds the widget or value for _ProjectSheet.
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final projects = ref.watch(projectsProvider);
@@ -259,28 +293,30 @@ class _ProjectSheet extends ConsumerWidget {
               child: ListView.builder(
                 shrinkWrap: true,
                 itemCount: list.length,
-                itemBuilder: (context, index) {
-                  final project = list[index];
-                  return ListTile(
-                    leading: const Icon(Icons.folder_outlined),
-                    title: AppText(project.name),
-                    subtitle: AppText(
-                      '${project.slug} • ${project.oidcIssuer}',
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    trailing: project.id == selected?.id
-                        ? Icon(Icons.assignment, size: 22)
-                        : StatusChip.status(context, project.status),
-                    selected: project.id == selected?.id,
-                    onTap: () {
-                      ref
-                          .read(selectedProjectIdProvider.notifier)
-                          .select(project.id);
-                      Navigator.of(context).pop();
+                itemBuilder: /* GF-00695 — Runs an inline callback in _ProjectSheet.build. */
+                    (context, index) {
+                      final project = list[index];
+                      return ListTile(
+                        leading: const Icon(Icons.folder_outlined),
+                        title: AppText(project.name),
+                        subtitle: AppText(
+                          '${project.slug} • ${project.oidcIssuer}',
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        trailing: project.id == selected?.id
+                            ? Icon(Icons.assignment, size: 22)
+                            : StatusChip.status(context, project.status),
+                        selected: project.id == selected?.id,
+                        onTap: /* GF-00696 — Runs an inline callback in _ProjectSheet.build.callback. */
+                            () {
+                              ref
+                                  .read(selectedProjectIdProvider.notifier)
+                                  .select(project.id);
+                              Navigator.of(context).pop();
+                            },
+                      );
                     },
-                  );
-                },
               ),
             ),
             if (projects.hasError)
@@ -288,7 +324,8 @@ class _ProjectSheet extends ConsumerWidget {
                 padding: const EdgeInsets.all(16),
                 child: ErrorCard(
                   error: projects.error!,
-                  onRetry: () => ref.read(projectsProvider.notifier).reload(),
+                  onRetry: /* GF-00697 — Runs an inline callback in _ProjectSheet.build. */
+                      () => ref.read(projectsProvider.notifier).reload(),
                   compact: true,
                 ),
               ),

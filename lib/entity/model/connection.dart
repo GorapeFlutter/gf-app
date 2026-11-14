@@ -7,6 +7,7 @@ import 'dart:convert';
 /// Keycloak; replacing only the host of an existing issuer will make token
 /// validation fail.
 class ConnectionSettings {
+  /// GF-00268 — Initializes ConnectionSettings.
   const ConnectionSettings({
     required this.apiBaseUrl,
     required this.issuer,
@@ -24,6 +25,7 @@ class ConnectionSettings {
   final String redirectUri;
   final List<String> scopes;
 
+  /// GF-00269 — Handles copy with in ConnectionSettings.
   ConnectionSettings copyWith({
     String? apiBaseUrl,
     String? issuer,
@@ -40,12 +42,14 @@ class ConnectionSettings {
     );
   }
 
+  /// GF-00270 — Computes ConnectionSettings.usesInsecureTransport.
   bool get usesInsecureTransport {
     final api = Uri.tryParse(apiBaseUrl);
     final idp = Uri.tryParse(issuer);
     return api?.scheme == 'http' || idp?.scheme == 'http';
   }
 
+  /// GF-00271 — Handles validate in ConnectionSettings.
   List<String> validate() {
     final errors = <String>[];
     final api = Uri.tryParse(apiBaseUrl);
@@ -68,6 +72,7 @@ class ConnectionSettings {
     return errors;
   }
 
+  /// GF-00272 — Serializes data in ConnectionSettings.
   Map<String, dynamic> toJson() => {
     'apiBaseUrl': apiBaseUrl,
     'issuer': issuer,
@@ -76,6 +81,7 @@ class ConnectionSettings {
     'scopes': scopes,
   };
 
+  /// GF-00273 — Initializes ConnectionSettings.fromJson.
   factory ConnectionSettings.fromJson(Map<String, dynamic> json) {
     const defaults = ConnectionSettings(
       apiBaseUrl: 'http://localhost:8000',
@@ -96,8 +102,10 @@ class ConnectionSettings {
     );
   }
 
+  /// GF-00274 — Serializes data in ConnectionSettings.
   String encode() => jsonEncode(toJson());
 
+  /// GF-00275 — Initializes ConnectionSettings.decode.
   factory ConnectionSettings.decode(String value) {
     final decoded = jsonDecode(value);
     if (decoded is! Map<String, dynamic>) {
@@ -106,6 +114,7 @@ class ConnectionSettings {
     return ConnectionSettings.fromJson(decoded);
   }
 
+  /// GF-00276 — Handles trim trailing slash in ConnectionSettings.
   static String _trimTrailingSlash(String value) {
     var result = value.trim();
     while (result.endsWith('/')) {
@@ -114,6 +123,7 @@ class ConnectionSettings {
     return result;
   }
 
+  /// GF-00277 — Handles == in ConnectionSettings.
   @override
   bool operator ==(Object other) {
     return other is ConnectionSettings &&
@@ -124,6 +134,7 @@ class ConnectionSettings {
         _listEquals(other.scopes, scopes);
   }
 
+  /// GF-00278 — Computes ConnectionSettings.hashCode.
   @override
   int get hashCode => Object.hash(
     apiBaseUrl,
@@ -133,6 +144,7 @@ class ConnectionSettings {
     Object.hashAll(scopes),
   );
 
+  /// GF-00279 — Handles list equals in ConnectionSettings.
   static bool _listEquals(List<String> a, List<String> b) {
     if (a.length != b.length) return false;
     for (var i = 0; i < a.length; i++) {

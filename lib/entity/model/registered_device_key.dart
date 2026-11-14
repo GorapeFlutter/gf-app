@@ -5,6 +5,7 @@ import 'dart:convert';
 /// Only the Keystore alias is stored. Private key bytes never leave Android
 /// Keystore / Secure Enclave.
 class RegisteredDeviceKey {
+  /// GF-00321 — Initializes RegisteredDeviceKey.
   const RegisteredDeviceKey({
     required this.projectId,
     required this.deviceId,
@@ -25,6 +26,7 @@ class RegisteredDeviceKey {
   final DateTime createdAt;
   final String? securityLevel;
 
+  /// GF-00322 — Serializes data in RegisteredDeviceKey.
   Map<String, dynamic> toJson() => {
     'project_id': projectId,
     'device_id': deviceId,
@@ -36,6 +38,7 @@ class RegisteredDeviceKey {
     'security_level': securityLevel,
   };
 
+  /// GF-00323 — Initializes RegisteredDeviceKey.fromJson.
   factory RegisteredDeviceKey.fromJson(Map<String, dynamic> json) {
     return RegisteredDeviceKey(
       projectId: json['project_id'] as String? ?? '',
@@ -51,6 +54,7 @@ class RegisteredDeviceKey {
     );
   }
 
+  /// GF-00324 — Parses data for RegisteredDeviceKey.
   static RegisteredDeviceKey decode(String value) {
     final decoded = jsonDecode(value);
     if (decoded is! Map<String, dynamic>) {
@@ -59,5 +63,6 @@ class RegisteredDeviceKey {
     return RegisteredDeviceKey.fromJson(decoded);
   }
 
+  /// GF-00325 — Serializes data in RegisteredDeviceKey.
   String encode() => jsonEncode(toJson());
 }

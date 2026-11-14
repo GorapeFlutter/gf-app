@@ -4,6 +4,7 @@ import 'package:flutter/material.dart' as material;
 /// locale selected in Settings. Dynamic server values and technical identifiers
 /// are left untouched.
 class AppText extends material.StatelessWidget {
+  /// GF-00397 — Initializes AppText.
   const AppText(
     this.data, {
     super.key,
@@ -37,6 +38,7 @@ class AppText extends material.StatelessWidget {
   final material.TextHeightBehavior? textHeightBehavior;
   final material.Color? selectionColor;
 
+  /// GF-00398 — Builds the widget or value for AppText.
   @override
   material.Widget build(material.BuildContext context) {
     return material.Text(
@@ -663,6 +665,7 @@ abstract final class AppStrings {
     'グループロールがありません。': 'No group roles.',
   };
 
+  /// GF-00399 — Handles translate in AppStrings.
   static String translate(material.BuildContext context, String? source) {
     if (source == null) return '';
     if (material.Localizations.localeOf(context).languageCode != 'en') {
@@ -756,7 +759,12 @@ abstract final class AppStrings {
 
     var translated = source;
     final phrases = [..._english.entries, ..._englishFragments.entries]
-      ..sort((a, b) => b.key.length.compareTo(a.key.length));
+      ..sort(
+        /* GF-00400 — Runs an inline callback in AppStrings.translate. */ (
+          a,
+          b,
+        ) => b.key.length.compareTo(a.key.length),
+      );
     for (final phrase in phrases) {
       if (phrase.key.length >= 4) {
         translated = translated.replaceAll(phrase.key, phrase.value);
@@ -766,5 +774,6 @@ abstract final class AppStrings {
   }
 }
 
+/// GF-00401 — Handles tr in top level.
 String tr(material.BuildContext context, String source) =>
     AppStrings.translate(context, source);

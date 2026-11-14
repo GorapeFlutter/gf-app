@@ -1,5 +1,6 @@
 /// Registration and proof challenge returned by Gorape.
 class Challenge {
+  /// GF-00391 — Initializes Challenge.
   const Challenge({
     required this.challengeId,
     required this.challenge,
@@ -12,8 +13,10 @@ class Challenge {
   final String challenge;
   final DateTime expiresAt;
 
+  /// GF-00392 — Computes Challenge.isExpired.
   bool get isExpired => DateTime.now().isAfter(expiresAt);
 
+  /// GF-00393 — Initializes Challenge.fromJson.
   factory Challenge.fromJson(Map<String, dynamic> json) {
     final expiresAt = json['expires_at'];
     return Challenge(

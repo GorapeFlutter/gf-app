@@ -4,14 +4,18 @@ import '../entity/model/platform.dart';
 import '../entity/model/platform_support.dart';
 
 abstract interface class PlatformRepository {
+  /// GF-00577 — Handles current in PlatformRepository.
   RuntimePlatform current();
 
+  /// GF-00578 — Handles support for in PlatformRepository.
   PlatformSupport supportFor(RuntimePlatform platform);
 }
 
 final class PlatformRepositoryImpl implements PlatformRepository {
+  /// GF-00579 — Initializes PlatformRepositoryImpl.
   const PlatformRepositoryImpl();
 
+  /// GF-00580 — Handles current in PlatformRepositoryImpl.
   @override
   RuntimePlatform current() {
     if (kIsWeb) return RuntimePlatform.web;
@@ -25,6 +29,7 @@ final class PlatformRepositoryImpl implements PlatformRepository {
     };
   }
 
+  /// GF-00581 — Handles support for in PlatformRepositoryImpl.
   @override
   PlatformSupport supportFor(RuntimePlatform platform) => switch (platform) {
     RuntimePlatform.android => const PlatformSupport(
@@ -79,4 +84,5 @@ final class PlatformRepositoryImpl implements PlatformRepository {
   };
 }
 
+/// GF-00582 — Creates an instance for new platform repository.
 PlatformRepository newPlatformRepository() => const PlatformRepositoryImpl();

@@ -16,32 +16,41 @@ import 'secure_store.dart';
 /// - sign the raw decoded challenge bytes,
 /// - return signatures as unpadded Base64url.
 abstract interface class DeviceKeyRepository {
+  /// GF-00453 — Computes DeviceKeyRepository.platform.
   String get platform;
 
+  /// GF-00454 — Handles availability in DeviceKeyRepository.
   Future<DeviceKeyAvailability> availability();
 
+  /// GF-00455 — Handles generate key in DeviceKeyRepository.
   Future<GeneratedDeviceKey> generateKey({
     required String keyIdentifier,
     required Uint8List attestationChallenge,
   });
 
+  /// GF-00456 — Handles sign in DeviceKeyRepository.
   Future<String> sign({required String keyIdentifier, required Uint8List data});
 
+  /// GF-00457 — Checks whether has key.
   Future<bool> hasKey(String keyIdentifier);
 
+  /// GF-00458 — Handles delete key in DeviceKeyRepository.
   Future<void> deleteKey(String keyIdentifier);
 }
 
 final class AndroidDeviceKeyRepository implements DeviceKeyRepository {
+  /// GF-00459 — Initializes AndroidDeviceKeyRepository.
   AndroidDeviceKeyRepository({MethodChannel? channel})
     : _channel = channel ?? const MethodChannel(channelName);
 
   static const channelName = 'com.gorapeflutter.gf_app/device_key';
   final MethodChannel _channel;
 
+  /// GF-00460 — Computes AndroidDeviceKeyRepository.platform.
   @override
   String get platform => 'android';
 
+  /// GF-00461 — Handles availability in AndroidDeviceKeyRepository.
   @override
   Future<DeviceKeyAvailability> availability() async {
     try {
@@ -71,6 +80,7 @@ final class AndroidDeviceKeyRepository implements DeviceKeyRepository {
     }
   }
 
+  /// GF-00462 — Handles generate key in AndroidDeviceKeyRepository.
   @override
   Future<GeneratedDeviceKey> generateKey({
     required String keyIdentifier,
@@ -114,6 +124,7 @@ final class AndroidDeviceKeyRepository implements DeviceKeyRepository {
     );
   }
 
+  /// GF-00463 — Handles sign in AndroidDeviceKeyRepository.
   @override
   Future<String> sign({
     required String keyIdentifier,
@@ -132,6 +143,7 @@ final class AndroidDeviceKeyRepository implements DeviceKeyRepository {
     return signature;
   }
 
+  /// GF-00464 — Checks whether has key.
   @override
   Future<bool> hasKey(String keyIdentifier) async =>
       await _channel.invokeMethod<bool>('hasKey', {
@@ -139,6 +151,7 @@ final class AndroidDeviceKeyRepository implements DeviceKeyRepository {
       }) ??
       false;
 
+  /// GF-00465 — Handles delete key in AndroidDeviceKeyRepository.
   @override
   Future<void> deleteKey(String keyIdentifier) => _channel.invokeMethod<void>(
     'deleteKey',
@@ -147,6 +160,7 @@ final class AndroidDeviceKeyRepository implements DeviceKeyRepository {
 }
 
 final class UnsupportedDeviceKeyRepository implements DeviceKeyRepository {
+  /// GF-00466 — Initializes UnsupportedDeviceKeyRepository.
   const UnsupportedDeviceKeyRepository({
     required this.platform,
     required this.reason,
@@ -156,25 +170,35 @@ final class UnsupportedDeviceKeyRepository implements DeviceKeyRepository {
   final String platform;
   final String reason;
 
+  /// GF-00467 — Handles availability in UnsupportedDeviceKeyRepository.
   @override
   Future<DeviceKeyAvailability> availability() async =>
       DeviceKeyAvailability.unsupported(reason);
+
+  /// GF-00468 — Handles generate key in UnsupportedDeviceKeyRepository.
   @override
   Future<GeneratedDeviceKey> generateKey({
     required String keyIdentifier,
     required Uint8List attestationChallenge,
   }) => throw UnsupportedError(reason);
+
+  /// GF-00469 — Handles sign in UnsupportedDeviceKeyRepository.
   @override
   Future<String> sign({
     required String keyIdentifier,
     required Uint8List data,
   }) => throw UnsupportedError(reason);
+
+  /// GF-00470 — Checks whether has key.
   @override
   Future<bool> hasKey(String keyIdentifier) async => false;
+
+  /// GF-00471 — Handles delete key in UnsupportedDeviceKeyRepository.
   @override
   Future<void> deleteKey(String keyIdentifier) async {}
 }
 
+/// GF-00472 — Creates an instance for new device key repository.
 DeviceKeyRepository newDeviceKeyRepository(
   RuntimePlatform platform,
 ) => switch (platform) {
@@ -209,21 +233,33 @@ DeviceKeyRepository newDeviceKeyRepository(
 };
 
 abstract interface class DeviceKeyStoreRepository {
+  /// GF-00473 — Handles load in DeviceKeyStoreRepository.
   Future<RegisteredDeviceKey?> load(String projectId, String deviceId);
+
+  /// GF-00474 — Handles for project in DeviceKeyStoreRepository.
   Future<List<RegisteredDeviceKey>> forProject(String projectId);
+
+  /// GF-00475 — Handles save in DeviceKeyStoreRepository.
   Future<void> save(RegisteredDeviceKey record);
+
+  /// GF-00476 — Handles delete in DeviceKeyStoreRepository.
   Future<void> delete(String projectId, String deviceId);
 }
 
 final class DeviceKeyStoreRepositoryImpl implements DeviceKeyStoreRepository {
+  /// GF-00477 — Initializes DeviceKeyStoreRepositoryImpl.
   DeviceKeyStoreRepositoryImpl(this._store);
   final SecureStore _store;
 
+  /// GF-00478 — Handles record key in DeviceKeyStoreRepositoryImpl.
   static String _recordKey(String projectId, String deviceId) =>
       'gorape.device_key.$projectId.$deviceId';
+
+  /// GF-00479 — Handles index key in DeviceKeyStoreRepositoryImpl.
   static String _indexKey(String projectId) =>
       'gorape.device_key_index.$projectId';
 
+  /// GF-00480 — Handles load in DeviceKeyStoreRepositoryImpl.
   @override
   Future<RegisteredDeviceKey?> load(String projectId, String deviceId) async {
     final raw = await _store.read(_recordKey(projectId, deviceId));
@@ -235,6 +271,7 @@ final class DeviceKeyStoreRepositoryImpl implements DeviceKeyStoreRepository {
     }
   }
 
+  /// GF-00481 — Handles for project in DeviceKeyStoreRepositoryImpl.
   @override
   Future<List<RegisteredDeviceKey>> forProject(String projectId) async {
     final raw = await _store.read(_indexKey(projectId));
@@ -252,33 +289,54 @@ final class DeviceKeyStoreRepositoryImpl implements DeviceKeyStoreRepository {
       final record = await load(projectId, id);
       if (record != null) records.add(record);
     }
-    records.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    records.sort(
+      /* GF-00482 — Runs an inline callback in DeviceKeyStoreRepositoryImpl.forProject. */ (
+        a,
+        b,
+      ) => b.createdAt.compareTo(a.createdAt),
+    );
     return records;
   }
 
+  /// GF-00483 — Handles save in DeviceKeyStoreRepositoryImpl.
   @override
   Future<void> save(RegisteredDeviceKey record) async {
     await _store.write(
       _recordKey(record.projectId, record.deviceId),
       record.encode(),
     );
-    final ids = (await forProject(
-      record.projectId,
-    )).map((item) => item.deviceId).toSet().toList();
+    final ids = (await forProject(record.projectId))
+        .map(
+          /* GF-00484 — Runs an inline callback in DeviceKeyStoreRepositoryImpl.save. */ (
+            item,
+          ) => item.deviceId,
+        )
+        .toSet()
+        .toList();
     if (!ids.contains(record.deviceId)) ids.insert(0, record.deviceId);
     await _store.write(_indexKey(record.projectId), jsonEncode(ids));
   }
 
+  /// GF-00485 — Handles delete in DeviceKeyStoreRepositoryImpl.
   @override
   Future<void> delete(String projectId, String deviceId) async {
     await _store.delete(_recordKey(projectId, deviceId));
     final ids = (await forProject(projectId))
-        .map((item) => item.deviceId)
-        .where((id) => id != deviceId)
+        .map(
+          /* GF-00486 — Runs an inline callback in DeviceKeyStoreRepositoryImpl.delete. */ (
+            item,
+          ) => item.deviceId,
+        )
+        .where(
+          /* GF-00487 — Runs an inline callback in DeviceKeyStoreRepositoryImpl.delete. */ (
+            id,
+          ) => id != deviceId,
+        )
         .toList(growable: false);
     await _store.write(_indexKey(projectId), jsonEncode(ids));
   }
 }
 
+/// GF-00488 — Creates an instance for new device key store repository.
 DeviceKeyStoreRepository newDeviceKeyStoreRepository(SecureStore store) =>
     DeviceKeyStoreRepositoryImpl(store);

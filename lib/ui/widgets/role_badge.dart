@@ -5,11 +5,13 @@ import '../../entity/model/role.dart';
 
 /// Compact role indicator used across cluster/project/group screens.
 class RoleBadge extends StatelessWidget {
+  /// GF-00996 — Initializes RoleBadge.
   const RoleBadge({super.key, required this.role, this.showIcon = true});
 
   final AccessRole role;
   final bool showIcon;
 
+  /// GF-00997 — Handles color of in RoleBadge.
   static Color colorOf(AccessRole role, ColorScheme scheme) {
     return switch (role) {
       AccessRole.admin => Colors.deepPurple,
@@ -19,6 +21,7 @@ class RoleBadge extends StatelessWidget {
     };
   }
 
+  /// GF-00998 — Handles icon of in RoleBadge.
   static IconData iconOf(AccessRole role) {
     return switch (role) {
       AccessRole.admin => Icons.admin_panel_settings,
@@ -28,6 +31,7 @@ class RoleBadge extends StatelessWidget {
     };
   }
 
+  /// GF-00999 — Builds the widget or value for RoleBadge.
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
@@ -62,6 +66,7 @@ class RoleBadge extends StatelessWidget {
 
 /// Explains the current role and lists the capabilities it enables.
 class RoleCapabilityCard extends StatelessWidget {
+  /// GF-01000 — Initializes RoleCapabilityCard.
   const RoleCapabilityCard({
     super.key,
     required this.role,
@@ -73,6 +78,7 @@ class RoleCapabilityCard extends StatelessWidget {
   final String scopeLabel;
   final String? footnote;
 
+  /// GF-01001 — Builds the widget or value for RoleCapabilityCard.
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
@@ -131,6 +137,7 @@ class RoleCapabilityCard extends StatelessWidget {
 
 /// Compact inline notice used to explain the current role's restrictions.
 class RoleNotice extends StatelessWidget {
+  /// GF-01002 — Initializes RoleNotice.
   const RoleNotice({
     super.key,
     required this.role,
@@ -142,6 +149,7 @@ class RoleNotice extends StatelessWidget {
   final String message;
   final String? scopeLabel;
 
+  /// GF-01003 — Builds the widget or value for RoleNotice.
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
@@ -194,6 +202,7 @@ class RoleNotice extends StatelessWidget {
 /// Screens still exist for this state so the user can see why nothing is
 /// available instead of getting a blank page.
 class RoleNoneScreen extends StatelessWidget {
+  /// GF-01004 — Initializes RoleNoneScreen.
   const RoleNoneScreen({
     super.key,
     required this.scopeLabel,
@@ -205,6 +214,7 @@ class RoleNoneScreen extends StatelessWidget {
   final String? message;
   final Widget? action;
 
+  /// GF-01005 — Builds the widget or value for RoleNoneScreen.
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
@@ -244,6 +254,7 @@ class RoleNoneScreen extends StatelessWidget {
 }
 
 class _Capability extends StatelessWidget {
+  /// GF-01006 — Initializes _Capability.
   const _Capability({
     required this.label,
     required this.enabled,
@@ -254,6 +265,7 @@ class _Capability extends StatelessWidget {
   final bool enabled;
   final Color color;
 
+  /// GF-01007 — Builds the widget or value for _Capability.
   @override
   Widget build(BuildContext context) {
     return Container(

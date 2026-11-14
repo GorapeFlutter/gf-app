@@ -11,8 +11,10 @@ import '../widgets/common.dart';
 /// The current Gorape OpenAPI 3.1 contract has no policy endpoint, so these
 /// values are stored on-device only and clearly labelled as not enforced.
 class PolicyScreen extends ConsumerWidget {
+  /// GF-00844 — Initializes PolicyScreen.
   const PolicyScreen({super.key});
 
+  /// GF-00845 — Builds the widget or value for PolicyScreen.
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final policy = ref.watch(policyControllerProvider);
@@ -71,9 +73,12 @@ class PolicyScreen extends ConsumerWidget {
         ),
         const SizedBox(height: 12),
         policy.when(
-          loading: () => const LoadingView(label: 'ポリシーを読み込み中...'),
-          error: (error, _) => ErrorCard(error: error),
-          data: (value) => _PolicyForm(policy: value),
+          loading: /* GF-00846 — Runs an inline callback in PolicyScreen.build. */
+              () => const LoadingView(label: 'ポリシーを読み込み中...'),
+          error: /* GF-00847 — Runs an inline callback in PolicyScreen.build. */
+              (error, _) => ErrorCard(error: error),
+          data: /* GF-00848 — Runs an inline callback in PolicyScreen.build. */
+              (value) => _PolicyForm(policy: value),
         ),
       ],
     );
@@ -81,15 +86,18 @@ class PolicyScreen extends ConsumerWidget {
 }
 
 class _PolicyForm extends ConsumerWidget {
+  /// GF-00849 — Initializes _PolicyForm.
   const _PolicyForm({required this.policy});
 
   final LocalDevicePolicy policy;
 
+  /// GF-00850 — Builds the widget or value for _PolicyForm.
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final controller = ref.read(policyControllerProvider.notifier);
     final scheme = Theme.of(context).colorScheme;
 
+    /// GF-00851 — Handles update in _PolicyForm.build.
     Future<void> update(LocalDevicePolicy next) async {
       try {
         await controller.save(next);
@@ -121,8 +129,9 @@ class _PolicyForm extends ConsumerWidget {
                   '（アプリ内の案内のみ）',
                 ),
                 value: policy.requireProofAfterLogin,
-                onChanged: (value) =>
-                    update(policy.copyWith(requireProofAfterLogin: value)),
+                onChanged: /* GF-00852 — Runs an inline callback in _PolicyForm.build. */
+                    (value) =>
+                        update(policy.copyWith(requireProofAfterLogin: value)),
               ),
               const Divider(),
               SwitchListTile(
@@ -133,9 +142,10 @@ class _PolicyForm extends ConsumerWidget {
                   'この設定は表示上の希望値であり、登録可否を変えません。',
                 ),
                 value: policy.allowDevicesWithoutAttestation,
-                onChanged: (value) => update(
-                  policy.copyWith(allowDevicesWithoutAttestation: value),
-                ),
+                onChanged: /* GF-00853 — Runs an inline callback in _PolicyForm.build. */
+                    (value) => update(
+                      policy.copyWith(allowDevicesWithoutAttestation: value),
+                    ),
               ),
             ],
           ),
@@ -148,10 +158,11 @@ class _PolicyForm extends ConsumerWidget {
             children: [
               RadioGroup<PasskeyStrategy>(
                 groupValue: policy.passkeyStrategy,
-                onChanged: (value) {
-                  if (value == null) return;
-                  update(policy.copyWith(passkeyStrategy: value));
-                },
+                onChanged: /* GF-00854 — Runs an inline callback in _PolicyForm.build. */
+                    (value) {
+                      if (value == null) return;
+                      update(policy.copyWith(passkeyStrategy: value));
+                    },
                 child: const Column(
                   children: [
                     RadioListTile<PasskeyStrategy>(

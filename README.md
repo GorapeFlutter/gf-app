@@ -233,23 +233,23 @@ verifies possession. The app never stores passkey secrets or passwords.
 
 ```
 lib/
-  config/           接続設定などの既定値生成
-  controller/       UIから呼び出すRiverpod controllerと依存注入
-  entity/           model / request / response のデータ定義
-  usecase/          認証、端末登録、所有証明などのアプリケーションロジック
-  repository/       HTTP、AppAuth、Secure Storage、MethodChannel、OS判定
-  share/            レイヤー間で共有する例外とステートレスな変換処理
+  config/           Runtime configuration defaults
+  controller/       Riverpod controllers and dependency injection for the UI
+  entity/           Model, request, and response definitions
+  usecase/          Authentication, device registration, proof, and app workflows
+  repository/       HTTP, AppAuth, secure storage, MethodChannel, and platform adapters
+  share/            Shared exceptions and stateless transformations
   ui/               Login, devices, registration, management, support, settings
-android/            MainActivity.kt Keystore/attestation MethodChannel
+android/            MainActivity.kt Keystore/attestation MethodChannel bridge
 docker/             gf-app Compose overrides (backend files are not edited)
 scripts/            Backend, Keycloak, trust-anchor and Android dev helpers
 test/               Unit/widget tests
 ```
 
-`cmn-core` と同様に、各レイヤーは `project.dart`、`device.dart`、
-`attestation.dart` などの概念単位で分割しています。repository / usecase /
-controller では公開interface、実装class、生成関数を同じファイルに置き、
-UIはcontroller経由でのみ処理を開始します。
+As in `cmn-core`, layers are split by concept (`project.dart`, `device.dart`,
+`attestation.dart`, and so on). Repositories, use cases, and controllers keep
+their public interfaces, implementations, and constructors together. UI
+processing starts through controllers.
 
 ## Development checks
 
@@ -290,6 +290,24 @@ missing while the AOT snapshot exists.
 
 ## Further documentation
 
+- The [mdBook](book.toml) is the documentation site. English is the default;
+  select **日本語** in the language tabs to switch chapters. Install the tools
+  and build the book:
+  ```bash
+  cargo install mdbook
+  cargo install mdbook-tabs
+  cargo install mdbook-mermaid
+  scripts/docs/build-book.sh
+  ```
+  Open `build/mdbook/index.html`.
+- `scripts/docs/link_gf_ids.py` links documentation IDs to their source-comment
+  line on GitHub. It skips fenced diagrams; run it after moving ID comments.
+- [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — layer overview, process IDs
+  (`GF-XXXXX`) and Mermaid diagrams in English and Japanese.
+- [`docs/FUNCTION_INDEX.md`](docs/FUNCTION_INDEX.md) — IDs for every handwritten
+  Dart function, callback, and Android native function.
+- [`docs/PROCESS_INDEX.md`](docs/PROCESS_INDEX.md) — IDs for logical steps inside
+  multi-stage functions.
 - [`docs/SETUP.md`](docs/SETUP.md) — Docker/Keycloak/trust-anchor details and
   verification commands.
 - [`docs/ANDROID.md`](docs/ANDROID.md) — Android registration flow, emulator

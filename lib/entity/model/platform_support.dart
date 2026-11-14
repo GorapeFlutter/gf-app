@@ -4,6 +4,7 @@
 /// `GET /v1/projects/{projectId}/attestation/capabilities` and may be
 /// "unconfigured" even on Android.
 class PlatformSupport {
+  /// GF-00304 — Initializes PlatformSupport.
   const PlatformSupport({
     required this.platform,
     required this.oidcLogin,

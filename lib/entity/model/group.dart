@@ -1,5 +1,6 @@
 /// A Gorape group returned by the project group endpoints.
 class Group {
+  /// GF-00292 — Initializes Group.
   const Group({
     required this.id,
     required this.projectId,
@@ -18,8 +19,10 @@ class Group {
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
+  /// GF-00293 — Computes Group.isActive.
   bool get isActive => status == 'active';
 
+  /// GF-00294 — Initializes Group.fromJson.
   factory Group.fromJson(Map<String, dynamic> json) {
     return Group(
       id: _string(json['id']),
@@ -32,20 +35,24 @@ class Group {
     );
   }
 
+  /// GF-00295 — Handles string in Group.
   static String _string(Object? value, {String fallback = ''}) =>
       value is String ? value : fallback;
 
+  /// GF-00296 — Handles date in Group.
   static DateTime? _date(Object? value) =>
       value is String ? DateTime.tryParse(value) : null;
 }
 
 /// Stable provider key for group-scoped resources.
 class GroupRef {
+  /// GF-00297 — Initializes GroupRef.
   const GroupRef({required this.projectId, required this.groupId});
 
   final String projectId;
   final String groupId;
 
+  /// GF-00298 — Handles == in GroupRef.
   @override
   bool operator ==(Object other) {
     return other is GroupRef &&
@@ -53,9 +60,11 @@ class GroupRef {
         other.groupId == groupId;
   }
 
+  /// GF-00299 — Computes GroupRef.hashCode.
   @override
   int get hashCode => Object.hash(projectId, groupId);
 
+  /// GF-00300 — Handles to string in GroupRef.
   @override
   String toString() => 'GroupRef($projectId, $groupId)';
 }

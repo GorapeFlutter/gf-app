@@ -14,6 +14,7 @@ enum PasskeyStrategy {
 }
 
 class LocalDevicePolicy {
+  /// GF-00305 — Initializes LocalDevicePolicy.
   const LocalDevicePolicy({
     this.allowDevicesWithoutAttestation = false,
     this.requireProofAfterLogin = true,
@@ -24,6 +25,7 @@ class LocalDevicePolicy {
   final bool requireProofAfterLogin;
   final PasskeyStrategy passkeyStrategy;
 
+  /// GF-00306 — Handles copy with in LocalDevicePolicy.
   LocalDevicePolicy copyWith({
     bool? allowDevicesWithoutAttestation,
     bool? requireProofAfterLogin,
@@ -38,12 +40,14 @@ class LocalDevicePolicy {
     );
   }
 
+  /// GF-00307 — Serializes data in LocalDevicePolicy.
   Map<String, dynamic> toJson() => {
     'allow_devices_without_attestation': allowDevicesWithoutAttestation,
     'require_proof_after_login': requireProofAfterLogin,
     'passkey_strategy': passkeyStrategy.name,
   };
 
+  /// GF-00308 — Initializes LocalDevicePolicy.fromJson.
   factory LocalDevicePolicy.fromJson(Map<String, dynamic> json) {
     final raw = json['passkey_strategy'];
     return LocalDevicePolicy(
@@ -51,12 +55,16 @@ class LocalDevicePolicy {
           json['allow_devices_without_attestation'] == true,
       requireProofAfterLogin: json['require_proof_after_login'] != false,
       passkeyStrategy: PasskeyStrategy.values.firstWhere(
-        (value) => value.name == raw,
-        orElse: () => PasskeyStrategy.dedicatedDeviceKey,
+        /* GF-00309 — Runs an inline callback in LocalDevicePolicy.fromJson. */ (
+          value,
+        ) => value.name == raw,
+        orElse: /* GF-00310 — Runs an inline callback in LocalDevicePolicy.fromJson. */
+            () => PasskeyStrategy.dedicatedDeviceKey,
       ),
     );
   }
 
+  /// GF-00311 — Parses data for LocalDevicePolicy.
   static LocalDevicePolicy decode(String value) {
     final decoded = jsonDecode(value);
     if (decoded is! Map<String, dynamic>) {
@@ -65,11 +73,13 @@ class LocalDevicePolicy {
     return LocalDevicePolicy.fromJson(decoded);
   }
 
+  /// GF-00312 — Serializes data in LocalDevicePolicy.
   String encode() => jsonEncode(toJson());
 }
 
 /// Backend policy support is explicitly absent from the current OpenAPI spec.
 class PolicyCapabilities {
+  /// GF-00313 — Initializes PolicyCapabilities.
   const PolicyCapabilities({
     required this.backendSupported,
     required this.reason,

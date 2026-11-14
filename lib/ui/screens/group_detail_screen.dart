@@ -18,6 +18,7 @@ import '../widgets/role_dialogs.dart';
 /// Keycloak group-specific role; the matching admin/editor/viewer screen is
 /// selected automatically.
 class GroupScopeScreen extends ConsumerWidget {
+  /// GF-00753 — Initializes GroupScopeScreen.
   const GroupScopeScreen({
     super.key,
     required this.project,
@@ -27,6 +28,7 @@ class GroupScopeScreen extends ConsumerWidget {
   final Project project;
   final Group group;
 
+  /// GF-00754 — Builds the widget or value for GroupScopeScreen.
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final snapshot = ref.watch(roleSnapshotProvider);
@@ -49,6 +51,7 @@ class GroupScopeScreen extends ConsumerWidget {
 
 /// Group administrator: edit/delete the group and manage group roles.
 class GroupAdminScreen extends StatelessWidget {
+  /// GF-00755 — Initializes GroupAdminScreen.
   const GroupAdminScreen({
     super.key,
     required this.project,
@@ -58,6 +61,7 @@ class GroupAdminScreen extends StatelessWidget {
   final Project project;
   final Group group;
 
+  /// GF-00756 — Builds the widget or value for GroupAdminScreen.
   @override
   Widget build(BuildContext context) {
     return _GroupScopeView(
@@ -70,6 +74,7 @@ class GroupAdminScreen extends StatelessWidget {
 
 /// Group editor: assign or remove devices without changing group settings.
 class GroupEditorScreen extends StatelessWidget {
+  /// GF-00757 — Initializes GroupEditorScreen.
   const GroupEditorScreen({
     super.key,
     required this.project,
@@ -79,6 +84,7 @@ class GroupEditorScreen extends StatelessWidget {
   final Project project;
   final Group group;
 
+  /// GF-00758 — Builds the widget or value for GroupEditorScreen.
   @override
   Widget build(BuildContext context) {
     return _GroupScopeView(
@@ -91,6 +97,7 @@ class GroupEditorScreen extends StatelessWidget {
 
 /// Group viewer: read-only group and device overview.
 class GroupViewerScreen extends StatelessWidget {
+  /// GF-00759 — Initializes GroupViewerScreen.
   const GroupViewerScreen({
     super.key,
     required this.project,
@@ -100,6 +107,7 @@ class GroupViewerScreen extends StatelessWidget {
   final Project project;
   final Group group;
 
+  /// GF-00760 — Builds the widget or value for GroupViewerScreen.
   @override
   Widget build(BuildContext context) {
     return _GroupScopeView(
@@ -112,6 +120,7 @@ class GroupViewerScreen extends StatelessWidget {
 
 /// Shared group view; the per-role screens configure which operations appear.
 class _GroupScopeView extends ConsumerStatefulWidget {
+  /// GF-00761 — Initializes _GroupScopeView.
   const _GroupScopeView({
     required this.project,
     required this.group,
@@ -122,6 +131,7 @@ class _GroupScopeView extends ConsumerStatefulWidget {
   final Group group;
   final AccessRole role;
 
+  /// GF-00762 — Creates the state object for _GroupScopeView.
   @override
   ConsumerState<_GroupScopeView> createState() => _GroupScopeViewState();
 }
@@ -130,11 +140,14 @@ class _GroupScopeViewState extends ConsumerState<_GroupScopeView> {
   late Group _group = widget.group;
   bool _busy = false;
 
+  /// GF-00763 — Computes _GroupScopeViewState._role.
   AccessRole get _role => widget.role;
 
+  /// GF-00764 — Computes _GroupScopeViewState._refKey.
   GroupRef get _refKey =>
       GroupRef(projectId: widget.project.id, groupId: _group.id);
 
+  /// GF-00765 — Builds the widget or value for _GroupScopeViewState.
   @override
   Widget build(BuildContext context) {
     final devices = ref.watch(groupDevicesProvider(_refKey));
@@ -148,50 +161,54 @@ class _GroupScopeViewState extends ConsumerState<_GroupScopeView> {
             tooltip: tr(context, '再読み込み'),
             onPressed: _busy
                 ? null
-                : () => ref.invalidate(groupDevicesProvider(_refKey)),
+                : /* GF-00766 — Runs an inline callback in _GroupScopeViewState.build. */ () =>
+                      ref.invalidate(groupDevicesProvider(_refKey)),
             icon: Icon(Icons.refresh, size: 22),
           ),
           if (_role.canAdmin)
             PopupMenuButton<String>(
-              onSelected: (value) async {
-                switch (value) {
-                  case 'edit':
-                    await _editGroup();
-                    break;
-                  case 'delete':
-                    await _deleteGroup();
-                    break;
-                }
-              },
-              itemBuilder: (context) => [
-                PopupMenuItem(
-                  value: 'edit',
-                  child: ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    leading: Icon(Icons.edit, size: 22),
-                    title: AppText('グループを編集'),
-                  ),
-                ),
-                PopupMenuItem(
-                  value: 'delete',
-                  child: ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    leading: Icon(Icons.delete, size: 22),
-                    title: AppText('グループを削除'),
-                  ),
-                ),
-              ],
+              onSelected: /* GF-00767 — Runs an inline callback in _GroupScopeViewState.build. */
+                  (value) async {
+                    switch (value) {
+                      case 'edit':
+                        await _editGroup();
+                        break;
+                      case 'delete':
+                        await _deleteGroup();
+                        break;
+                    }
+                  },
+              itemBuilder: /* GF-00768 — Runs an inline callback in _GroupScopeViewState.build. */
+                  (context) => [
+                    PopupMenuItem(
+                      value: 'edit',
+                      child: ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        leading: Icon(Icons.edit, size: 22),
+                        title: AppText('グループを編集'),
+                      ),
+                    ),
+                    PopupMenuItem(
+                      value: 'delete',
+                      child: ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        leading: Icon(Icons.delete, size: 22),
+                        title: AppText('グループを削除'),
+                      ),
+                    ),
+                  ],
             ),
         ],
       ),
       body: RefreshIndicator(
-        onRefresh: () async {
-          ref.invalidate(groupDevicesProvider(_refKey));
-          if (_role.canAdmin) {
-            ref.invalidate(groupRoleBindingsProvider(_refKey));
-          }
-          await ref.read(groupDevicesProvider(_refKey).future);
-        },
+        onRefresh: /* GF-00769 — Runs an inline callback in _GroupScopeViewState.build. */
+            () async {
+              ref.invalidate(groupDevicesProvider(_refKey));
+              if (_role.canAdmin) {
+                ref.invalidate(groupRoleBindingsProvider(_refKey));
+              }
+              await ref.read(groupDevicesProvider(_refKey).future);
+            },
         child: ListView(
           physics: const AlwaysScrollableScrollPhysics(),
           padding: const EdgeInsets.all(16),
@@ -248,51 +265,56 @@ class _GroupScopeViewState extends ConsumerState<_GroupScopeView> {
                 ],
               ),
               child: devices.when(
-                loading: () => const LinearProgressIndicator(),
-                error: (error, _) => ErrorCard(
-                  error: error,
-                  compact: true,
-                  onRetry: () => ref.invalidate(groupDevicesProvider(_refKey)),
-                ),
-                data: (list) {
-                  if (list.isEmpty) {
-                    return AppText(
-                      _role.canEdit
-                          ? 'デバイスが割り当てられていません。右上の「追加」から割り当てできます。'
-                          : 'デバイスが割り当てられていません。',
-                    );
-                  }
-                  return Column(
-                    children: [
-                      for (final device in list)
-                        ListTile(
-                          contentPadding: EdgeInsets.zero,
-                          dense: true,
-                          leading: const Icon(Icons.phone_android),
-                          title: AppText(device.displayName),
-                          subtitle: AppText(
-                            '${platformLabel(device.platform)} • '
-                            '${device.status}',
-                          ),
-                          trailing: _role.canEdit
-                              ? IconButton(
-                                  tooltip: tr(context, 'グループから外す'),
-                                  onPressed: _busy
-                                      ? null
-                                      : () => _unbindDevice(
-                                          device.id,
-                                          device.displayName,
-                                        ),
-                                  icon: Icon(
-                                    Icons.remove_circle_outline,
-                                    color: scheme.error,
-                                  ),
-                                )
-                              : null,
-                        ),
-                    ],
-                  );
-                },
+                loading: /* GF-00770 — Runs an inline callback in _GroupScopeViewState.build. */
+                    () => const LinearProgressIndicator(),
+                error: /* GF-00771 — Runs an inline callback in _GroupScopeViewState.build. */
+                    (error, _) => ErrorCard(
+                      error: error,
+                      compact: true,
+                      onRetry: /* GF-00772 — Runs an inline callback in _GroupScopeViewState.build.callback. */
+                          () => ref.invalidate(groupDevicesProvider(_refKey)),
+                    ),
+                data: /* GF-00773 — Runs an inline callback in _GroupScopeViewState.build. */
+                    (list) {
+                      if (list.isEmpty) {
+                        return AppText(
+                          _role.canEdit
+                              ? 'デバイスが割り当てられていません。右上の「追加」から割り当てできます。'
+                              : 'デバイスが割り当てられていません。',
+                        );
+                      }
+                      return Column(
+                        children: [
+                          for (final device in list)
+                            ListTile(
+                              contentPadding: EdgeInsets.zero,
+                              dense: true,
+                              leading: const Icon(Icons.phone_android),
+                              title: AppText(device.displayName),
+                              subtitle: AppText(
+                                '${platformLabel(device.platform)} • '
+                                '${device.status}',
+                              ),
+                              trailing: _role.canEdit
+                                  ? IconButton(
+                                      tooltip: tr(context, 'グループから外す'),
+                                      onPressed: _busy
+                                          ? null
+                                          : /* GF-00774 — Runs an inline callback in _GroupScopeViewState.build.callback. */ () =>
+                                                _unbindDevice(
+                                                  device.id,
+                                                  device.displayName,
+                                                ),
+                                      icon: Icon(
+                                        Icons.remove_circle_outline,
+                                        color: scheme.error,
+                                      ),
+                                    )
+                                  : null,
+                            ),
+                        ],
+                      );
+                    },
               ),
             ),
             if (_role.canAdmin)
@@ -338,11 +360,17 @@ class _GroupScopeViewState extends ConsumerState<_GroupScopeView> {
     );
   }
 
+  /// GF-00775 — Handles edit group in _GroupScopeViewState.
   Future<void> _editGroup() async {
+    // GF-02129 — Collect group edits and stop when the dialog is cancelled.
     final input = await showGroupFormDialog(context, initial: _group);
     if (input == null || !mounted) return;
-    setState(() => _busy = true);
+    setState(
+      /* GF-00776 — Runs an inline callback in _GroupScopeViewState._editGroup. */ () =>
+          _busy = true,
+    );
     try {
+      // GF-02130 — Persist the group changes through the group controller.
       final updated = await ref
           .read(groupControllerProvider)
           .update(
@@ -351,66 +379,105 @@ class _GroupScopeViewState extends ConsumerState<_GroupScopeView> {
             GroupUpdateRequest(name: input.name, status: input.status),
           );
       if (!mounted) return;
-      setState(() => _group = updated);
+      // GF-02131 — Replace local group state and report the successful update.
+      setState(
+        /* GF-00777 — Runs an inline callback in _GroupScopeViewState._editGroup. */ () =>
+            _group = updated,
+      );
       _showMessage('グループを更新しました。');
     } on Object catch (error) {
       if (mounted) _showError(error);
     } finally {
-      if (mounted) setState(() => _busy = false);
+      if (mounted)
+        setState(
+          /* GF-00778 — Runs an inline callback in _GroupScopeViewState._editGroup. */ () =>
+              _busy = false,
+        );
     }
   }
 
+  /// GF-00779 — Handles delete group in _GroupScopeViewState.
   Future<void> _deleteGroup() async {
+    // GF-02132 — Confirm the irreversible group deletion with the user.
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const AppText('グループを削除しますか？'),
-        content: AppText('「${_group.name}」を削除します。元に戻せません。'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const AppText('キャンセル'),
+      builder: /* GF-00780 — Runs an inline callback in _GroupScopeViewState._deleteGroup. */
+          (context) => AlertDialog(
+            title: const AppText('グループを削除しますか？'),
+            content: AppText('「${_group.name}」を削除します。元に戻せません。'),
+            actions: [
+              TextButton(
+                onPressed: /* GF-00781 — Runs an inline callback in _GroupScopeViewState._deleteGroup.callback. */
+                    () => Navigator.of(context).pop(false),
+                child: const AppText('キャンセル'),
+              ),
+              FilledButton(
+                onPressed: /* GF-00782 — Runs an inline callback in _GroupScopeViewState._deleteGroup.callback. */
+                    () => Navigator.of(context).pop(true),
+                style: FilledButton.styleFrom(
+                  backgroundColor: Theme.of(context).colorScheme.error,
+                ),
+                child: const AppText('削除する'),
+              ),
+            ],
           ),
-          FilledButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            style: FilledButton.styleFrom(
-              backgroundColor: Theme.of(context).colorScheme.error,
-            ),
-            child: const AppText('削除する'),
-          ),
-        ],
-      ),
     );
     if (confirmed != true || !mounted) return;
-    setState(() => _busy = true);
+    setState(
+      /* GF-00783 — Runs an inline callback in _GroupScopeViewState._deleteGroup. */ () =>
+          _busy = true,
+    );
     try {
+      // GF-02133 — Delete the group through the group controller.
       await ref
           .read(groupControllerProvider)
           .delete(widget.project.id, _group.id);
       if (!mounted) return;
+      // GF-02134 — Close the detail view after successful deletion.
       Navigator.of(context).pop();
     } on Object catch (error) {
       if (mounted) _showError(error);
     } finally {
-      if (mounted) setState(() => _busy = false);
+      if (mounted)
+        setState(
+          /* GF-00784 — Runs an inline callback in _GroupScopeViewState._deleteGroup. */ () =>
+              _busy = false,
+        );
     }
   }
 
+  /// GF-00785 — Handles bind device in _GroupScopeViewState.
   Future<void> _bindDevice() async {
+    // GF-02135 — Find active devices that are not already assigned.
     final assigned = ref.read(groupDevicesProvider(_refKey)).value ?? const [];
     final all = ref.read(devicesProvider(widget.project.id)).value ?? const [];
-    final assignedIds = assigned.map((device) => device.id).toSet();
+    final assignedIds = assigned
+        .map(
+          /* GF-00786 — Runs an inline callback in _GroupScopeViewState._bindDevice. */ (
+            device,
+          ) => device.id,
+        )
+        .toSet();
     final candidates = all
-        .where((device) => device.isActive && !assignedIds.contains(device.id))
+        .where(
+          /* GF-00787 — Runs an inline callback in _GroupScopeViewState._bindDevice. */ (
+            device,
+          ) => device.isActive && !assignedIds.contains(device.id),
+        )
         .toList(growable: false);
     if (candidates.isEmpty) {
       _showMessage('追加できるデバイスがありません。デバイスタブで登録してください。');
       return;
     }
+    // GF-02136 — Ask the user to choose one eligible device.
     final deviceId = await showGroupDevicePicker(context, devices: candidates);
     if (deviceId == null || !mounted) return;
-    setState(() => _busy = true);
+    setState(
+      /* GF-00788 — Runs an inline callback in _GroupScopeViewState._bindDevice. */ () =>
+          _busy = true,
+    );
     try {
+      // GF-02137 — Add the selected device to the group's backend membership.
       await ref
           .read(groupControllerProvider)
           .bindDevice(widget.project.id, _group.id, deviceId);
@@ -418,13 +485,23 @@ class _GroupScopeViewState extends ConsumerState<_GroupScopeView> {
     } on Object catch (error) {
       if (mounted) _showError(error);
     } finally {
-      if (mounted) setState(() => _busy = false);
+      if (mounted)
+        setState(
+          /* GF-00789 — Runs an inline callback in _GroupScopeViewState._bindDevice. */ () =>
+              _busy = false,
+        );
     }
   }
 
+  /// GF-00790 — Handles unbind device in _GroupScopeViewState.
   Future<void> _unbindDevice(String deviceId, String name) async {
-    setState(() => _busy = true);
+    // GF-02138 — Mark the group membership change as active.
+    setState(
+      /* GF-00791 — Runs an inline callback in _GroupScopeViewState._unbindDevice. */ () =>
+          _busy = true,
+    );
     try {
+      // GF-02139 — Remove the device from the backend group membership.
       await ref
           .read(groupControllerProvider)
           .unbindDevice(widget.project.id, _group.id, deviceId);
@@ -432,15 +509,25 @@ class _GroupScopeViewState extends ConsumerState<_GroupScopeView> {
     } on Object catch (error) {
       if (mounted) _showError(error);
     } finally {
-      if (mounted) setState(() => _busy = false);
+      if (mounted)
+        setState(
+          /* GF-00792 — Runs an inline callback in _GroupScopeViewState._unbindDevice. */ () =>
+              _busy = false,
+        );
     }
   }
 
+  /// GF-00793 — Handles assign group role in _GroupScopeViewState.
   Future<void> _assignGroupRole() async {
+    // GF-02140 — Collect the subject and role to grant.
     final input = await showRoleBindingDialog(context, title: 'グループロールを付与');
     if (input == null || !mounted) return;
-    setState(() => _busy = true);
+    setState(
+      /* GF-00794 — Runs an inline callback in _GroupScopeViewState._assignGroupRole. */ () =>
+          _busy = true,
+    );
     try {
+      // GF-02141 — Persist the group role binding through the role controller.
       await ref
           .read(roleControllerProvider)
           .putGroupRole(
@@ -455,13 +542,23 @@ class _GroupScopeViewState extends ConsumerState<_GroupScopeView> {
     } on Object catch (error) {
       if (mounted) _showError(error);
     } finally {
-      if (mounted) setState(() => _busy = false);
+      if (mounted)
+        setState(
+          /* GF-00795 — Runs an inline callback in _GroupScopeViewState._assignGroupRole. */ () =>
+              _busy = false,
+        );
     }
   }
 
+  /// GF-00796 — Handles delete group role in _GroupScopeViewState.
   Future<void> _deleteGroupRole(String bindingId) async {
-    setState(() => _busy = true);
+    // GF-02142 — Mark the role-binding change as active.
+    setState(
+      /* GF-00797 — Runs an inline callback in _GroupScopeViewState._deleteGroupRole. */ () =>
+          _busy = true,
+    );
     try {
+      // GF-02143 — Delete the selected group role binding in Gorape.
       await ref
           .read(roleControllerProvider)
           .deleteGroupRole(widget.project.id, _group.id, bindingId);
@@ -469,16 +566,22 @@ class _GroupScopeViewState extends ConsumerState<_GroupScopeView> {
     } on Object catch (error) {
       if (mounted) _showError(error);
     } finally {
-      if (mounted) setState(() => _busy = false);
+      if (mounted)
+        setState(
+          /* GF-00798 — Runs an inline callback in _GroupScopeViewState._deleteGroupRole. */ () =>
+              _busy = false,
+        );
     }
   }
 
+  /// GF-00799 — Handles show message in _GroupScopeViewState.
   void _showMessage(String message) {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(content: AppText(message)));
   }
 
+  /// GF-00800 — Handles show error in _GroupScopeViewState.
   void _showError(Object error) {
     final friendly = friendlyError(error);
     ScaffoldMessenger.of(context).showSnackBar(
@@ -491,57 +594,66 @@ class _GroupScopeViewState extends ConsumerState<_GroupScopeView> {
 }
 
 class _GroupRoleList extends ConsumerWidget {
+  /// GF-00801 — Initializes _GroupRoleList.
   const _GroupRoleList({required this.groupRef, required this.onDelete});
 
   final GroupRef groupRef;
   final Future<void> Function(String bindingId) onDelete;
 
+  /// GF-00802 — Builds the widget or value for _GroupRoleList.
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final bindings = ref.watch(groupRoleBindingsProvider(groupRef));
     return bindings.when(
-      loading: () => const LinearProgressIndicator(),
-      error: (error, _) => ErrorCard(
-        error: error,
-        compact: true,
-        onRetry: () => ref.invalidate(groupRoleBindingsProvider(groupRef)),
-      ),
-      data: (list) {
-        if (list.isEmpty) return const AppText('グループロールがありません。');
-        return Column(
-          children: [
-            for (final GroupRoleBinding binding in list)
-              ListTile(
-                contentPadding: EdgeInsets.zero,
-                dense: true,
-                leading: const Icon(Icons.person_outline),
-                title: AppText(
-                  binding.principalId,
-                  style: const TextStyle(fontFamily: 'monospace'),
-                  overflow: TextOverflow.ellipsis,
-                ),
-                subtitle: AppText('付与 ${formatTimestamp(binding.createdAt)}'),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    RoleBadge(role: binding.accessRole),
-                    IconButton(
-                      tooltip: tr(context, '削除'),
-                      onPressed: () => onDelete(binding.id),
-                      icon: ColorFiltered(
-                        colorFilter: ColorFilter.mode(
-                          Theme.of(context).colorScheme.onSurfaceVariant,
-                          BlendMode.srcIn,
-                        ),
-                        child: Icon(Icons.delete, size: 22),
-                      ),
+      loading: /* GF-00803 — Runs an inline callback in _GroupRoleList.build. */
+          () => const LinearProgressIndicator(),
+      error: /* GF-00804 — Runs an inline callback in _GroupRoleList.build. */
+          (error, _) => ErrorCard(
+            error: error,
+            compact: true,
+            onRetry: /* GF-00805 — Runs an inline callback in _GroupRoleList.build.callback. */
+                () => ref.invalidate(groupRoleBindingsProvider(groupRef)),
+          ),
+      data: /* GF-00806 — Runs an inline callback in _GroupRoleList.build. */
+          (list) {
+            if (list.isEmpty) return const AppText('グループロールがありません。');
+            return Column(
+              children: [
+                for (final GroupRoleBinding binding in list)
+                  ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    dense: true,
+                    leading: const Icon(Icons.person_outline),
+                    title: AppText(
+                      binding.principalId,
+                      style: const TextStyle(fontFamily: 'monospace'),
+                      overflow: TextOverflow.ellipsis,
                     ),
-                  ],
-                ),
-              ),
-          ],
-        );
-      },
+                    subtitle: AppText(
+                      '付与 ${formatTimestamp(binding.createdAt)}',
+                    ),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        RoleBadge(role: binding.accessRole),
+                        IconButton(
+                          tooltip: tr(context, '削除'),
+                          onPressed: /* GF-00807 — Runs an inline callback in _GroupRoleList.build.callback. */
+                              () => onDelete(binding.id),
+                          icon: ColorFiltered(
+                            colorFilter: ColorFilter.mode(
+                              Theme.of(context).colorScheme.onSurfaceVariant,
+                              BlendMode.srcIn,
+                            ),
+                            child: Icon(Icons.delete, size: 22),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+              ],
+            );
+          },
     );
   }
 }

@@ -7,6 +7,7 @@ import '../../entity/model/role.dart';
 import 'common.dart';
 
 class GroupFormResult {
+  /// GF-01008 — Initializes GroupFormResult.
   const GroupFormResult({
     required this.slug,
     required this.name,
@@ -18,21 +19,25 @@ class GroupFormResult {
   final String status;
 }
 
+/// GF-01009 — Handles show group form dialog in top level.
 Future<GroupFormResult?> showGroupFormDialog(
   BuildContext context, {
   Group? initial,
 }) {
   return showDialog<GroupFormResult>(
     context: context,
-    builder: (context) => _GroupFormDialog(initial: initial),
+    builder: /* GF-01010 — Runs an inline callback in top level.showGroupFormDialog. */
+        (context) => _GroupFormDialog(initial: initial),
   );
 }
 
 class _GroupFormDialog extends StatefulWidget {
+  /// GF-01011 — Initializes _GroupFormDialog.
   const _GroupFormDialog({this.initial});
 
   final Group? initial;
 
+  /// GF-01012 — Creates the state object for _GroupFormDialog.
   @override
   State<_GroupFormDialog> createState() => _GroupFormDialogState();
 }
@@ -43,8 +48,10 @@ class _GroupFormDialogState extends State<_GroupFormDialog> {
   late String _status;
   String? _error;
 
+  /// GF-01013 — Computes _GroupFormDialogState._editing.
   bool get _editing => widget.initial != null;
 
+  /// GF-01014 — Initializes state for _GroupFormDialogState.
   @override
   void initState() {
     super.initState();
@@ -53,6 +60,7 @@ class _GroupFormDialogState extends State<_GroupFormDialog> {
     _status = widget.initial?.status ?? 'active';
   }
 
+  /// GF-01015 — Releases resources owned by _GroupFormDialogState.
   @override
   void dispose() {
     _slug.dispose();
@@ -60,6 +68,7 @@ class _GroupFormDialogState extends State<_GroupFormDialog> {
     super.dispose();
   }
 
+  /// GF-01016 — Builds the widget or value for _GroupFormDialogState.
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -103,8 +112,11 @@ class _GroupFormDialogState extends State<_GroupFormDialog> {
                     child: AppText('inactive'),
                   ),
                 ],
-                onChanged: (value) =>
-                    setState(() => _status = value ?? 'active'),
+                onChanged: /* GF-01017 — Runs an inline callback in _GroupFormDialogState.build. */
+                    (value) => setState(
+                      /* GF-01018 — Runs an inline callback in _GroupFormDialogState.build.callback. */ () =>
+                          _status = value ?? 'active',
+                    ),
               ),
             ],
             if (_error != null) ...[
@@ -119,7 +131,8 @@ class _GroupFormDialogState extends State<_GroupFormDialog> {
       ),
       actions: [
         TextButton(
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: /* GF-01019 — Runs an inline callback in _GroupFormDialogState.build. */
+              () => Navigator.of(context).pop(),
           child: const AppText('キャンセル'),
         ),
         FilledButton(
@@ -130,15 +143,22 @@ class _GroupFormDialogState extends State<_GroupFormDialog> {
     );
   }
 
+  /// GF-01020 — Handles submit in _GroupFormDialogState.
   void _submit() {
     final slug = _slug.text.trim();
     final name = _name.text.trim();
     if (!_editing && !RegExp(r'^[a-z0-9][a-z0-9-]{0,62}$').hasMatch(slug)) {
-      setState(() => _error = 'Slugは小文字英数字とハイフンで入力してください。');
+      setState(
+        /* GF-01021 — Runs an inline callback in _GroupFormDialogState._submit. */ () =>
+            _error = 'Slugは小文字英数字とハイフンで入力してください。',
+      );
       return;
     }
     if (name.isEmpty) {
-      setState(() => _error = '表示名を入力してください。');
+      setState(
+        /* GF-01022 — Runs an inline callback in _GroupFormDialogState._submit. */ () =>
+            _error = '表示名を入力してください。',
+      );
       return;
     }
     Navigator.of(
@@ -148,27 +168,32 @@ class _GroupFormDialogState extends State<_GroupFormDialog> {
 }
 
 class RoleBindingInput {
+  /// GF-01023 — Initializes RoleBindingInput.
   const RoleBindingInput({required this.subject, required this.role});
 
   final String subject;
   final AccessRole role;
 }
 
+/// GF-01024 — Handles show role binding dialog in top level.
 Future<RoleBindingInput?> showRoleBindingDialog(
   BuildContext context, {
   String title = 'ロールを付与',
 }) {
   return showDialog<RoleBindingInput>(
     context: context,
-    builder: (context) => _RoleBindingDialog(title: title),
+    builder: /* GF-01025 — Runs an inline callback in top level.showRoleBindingDialog. */
+        (context) => _RoleBindingDialog(title: title),
   );
 }
 
 class _RoleBindingDialog extends StatefulWidget {
+  /// GF-01026 — Initializes _RoleBindingDialog.
   const _RoleBindingDialog({required this.title});
 
   final String title;
 
+  /// GF-01027 — Creates the state object for _RoleBindingDialog.
   @override
   State<_RoleBindingDialog> createState() => _RoleBindingDialogState();
 }
@@ -178,12 +203,14 @@ class _RoleBindingDialogState extends State<_RoleBindingDialog> {
   AccessRole _role = AccessRole.viewer;
   String? _error;
 
+  /// GF-01028 — Releases resources owned by _RoleBindingDialogState.
   @override
   void dispose() {
     _subject.dispose();
     super.dispose();
   }
 
+  /// GF-01029 — Builds the widget or value for _RoleBindingDialogState.
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -218,8 +245,11 @@ class _RoleBindingDialogState extends State<_RoleBindingDialog> {
                 ])
                   DropdownMenuItem(value: role, child: AppText(role.label)),
               ],
-              onChanged: (value) =>
-                  setState(() => _role = value ?? AccessRole.viewer),
+              onChanged: /* GF-01030 — Runs an inline callback in _RoleBindingDialogState.build. */
+                  (value) => setState(
+                    /* GF-01031 — Runs an inline callback in _RoleBindingDialogState.build.callback. */ () =>
+                        _role = value ?? AccessRole.viewer,
+                  ),
             ),
             const SizedBox(height: 8),
             AppText(
@@ -238,20 +268,25 @@ class _RoleBindingDialogState extends State<_RoleBindingDialog> {
       ),
       actions: [
         TextButton(
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: /* GF-01032 — Runs an inline callback in _RoleBindingDialogState.build. */
+              () => Navigator.of(context).pop(),
           child: const AppText('キャンセル'),
         ),
         FilledButton(
-          onPressed: () {
-            final subject = _subject.text.trim();
-            if (subject.isEmpty) {
-              setState(() => _error = 'OIDC Subjectを入力してください。');
-              return;
-            }
-            Navigator.of(
-              context,
-            ).pop(RoleBindingInput(subject: subject, role: _role));
-          },
+          onPressed: /* GF-01033 — Runs an inline callback in _RoleBindingDialogState.build. */
+              () {
+                final subject = _subject.text.trim();
+                if (subject.isEmpty) {
+                  setState(
+                    /* GF-01034 — Runs an inline callback in _RoleBindingDialogState.build.callback. */ () =>
+                        _error = 'OIDC Subjectを入力してください。',
+                  );
+                  return;
+                }
+                Navigator.of(
+                  context,
+                ).pop(RoleBindingInput(subject: subject, role: _role));
+              },
           child: const AppText('付与'),
         ),
       ],
@@ -259,42 +294,46 @@ class _RoleBindingDialogState extends State<_RoleBindingDialog> {
   }
 }
 
+/// GF-01035 — Handles show group device picker in top level.
 Future<String?> showGroupDevicePicker(
   BuildContext context, {
   required List<Device> devices,
 }) {
   return showDialog<String>(
     context: context,
-    builder: (context) => AlertDialog(
-      title: const AppText('グループにデバイスを追加'),
-      content: SizedBox(
-        width: 420,
-        child: devices.isEmpty
-            ? const AppText('追加できるデバイスがありません。')
-            : SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    for (final device in devices)
-                      ListTile(
-                        leading: const Icon(Icons.devices_other),
-                        title: AppText(device.displayName),
-                        subtitle: AppText(
-                          '${platformLabel(device.platform)} • '
-                          '${formatTimestamp(device.registeredAt)}',
-                        ),
-                        onTap: () => Navigator.of(context).pop(device.id),
-                      ),
-                  ],
-                ),
-              ),
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: const AppText('閉じる'),
+    builder: /* GF-01036 — Runs an inline callback in top level.showGroupDevicePicker. */
+        (context) => AlertDialog(
+          title: const AppText('グループにデバイスを追加'),
+          content: SizedBox(
+            width: 420,
+            child: devices.isEmpty
+                ? const AppText('追加できるデバイスがありません。')
+                : SingleChildScrollView(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        for (final device in devices)
+                          ListTile(
+                            leading: const Icon(Icons.devices_other),
+                            title: AppText(device.displayName),
+                            subtitle: AppText(
+                              '${platformLabel(device.platform)} • '
+                              '${formatTimestamp(device.registeredAt)}',
+                            ),
+                            onTap: /* GF-01037 — Runs an inline callback in top level.showGroupDevicePicker.callback. */
+                                () => Navigator.of(context).pop(device.id),
+                          ),
+                      ],
+                    ),
+                  ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: /* GF-01038 — Runs an inline callback in top level.showGroupDevicePicker.callback. */
+                  () => Navigator.of(context).pop(),
+              child: const AppText('閉じる'),
+            ),
+          ],
         ),
-      ],
-    ),
   );
 }

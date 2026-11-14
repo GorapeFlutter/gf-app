@@ -1,5 +1,6 @@
 /// A device returned by the Gorape device endpoints.
 class Device {
+  /// GF-00280 — Initializes Device.
   const Device({
     required this.id,
     required this.projectId,
@@ -24,8 +25,10 @@ class Device {
   final DateTime? revokedAt;
   final int version;
 
+  /// GF-00281 — Computes Device.isActive.
   bool get isActive => status == 'active';
 
+  /// GF-00282 — Initializes Device.fromJson.
   factory Device.fromJson(Map<String, dynamic> json) {
     return Device(
       id: _string(json['id']),
@@ -43,12 +46,15 @@ class Device {
     );
   }
 
+  /// GF-00283 — Handles string in Device.
   static String _string(Object? value, {String fallback = ''}) =>
       value is String ? value : fallback;
 
+  /// GF-00284 — Handles int in Device.
   static int _int(Object? value) =>
       value is int ? value : int.tryParse('$value') ?? 1;
 
+  /// GF-00285 — Handles date in Device.
   static DateTime? _date(Object? value) =>
       value is String ? DateTime.tryParse(value) : null;
 }

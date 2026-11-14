@@ -11,8 +11,10 @@ import 'ui/screens/settings_screen.dart';
 import 'ui/widgets/common.dart';
 
 class GorapeApp extends ConsumerWidget {
+  /// GF-00100 — Initializes GorapeApp.
   const GorapeApp({super.key});
 
+  /// GF-00101 — Builds the widget or value for GorapeApp.
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final locale = ref.watch(languageProvider).value ?? const Locale('ja');
@@ -34,26 +36,33 @@ class GorapeApp extends ConsumerWidget {
   }
 }
 
+/// GF-00001 — Restores the session and selects the login or authenticated shell.
 class AuthGate extends ConsumerWidget {
+  /// GF-00102 — Initializes AuthGate.
   const AuthGate({super.key});
 
+  /// GF-00103 — Builds the widget or value for AuthGate.
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // GF-02037 — Resolve platform, saved connection settings, and auth state.
     final platform = ref.watch(runtimePlatformProvider);
     final connection = ref.watch(connectionSettingsProvider);
     final auth = ref.watch(authControllerProvider);
 
     if (connection.isLoading && !connection.hasValue) {
+      // GF-02038 — Keep the splash screen visible while settings are loading.
       return const _SplashScreen(label: '設定を読み込み中...');
     }
     if (connection.hasError && !connection.hasValue) {
+      // GF-02039 — Surface settings errors with a retry action.
       return Scaffold(
         body: Center(
           child: Padding(
             padding: const EdgeInsets.all(24),
             child: ErrorCard(
               error: connection.error!,
-              onRetry: () => ref.invalidate(connectionSettingsProvider),
+              onRetry: /* GF-00104 — Runs an inline callback in AuthGate.build. */
+                  () => ref.invalidate(connectionSettingsProvider),
             ),
           ),
         ),
@@ -66,6 +75,7 @@ class AuthGate extends ConsumerWidget {
     final session = auth.value;
 
     if (session != null) {
+      // GF-02040 — Route restored or signed-in sessions to the app shell.
       return const AppShell();
     }
 
@@ -76,6 +86,7 @@ class AuthGate extends ConsumerWidget {
     }
 
     final authSupport = ref.watch(authSupportProvider);
+    // GF-02041 — Build the login screen with platform support and settings.
     return LoginScreen(
       settings: settings,
       platform: platform,
@@ -84,25 +95,32 @@ class AuthGate extends ConsumerWidget {
       loading: auth.isLoading,
       error: auth.hasError ? auth.error : null,
       unsupportedReason: authSupport.unsupportedReason,
-      onLogin: () => ref.read(authControllerProvider.notifier).signIn(),
-      onAdminLogin: () =>
-          ref.read(authControllerProvider.notifier).signIn(forceLogin: true),
-      onOpenSettings: () {
-        Navigator.of(context).push(
-          MaterialPageRoute<void>(
-            builder: (_) => const SettingsScreen(fromLogin: true),
-          ),
-        );
-      },
+      onLogin: /* GF-00105 — Runs an inline callback in AuthGate.build. */ () =>
+          ref.read(authControllerProvider.notifier).signIn(),
+      onAdminLogin: /* GF-00106 — Runs an inline callback in AuthGate.build. */
+          () => ref
+              .read(authControllerProvider.notifier)
+              .signIn(forceLogin: true),
+      onOpenSettings: /* GF-00107 — Runs an inline callback in AuthGate.build. */
+          () {
+            Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: /* GF-00108 — Runs an inline callback in AuthGate.build.callback. */
+                    (_) => const SettingsScreen(fromLogin: true),
+              ),
+            );
+          },
     );
   }
 }
 
 class _SplashScreen extends StatelessWidget {
+  /// GF-00109 — Initializes _SplashScreen.
   const _SplashScreen({required this.label});
 
   final String label;
 
+  /// GF-00110 — Builds the widget or value for _SplashScreen.
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
