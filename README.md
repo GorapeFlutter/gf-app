@@ -300,8 +300,10 @@ missing while the AOT snapshot exists.
   scripts/docs/build-book.sh
   ```
   Open `build/mdbook/index.html`.
-- To publish the book, set **Settings → Pages → Build and deployment → Source**
-  to **GitHub Actions**. The workflow builds on pull requests and deploys pushes
+- Before the first deployment, a repository administrator must enable Pages in
+  **Settings → Pages → Build and deployment → Source → GitHub Actions**. GitHub
+  does not allow the workflow's `GITHUB_TOKEN` to create the Pages site. After
+  this one-time setup, the workflow builds on pull requests and deploys pushes
   to `main` at `https://gorapeflutter.github.io/gf-app/`.
 - `scripts/docs/link_gf_ids.py` links documentation IDs to their source-comment
   line on GitHub. It skips fenced diagrams; run it after moving ID comments.
