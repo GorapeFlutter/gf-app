@@ -34,6 +34,56 @@ flowchart LR
 - **Repository** はHTTP、OIDC、Secure Storage、ネイティブ機能との境界です。
 - **Entity** はレイヤー間で受け渡すデータを定義します。
 
+## システム全体の構成とtrust boundary
+
+サインインとAndroid device-trust flowでは、同じ認証sessionに見えてもprotocol上の役割が異なります。KeycloakはOIDC Identity Provider（IdP）であり、Keycloakにパスキーを設定した場合のWebAuthn Relying Party（RP）でもあります。`gf-app`はpublic OIDC clientです。Gorape APIはOAuth resource serverであり、device登録challengeを検証するrelying serviceです。現行client contractでは、パスキー/WebAuthnのRPではありません。
+
+```mermaid
+flowchart LR
+    User[ユーザー]
+    LocalUV[ローカルユーザー検証<br/>生体認証 / PIN]
+    Authenticator[認証器<br/>platform authenticator / passkey provider]
+    Keycloak[Keycloak<br/>OIDC IdP; KeycloakパスキーのWebAuthn RP]
+    App[gf-app<br/>public OIDC client]
+    API[Gorape API<br/>OAuth resource server / device-trust RP]
+    Native[Android MainActivity<br/>MethodChannel GF-01140]
+    Keystore[Android Keystore]
+
+    User -->|サインイン GF-00002 / GF-00136| App
+    App -->|Authorization Code + PKCE GF-00002 / GF-01056| Keycloak
+    Keycloak -->|パスキー設定時のWebAuthn challenge| Authenticator
+    User -->|パスキー時のローカルUV| LocalUV
+    LocalUV --> Authenticator
+    Authenticator -->|署名済みassertion| Keycloak
+    Keycloak -->|OIDC code / token| App
+    App -->|Bearer access token GF-00003 / GF-00551| API
+
+    App -->|登録challenge GF-00005 / GF-02026| API
+    API -->|challenge_id + challenge| App
+    App -->|端末登録 GF-00005 / GF-01087| Native
+    Native -->|鍵生成 GF-01142 / GF-01143| Keystore
+    Keystore -->|公開鍵 + Android certificate chain GF-02090| Native
+    Native -->|登録evidence| App
+    App -->|登録検証 GF-02028| API
+
+    API -->|所有証明challenge GF-00006 / GF-02032| App
+    App -->|challenge署名 GF-00006 / GF-01088 / GF-01144| Native
+    Native -->|秘密鍵操作。鍵は端末内に保持| Keystore
+    Keystore -->|DER signature| Native
+    Native -->|署名| App
+    App -->|所有証明検証 GF-02034| API
+```
+
+**ローカルユーザー検証（UV）の境界:** Keycloakのパスキー経路では、生体認証、PINなどのUVは認証器/platform側で実行されます。`gf-app`が受け取るのはOIDCの結果であり、生体情報は受け取りません。一方、Android端末登録用の鍵は[GF-01143](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L159)で`setUserAuthenticationRequired(false)`を設定しているため、現在のdevice-key登録・所有証明にはローカルUVを要求しません。パスキーのUVを現行[GF-00005](https://github.com/GorapeFlutter/gf-app/blob/main/lib/usecase/device.dart#L89)鍵の性質と混同しないでください。
+
+| 用語 | この構成での役割 |
+| --- | --- |
+| 認証器（Authenticator） | パスキーの作成・利用、またはAndroid Keystore操作を実行します。 |
+| ローカルユーザー検証（UV） | Keycloakパスキー経路で、認証器/platformが生体認証やPINを検証します。 |
+| Keycloak IdP | ユーザーを認証して`gf-app`へOIDC tokenを発行します。Keycloak内のパスキーに対してWebAuthn RPとなります。 |
+| `gf-app` | Public OIDC clientです。Controller → Usecase → Repository経由で端末登録・所有証明を調整します。 |
+| Gorape API | OAuth resource server兼device-trust relying serviceです。access tokenと登録device keyを検証します。現行contractにパスキー/WebAuthn endpointはありません。 |
+
 ## 処理ID一覧
 
 | ID | 処理 | 主な実装 |
@@ -200,6 +250,65 @@ sequenceDiagram
     end
     UC-->>UI: complete or cleanup warning GF-02110–GF-02112
 ```
+
+## パスキーattestation、TPM、このclientの対応範囲
+
+「パスキーattestation」と上記のAndroid端末登録フローは関連しますが、別のprotocolです。パスキーはbrowserやcredential providerが管理するWebAuthn/FIDO credentialです。現在の`gf-app` AndroidフローはAndroid Keystore内にアプリ専用device keyを生成し、そのcertificate chainをGorapeへ送信します（[GF-00005](https://github.com/GorapeFlutter/gf-app/blob/main/lib/usecase/device.dart#L89)）。パスキー登録やWebAuthnの`attestationObject`送信ではありません。
+
+| フロー | attestation対象の鍵 | evidence形式 | このrepositoryの対応 |
+| --- | --- | --- | --- |
+| 現行Android端末登録（[GF-00005](https://github.com/GorapeFlutter/gf-app/blob/main/lib/usecase/device.dart#L89)） | アプリが生成するEC P-256 device key | Android KeystoreのX.509 certificate chain。Gorape challengeを`setAttestationChallenge`に結び付ける | Androidで実装済み。GorapeがAndroid Key Attestation evidenceを検証 |
+| WebAuthnパスキー（`attestation: "none"`） | credential providerが管理するパスキー | attestation statementを含まない（または匿名化された）WebAuthn `attestationObject` | パスキー登録フローは未実装 |
+| WebAuthnパスキー（`fmt: "tpm"`） | TPM public areaとして表されるcredential key | CBOR WebAuthn attestation statement、TPM structure、AIK certificate chain | 未実装。GorapeにTPM/WebAuthn attestation endpointなし |
+| WebAuthn Android Key（`fmt: "android-key"`） | Android WebAuthn credential | WebAuthn Android Key Attestation statement | 別のWebAuthn format。上記独自Androidフローとは異なる |
+
+WebAuthnの`android-key` formatもAndroid Key Attestationを利用できますが、evidenceをWebAuthn `attestationObject`に格納し、WebAuthnのclient/authenticator dataへ結び付けます。一方、`gf-app`は独自の`evidence.certificate_chain`をGorapeの端末登録endpointへ直接送信します。
+
+### WebAuthn TPM formatの内容
+
+[WebAuthn Level 3 Recommendation §8.3](https://www.w3.org/TR/2026/REC-webauthn-3-20260825/#sctn-tpm-attestation)は、TPM 2.0用の`fmt: "tpm"`を定義します。`attStmt`には`ver`、`alg`、`sig`、`certInfo`、`pubArea`と、leafがTPM Attestation Key（AIK）certificateとなる`x5c` chainが含まれます。AIKはパスキーのcredential keyとは別の鍵です。AIKがcredential keyについてのevidenceに署名し、credential keyは後続の認証assertionに署名します。
+
+WebAuthn CBOR objectの該当部分は次の形です。
+
+```text
+{
+  "fmt": "tpm",
+  "attStmt": {
+    "ver": "2.0",
+    "alg": <COSE algorithm>,
+    "x5c": [<AIK certificate>, ...certificate chain],
+    "sig": <TPMT_SIGNATURE>,
+    "certInfo": <TPMS_ATTEST>,
+    "pubArea": <TPMT_PUBLIC>
+  },
+  "authData": <authenticator data>
+}
+```
+
+登録時、WebAuthnは`authenticatorData`と`clientDataJSON`のhashから`attToBeSigned`を構成します。準拠するverifierは少なくとも次を検証します。
+
+1. AIK signatureとcertificate chainを、明示したtrust policy/metadata sourceに対して検証する。
+2. `certInfo.magic`および`certInfo.type`が`TPM_ST_ATTEST_CERTIFY`であることを確認する。
+3. `certInfo.extraData`が`attToBeSigned`のhashと一致することを確認する。
+4. `pubArea`からTPM Nameを計算して`certInfo`内のcertified nameと照合し、`pubArea`の公開鍵が`authenticatorData`のcredential public keyと一致することを確認する。
+
+したがってTPM formatは、単に「公開鍵をTPMで署名する」ものではありません。WebAuthn ceremony、TPMがcertifyしたcredential key、AIK trust chainの間を結び付けるprotocolです。また、それだけでOS、boot state、継続的な端末complianceの全てが証明されるわけではありません。
+
+### 標準化団体・公開実装資料の状況
+
+**2026年11月14日時点**で、関連する公開資料の成熟度と範囲はそれぞれ異なります。
+
+- **W3C WebAuthn Working Group:** WebAuthn Level 3はRecommendationであり、相互運用可能なTPM attestation formatを定義しています。[attestation conveyance preference](https://www.w3.org/TR/2026/REC-webauthn-3-20260825/#enum-attestation-convey)の既定値は`"none"`です。またLevel 3では[attestationなしでもnon-zero AAGUIDを返せる](https://www.w3.org/TR/2026/REC-webauthn-3-20260825/#sctn-attestation-types)ため、AAGUIDだけではauthenticator provenanceの暗号学的証明になりません。
+- **Google:** Googleの[server-side passkey registration guide](https://developers.google.com/identity/passkeys/developer-guides/server-registration)は、一般例で`attestationType: 'none'`を指定しています。これはprivacyと相互運用性を重視する既定方針と整合しますが、Google独自のTPM attestation仕様を意味しません。GoogleのAndroid [Key Attestation資料](https://developer.android.com/privacy-and-security/security-key-attestation)は、Remote Key Provisioning（RKP）、trust root、certificate revocationを含む別のAndroid Keystore certificate-chain方式を説明しています。
+- **FIDO Alliance:** [FIDO Server Requirements v2.3 Review Draft](https://fidoalliance.org/specs/fidoserver/fido-server-v2.3-rd-20260226.html)はserver側のTPM attestation対応を要件として記載しますが、review draft自身が実装の根拠として使わないよう明記し、仕様変更の可能性を示しています。[Enterprise Deployment Working Groupのattestation白書](https://fidoalliance.org/fido-attestation-enhancing-trust-privacy-and-interoperability-in-passwordless-authentication/)は説明資料であり、normative protocol仕様ではありません。
+- **Trusted Computing Group（TCG）:** WebAuthnが利用するTPM 2.0 structure（`TPMS_ATTEST`、`TPMT_PUBLIC`、AIK/Endorsement Key credential）を定義します。WebAuthnはそれらを`tpm` formatでどうencode・検証するかを定義します。
+
+### `gf-app`への影響
+
+- [GF-00005](https://github.com/GorapeFlutter/gf-app/blob/main/lib/usecase/device.dart#L89)をパスキーattestationと呼ばないでください。これはAndroid Key Attestation extensionを使い、アプリが生成したAndroid Keystore keyのpropertiesを検証します。
+- パスキーを追加する場合は、WebAuthn/Credential Managerの独立した登録フローと、完全な`attestationObject`を受け取り検証するAPIが必要です。`fmt: "tpm"`にはTPM対応verifierが必要です。
+- `none`、direct attestation、enterprise attestationのpolicyを明確に分けてください。全体でmodel識別可能なattestationを必須にすると、同期パスキーを排除したり端末情報を漏らしたりする可能性があります。Enterprise attestationは一意識別情報を含み得るため、管理対象の事前許可済みRPに限定すべきです。
+- 既存のAndroid Key Attestationフローでは、Google trust rootとrevocation情報を継続的に更新してください。GoogleのAndroid資料によると、Android 16で発売される端末はfactory-provisioned keyではなくRKPを使います。trust root bundleが将来も固定だとは想定しないでください。
 
 ## 管理データとローカル設定
 

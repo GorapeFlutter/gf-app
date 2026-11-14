@@ -2,6 +2,8 @@
 
 実際の端末登録を行うplatformはAndroidのみです。backend verifierもAndroidのみ実装されています。
 
+これはアプリ専用device keyに対するAndroid Key Attestationであり、WebAuthnパスキーattestationではありません。TPMとパスキーattestationの違いは[アーキテクチャ](ARCHITECTURE.md)を参照してください。
+
 ## 設定
 
 - `minSdk = 24`（Android 7.0）。`KeyGenParameterSpec.setAttestationChallenge`に必要です。

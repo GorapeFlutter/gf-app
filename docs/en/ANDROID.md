@@ -3,6 +3,10 @@
 Android is the only platform where this client performs real device
 registration. The backend verifier is implemented for Android only.
 
+This is Android Key Attestation for an app-generated device key, not WebAuthn
+passkey attestation. See the [architecture chapter](ARCHITECTURE.md) for the
+TPM and passkey-attestation comparison.
+
 ## Configuration
 
 - `minSdk = 24` (Android 7.0), required for

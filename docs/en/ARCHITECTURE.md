@@ -37,6 +37,67 @@ Function IDs span [GF-00100](https://github.com/GorapeFlutter/gf-app/blob/main/l
 - **Repository** forms the boundary to HTTP, OIDC, secure storage, and native APIs.
 - **Entity** defines the data passed between layers.
 
+## System architecture and trust boundaries
+
+The same sign-in session and the Android device-trust flow involve different
+protocol roles. Keycloak is the OIDC Identity Provider (IdP), and it is also the
+WebAuthn Relying Party (RP) when passkeys are enabled in Keycloak. `gf-app` is
+the public OIDC client. Gorape API is the OAuth resource server and the relying
+service for device-registration challenges; it is **not** the passkey/WebAuthn
+RP in the current client contract.
+
+```mermaid
+flowchart LR
+    User[User]
+    LocalUV[Local user verification<br/>biometric / PIN]
+    Authenticator[Authenticator<br/>platform authenticator / passkey provider]
+    Keycloak[Keycloak<br/>OIDC IdP; WebAuthn RP for Keycloak passkeys]
+    App[gf-app<br/>public OIDC client]
+    API[Gorape API<br/>OAuth resource server / device-trust RP]
+    Native[Android MainActivity<br/>MethodChannel GF-01140]
+    Keystore[Android Keystore]
+
+    User -->|Sign-in GF-00002 / GF-00136| App
+    App -->|Authorization Code + PKCE GF-00002 / GF-01056| Keycloak
+    Keycloak -->|Optional WebAuthn challenge| Authenticator
+    User -->|Local UV, when requested by passkey| LocalUV
+    LocalUV --> Authenticator
+    Authenticator -->|Signed assertion| Keycloak
+    Keycloak -->|OIDC code / tokens| App
+    App -->|Bearer access token GF-00003 / GF-00551| API
+
+    App -->|Registration challenge GF-00005 / GF-02026| API
+    API -->|challenge_id + challenge| App
+    App -->|Register GF-00005 / GF-01087| Native
+    Native -->|Generate key GF-01142 / GF-01143| Keystore
+    Keystore -->|Public key + Android certificate chain GF-02090| Native
+    Native -->|Registration evidence| App
+    App -->|Registration verify GF-02028| API
+
+    API -->|Possession challenge GF-00006 / GF-02032| App
+    App -->|Sign challenge GF-00006 / GF-01088 / GF-01144| Native
+    Native -->|Private-key operation; key remains local| Keystore
+    Keystore -->|DER signature| Native
+    Native -->|Signature| App
+    App -->|Proof verify GF-02034| API
+```
+
+**Local user verification boundary:** on the optional Keycloak passkey path, the
+authenticator/platform performs the biometric, PIN, or other user-verification
+step; `gf-app` receives the OIDC result and does not receive biometric data.
+The separate Android device-registration key currently sets
+`setUserAuthenticationRequired(false)` in [GF-01143](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L159), so that device-key
+registration/proof path does not require local UV. Do not interpret the passkey
+UV step as a property of the current [GF-00005](https://github.com/GorapeFlutter/gf-app/blob/main/lib/usecase/device.dart#L89) key.
+
+| Term | Role in this architecture |
+| --- | --- |
+| Authenticator | Creates/uses a passkey or performs the Android Keystore operation. |
+| Local user verification (UV) | Authenticator/platform check, such as biometric or PIN, on the optional Keycloak passkey path. |
+| Keycloak IdP | Authenticates the user and issues OIDC tokens to `gf-app`; it is the WebAuthn RP for passkeys configured there. |
+| `gf-app` | Public OIDC client; coordinates device registration/proof through Controller → Usecase → Repository. |
+| Gorape API | OAuth resource server and device-trust relying service; it validates access tokens and the registered device key. It has no passkey/WebAuthn endpoint in the current contract. |
+
 ## End-to-end flow IDs
 
 | ID | Flow | Main implementation |
@@ -215,6 +276,114 @@ sequenceDiagram
     end
     UC-->>UI: Complete or cleanup warning GF-02110–GF-02112
 ```
+
+## Passkey attestation, TPM, and this client's scope
+
+“Passkey attestation” and the Android device-registration flow above are related
+but different protocols. A passkey is a WebAuthn/FIDO credential managed by a
+browser or credential provider. The current `gf-app` Android flow creates a
+separate application device key in Android Keystore and sends its certificate
+chain to Gorape ([GF-00005](https://github.com/GorapeFlutter/gf-app/blob/main/lib/usecase/device.dart#L89)); it does not register a passkey or send a WebAuthn
+`attestationObject`.
+
+| Flow | Key being attested | Evidence format | What this repository does |
+| --- | --- | --- | --- |
+| Current Android device registration ([GF-00005](https://github.com/GorapeFlutter/gf-app/blob/main/lib/usecase/device.dart#L89)) | App-generated EC P-256 device key | Android Keystore X.509 certificate chain; the Gorape challenge is bound with `setAttestationChallenge` | Implemented for Android; Gorape verifies the Android Key Attestation evidence |
+| WebAuthn passkey with `attestation: "none"` | Credential-provider passkey | WebAuthn `attestationObject` with no attestation statement (or an anonymized result) | Not implemented as a passkey-registration flow |
+| WebAuthn passkey with `fmt: "tpm"` | Credential key represented by a TPM public area | CBOR WebAuthn attestation statement plus TPM structures and an AIK certificate chain | Not implemented; Gorape has no TPM/WebAuthn attestation endpoint |
+| WebAuthn Android Key (`fmt: "android-key"`) | Android WebAuthn credential | WebAuthn Android Key Attestation statement | A separate WebAuthn format; it is not the custom Android flow above |
+
+The WebAuthn `android-key` format can use Android Key Attestation evidence, but
+it wraps that evidence in a WebAuthn `attestationObject` and binds it to the
+WebAuthn client/authenticator data. `gf-app` instead sends its custom
+`evidence.certificate_chain` to Gorape's device-registration endpoint.
+
+### What the WebAuthn TPM format contains
+
+The [WebAuthn Level 3 Recommendation, §8.3](https://www.w3.org/TR/2026/REC-webauthn-3-20260825/#sctn-tpm-attestation)
+defines `fmt: "tpm"` for TPM 2.0. Its `attStmt` includes `ver`, `alg`, `sig`,
+`certInfo`, `pubArea`, and an `x5c` chain whose leaf is the TPM Attestation Key
+(AIK) certificate. The AIK is distinct from the passkey's credential key: the
+AIK signs evidence about the credential key, while the credential key signs
+future authentication assertions.
+
+The relevant part of the WebAuthn CBOR object is:
+
+```text
+{
+  "fmt": "tpm",
+  "attStmt": {
+    "ver": "2.0",
+    "alg": <COSE algorithm>,
+    "x5c": [<AIK certificate>, ...certificate chain],
+    "sig": <TPMT_SIGNATURE>,
+    "certInfo": <TPMS_ATTEST>,
+    "pubArea": <TPMT_PUBLIC>
+  },
+  "authData": <authenticator data>
+}
+```
+
+At registration, WebAuthn constructs `attToBeSigned` from `authenticatorData`
+and the hash of `clientDataJSON`. A conforming verifier must, among other
+checks:
+
+1. Verify the AIK signature and the certificate chain against an explicitly
+   trusted policy/metadata source.
+2. Check `certInfo.magic` and that `certInfo.type` is `TPM_ST_ATTEST_CERTIFY`.
+3. Check that `certInfo.extraData` is the algorithm-appropriate hash of
+   `attToBeSigned`.
+4. Derive the TPM Name from `pubArea`, compare it with the certified name in
+   `certInfo`, and ensure the public key in `pubArea` matches the credential
+   public key in `authenticatorData`.
+
+The `tpm` format is therefore not just “a public key signed by a TPM”. It is a
+protocol-specific binding between the WebAuthn ceremony, the TPM-certified
+credential key, and the AIK trust chain. It also does not, by itself, prove every
+property of the operating system, boot state, or ongoing device compliance.
+
+### Standards and published implementation guidance
+
+As of **14 November 2026**, the relevant public work has different maturity and
+scope:
+
+- **W3C WebAuthn Working Group:** WebAuthn Level 3 is a Recommendation and
+  defines the interoperable TPM attestation format. Its
+  [attestation-conveyance preference](https://www.w3.org/TR/2026/REC-webauthn-3-20260825/#enum-attestation-convey)
+  defaults to `"none"`. Level 3 also
+  [allows a non-zero AAGUID without attestation](https://www.w3.org/TR/2026/REC-webauthn-3-20260825/#sctn-attestation-types),
+  so an AAGUID alone is not cryptographic proof of authenticator provenance.
+- **Google:** Google's [server-side passkey registration guide](https://developers.google.com/identity/passkeys/developer-guides/server-registration)
+  uses `attestationType: 'none'` in its general example. This is consistent
+  with a privacy- and interoperability-oriented default; it is not a Google
+  TPM-attestation specification. Google Android [Key Attestation guidance](https://developer.android.com/privacy-and-security/security-key-attestation)
+  describes a separate Android Keystore certificate-chain mechanism, including
+  Remote Key Provisioning (RKP), trust roots, and certificate revocation.
+- **FIDO Alliance:** The [FIDO Server Requirements v2.3 Review Draft](https://fidoalliance.org/specs/fidoserver/fido-server-v2.3-rd-20260226.html)
+  lists TPM attestation support as a server requirement, but explicitly says
+  the review draft is not a basis for implementation and may change. The
+  [Enterprise Deployment Working Group's attestation white paper](https://fidoalliance.org/fido-attestation-enhancing-trust-privacy-and-interoperability-in-passwordless-authentication/)
+  is explanatory guidance, not a normative protocol specification.
+- **Trusted Computing Group (TCG):** TPM 2.0 structures used by WebAuthn
+  (`TPMS_ATTEST`, `TPMT_PUBLIC`, AIK/Endorsement Key credentials) are defined by
+  the TPM specifications. WebAuthn defines how those structures are encoded
+  and verified for the `tpm` format.
+
+### Implications for `gf-app`
+
+- Do not describe [GF-00005](https://github.com/GorapeFlutter/gf-app/blob/main/lib/usecase/device.dart#L89) as passkey attestation. It proves properties of an
+  app-generated Android Keystore key using Android's attestation extension.
+- Adding passkeys would require a separate WebAuthn/Credential Manager
+  registration flow and an API that accepts and validates the complete
+  `attestationObject`; `fmt: "tpm"` must have its own TPM-aware verifier.
+- Keep policy for `none`, direct attestation, and enterprise attestation
+  explicit. Requiring model-identifying attestation globally can exclude synced
+  passkeys and disclose device information. Enterprise attestation can be
+  uniquely identifying and should be limited to managed, pre-authorized RPs.
+- For the existing Android Key Attestation flow, keep Google trust roots and
+  revocation data current. Google's Android guidance says Android 16 devices
+  launched with the platform use RKP rather than factory-provisioned keys; do
+  not assume one static root bundle forever.
 
 ## Management data and local preferences
 
