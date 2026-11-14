@@ -15,5 +15,6 @@ command = "mdbook-mermaid"
 after = ["links"]
 
 [output.html]
+site-url = "/gf-app/"
 additional-css = ["theme/tabs.css"]
 additional-js = ["theme/tabs.js", "mermaid.min.js", "mermaid-init.js"]
