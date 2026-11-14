@@ -12,5 +12,5 @@
 
   Use `--ref BRANCH_OR_TAG` to link to another GitHub ref.
 - `build-book.sh` builds the mdBook into the ignored `build/mdbook/` directory.
-  The root `book.toml` configures mdBook; install `mdbook`, `mdbook-tabs`, and
-  `mdbook-mermaid` before building.
+  `docs/book.toml` and the Mermaid/tab theme assets live under `docs/`; install
+  `mdbook`, `mdbook-tabs`, and `mdbook-mermaid` before building.

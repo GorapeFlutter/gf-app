@@ -290,7 +290,7 @@ missing while the AOT snapshot exists.
 
 ## Further documentation
 
-- The [mdBook](book.toml) is the documentation site. English is the default;
+- The [mdBook](docs/book.toml) is the documentation site. English is the default;
   select **日本語** in the language tabs to switch chapters. Install the tools
   and build the book:
   ```bash

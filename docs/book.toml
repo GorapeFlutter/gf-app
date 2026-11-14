@@ -2,10 +2,10 @@
 title = "gf-app documentation"
 authors = ["Gorapeflutter"]
 language = "en"
-src = "docs"
+src = "."
 
 [build]
-build-dir = "build/mdbook"
+build-dir = "../build/mdbook"
 
 [preprocessor.tabs]
 after = ["links", "mermaid"]
