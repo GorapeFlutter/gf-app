@@ -84,12 +84,20 @@ class PasskeyRegistrationResult {
     required this.attestationType,
     required this.securityLevel,
     required this.verifierVersion,
+    this.assuranceLevel = 'standard_passkey',
+    this.hardwareProtected = false,
+    this.backupEligible = false,
+    this.backupState = false,
   });
 
   final Device device;
   final String attestationType;
   final String securityLevel;
   final String verifierVersion;
+  final String assuranceLevel;
+  final bool hardwareProtected;
+  final bool backupEligible;
+  final bool backupState;
 
   factory PasskeyRegistrationResult.fromJson(Map<String, dynamic> json) {
     final device = json['device'];
@@ -104,6 +112,13 @@ class PasskeyRegistrationResult {
       attestationType: attestation['attestation_type'] as String? ?? '',
       securityLevel: attestation['security_level'] as String? ?? '',
       verifierVersion: attestation['verifier_version'] as String? ?? '',
+      assuranceLevel:
+          attestation['assurance_level'] as String? ??
+          attestation['security_level'] as String? ??
+          'standard_passkey',
+      hardwareProtected: attestation['hardware_protected'] == true,
+      backupEligible: attestation['backup_eligible'] == true,
+      backupState: attestation['backup_state'] == true,
     );
   }
 }

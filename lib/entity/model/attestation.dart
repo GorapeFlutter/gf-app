@@ -10,6 +10,7 @@ class AttestationRecord {
     required this.verificationStatus,
     required this.verifierVersion,
     required this.verifiedAt,
+    this.assuranceLevel,
     this.evidenceReference,
   });
 
@@ -21,6 +22,7 @@ class AttestationRecord {
   final String verificationStatus;
   final String verifierVersion;
   final DateTime verifiedAt;
+  final String? assuranceLevel;
   final String? evidenceReference;
 
   /// GF-00251 — Initializes AttestationRecord.fromJson.
@@ -37,6 +39,9 @@ class AttestationRecord {
       verifiedAt:
           DateTime.tryParse(json['verified_at'] as String? ?? '') ??
           DateTime.fromMillisecondsSinceEpoch(0),
+      assuranceLevel:
+          json['assurance_level'] as String? ??
+          json['evidence_reference'] as String?,
       evidenceReference: json['evidence_reference'] as String?,
     );
   }

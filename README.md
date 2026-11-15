@@ -76,6 +76,25 @@ cd gf-app
 ./scripts/run-android.sh
 ```
 
+## Diagnostic logging
+
+Debug builds emit structured JSON diagnostics through `dart:developer`. On
+Android, view them in Android Studio Logcat or with `flutter logs`; entries carry
+a stable logger MCode such as `FAPI002` or `FPKY004`. Release builds suppress
+these logs by default. To opt in for a diagnostic release build:
+
+```bash
+flutter build apk --release \
+  --dart-define=GF_APP_LOG_ENABLED=true \
+  --dart-define=GF_APP_LOG_LEVEL=INFO
+```
+
+`GF_APP_LOG_LEVEL` accepts `DEBUG`, `INFO`, `WARN`, `ERROR` or `FATAL`.
+Structured JSON is on by default; `GF_APP_LOG_STRUCTURED=false` selects readable
+text output. Authorization material, WebAuthn credentials/challenges/signatures,
+request bodies and resource IDs are not logged; sensitive field names and
+token-shaped strings are redacted as a defense in depth.
+
 The default Android API endpoint is `https://localhost:8443`. To check it
 outside the app, use the generated CA explicitly:
 

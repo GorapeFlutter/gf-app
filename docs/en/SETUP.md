@@ -128,8 +128,8 @@ certificate with both `delegate_permission/common.get_login_creds` and
 Google Password Manager was verified on Pixel 6 using the debug APK. The API
 endpoint remains `https://localhost:8443`; it is separate
 from the RP domain and its local CA is not used for Digital Asset Links.
-Backend implementation references: [GF-10010](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/repository/webauthn.go#L72)–[GF-10011](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/repository/webauthn.go#L401) validate the RP
-identity, while [GF-10016](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/usecase/passkey_device.go#L64)–[GF-10017](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/usecase/passkey_device.go#L121) issue and verify the registration.
+Backend implementation references: [GF-10010](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/repository/webauthn.go#L87)–[GF-10011](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/repository/webauthn.go#L577) validate the RP
+identity, while [GF-10016](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/usecase/passkey_device.go#L91)–[GF-10017](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/usecase/passkey_device.go#L151) issue and verify the registration.
 The [complete backend source ID index](https://github.com/Gorapeflutter/gorape/blob/main/docs/book/src/source-index.md)
 is maintained with the Gorape documentation.
 
@@ -186,6 +186,16 @@ development, run Flutter on port 5000 and register
 Linux builds need GTK/WebKitGTK development packages from
 `desktop_webview_window`, while OIDC/passkey flows open the installed system
 browser.
+
+### Native Device Trust keys
+
+gf-app has OS-local Device key providers: Android Keystore, Apple Secure
+Enclave, Windows Platform Crypto Provider, and Linux TPM2. Linux runtime key
+operations require `tpm2-tools` and access to `/dev/tpmrm0`; the provider pins
+the device TCTI and never falls back to a software key. Apple/Windows/Linux
+legacy raw-key providers currently do not send a server-verifiable same-key
+attestation, so device registration uses the WebAuthn passkey ceremony
+(`PasskeyDeviceUsecase`) as the primary path.
 
 ### Verify the verifier is active
 

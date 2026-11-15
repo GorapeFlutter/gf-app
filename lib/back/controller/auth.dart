@@ -4,6 +4,8 @@ import '../../entity/model/auth_session.dart';
 import '../../entity/model/auth_support.dart';
 import '../repository/auth.dart';
 import '../share/error.dart';
+import '../share/logger.dart';
+import '../share/mcode.dart';
 import '../share/http_client.dart';
 import '../usecase/auth.dart';
 import 'base.dart';
@@ -17,7 +19,11 @@ final authRepositoryProvider = Provider<AuthRepository>(
         ref.watch(connectionConfigProvider).defaultsFromEnvironment(platform);
     final client = newDefaultHttpClient();
     ref.onDispose(client.close);
-    return newAuthRepository(settings, platform, httpClient: client);
+    return newAuthRepository(
+      settings,
+      platform,
+      httpClient: client,
+    );
   },
 );
 
@@ -67,7 +73,24 @@ final class AuthControllerImpl extends AsyncNotifier<AuthSession?>
   @override
   Future<AuthSession?> build() async {
     await ref.watch(connectionSettingsProvider.future);
-    return ref.watch(authUsecaseProvider).restore();
+    final logger = AppLogger.instance;
+    // GF-02169 — Record the outcome of restoring the stored authentication session.
+    logger.debug(AppMCodes.authRestoreStarted);
+    try {
+      final session = await ref.watch(authUsecaseProvider).restore();
+      logger.info(
+        AppMCodes.authRestoreCompleted,
+        fields: {'authenticated': session != null},
+      );
+      return session;
+    } on Object catch (error, stackTrace) {
+      logger.error(
+        AppMCodes.authRestoreFailed,
+        error: error,
+        stackTrace: stackTrace,
+      );
+      rethrow;
+    }
   }
 
   /// GF-00136 — Handles sign in in AuthControllerImpl.
@@ -79,18 +102,48 @@ final class AuthControllerImpl extends AsyncNotifier<AuthSession?>
   }) async {
     // GF-02155 — Enter loading state before starting the provider interaction.
     state = const AsyncLoading();
+    final logger = AppLogger.instance;
+    // GF-02170 — Record sign-in mode and completion without logging tokens.
+    logger.info(
+      AppMCodes.authSignInStarted,
+      fields: {'passkey_required': requirePasskey, 'force_login': forceLogin},
+    );
     try {
       // GF-02156 — Call the use case and publish the restored session.
-      state = AsyncData(
-        await ref
-            .read(authUsecaseProvider)
-            .signIn(forceLogin: forceLogin, requirePasskey: requirePasskey),
+      final session = await ref
+          .read(authUsecaseProvider)
+          .signIn(forceLogin: forceLogin, requirePasskey: requirePasskey);
+      state = AsyncData(session);
+      logger.info(
+        AppMCodes.authSignInCompleted,
+        fields: {'passkey_required': requirePasskey},
       );
     } on AppException catch (error, stackTrace) {
       // GF-02157 — Preserve expected application errors for the UI.
+      if (error.code == 'auth_cancelled') {
+        logger.info(
+          AppMCodes.authSignInCancelled,
+          fields: {'passkey_required': requirePasskey},
+        );
+      } else {
+        logger.warning(
+          AppMCodes.authSignInFailed,
+          fields: {
+            'error_code': error.code,
+            'passkey_required': requirePasskey,
+          },
+          error: error,
+        );
+      }
       state = AsyncError(error, stackTrace);
     } on Object catch (error, stackTrace) {
       // GF-02158 — Wrap unexpected provider errors as authentication failures.
+      logger.error(
+        AppMCodes.authSignInFailed,
+        fields: {'passkey_required': requirePasskey},
+        error: error,
+        stackTrace: stackTrace,
+      );
       state = AsyncError(
         AuthException('ログインに失敗しました。', code: error.toString()),
         stackTrace,
@@ -99,8 +152,22 @@ final class AuthControllerImpl extends AsyncNotifier<AuthSession?>
   }
 
   @override
-  Future<bool> registerPasskey() =>
-      ref.read(authUsecaseProvider).registerPasskey();
+  Future<bool> registerPasskey() async {
+    final logger = AppLogger.instance;
+    // GF-02171 — Record the Keycloak passkey action without credential data.
+    logger.info(AppMCodes.passkeyAiaStarted);
+    try {
+      final registered = await ref.read(authUsecaseProvider).registerPasskey();
+      logger.info(
+        AppMCodes.passkeyAiaCompleted,
+        fields: {'registered': registered},
+      );
+      return registered;
+    } on Object catch (error) {
+      logger.warning(AppMCodes.passkeyAiaFailed, error: error);
+      rethrow;
+    }
+  }
 
   /// GF-00137 — Handles refresh session in AuthControllerImpl.
   @override
@@ -120,12 +187,37 @@ final class AuthControllerImpl extends AsyncNotifier<AuthSession?>
 
   /// GF-00138 — Handles refresh session in AuthControllerImpl.
   Future<bool> _refreshSession() async {
+    final logger = AppLogger.instance;
+    // GF-02172 — Record refresh outcomes without logging token material.
+    logger.debug(AppMCodes.authRefreshStarted);
     final current = state.value;
-    if (current == null) return false;
-    final refreshed = await ref.read(authUsecaseProvider).refresh(current);
-    if (refreshed == null) return false;
-    state = AsyncData(refreshed);
-    return true;
+    if (current == null) {
+      logger.debug(
+        AppMCodes.authRefreshCompleted,
+        fields: {'refreshed': false, 'reason': 'no_session'},
+      );
+      return false;
+    }
+    try {
+      final refreshed = await ref.read(authUsecaseProvider).refresh(current);
+      if (refreshed == null) {
+        logger.info(
+          AppMCodes.authRefreshCompleted,
+          fields: {'refreshed': false},
+        );
+        return false;
+      }
+      state = AsyncData(refreshed);
+      logger.info(AppMCodes.authRefreshCompleted, fields: {'refreshed': true});
+      return true;
+    } on Object catch (error, stackTrace) {
+      logger.warning(
+        AppMCodes.authRefreshFailed,
+        error: error,
+        stackTrace: stackTrace,
+      );
+      rethrow;
+    }
   }
 
   /// GF-00139 — Handles sign out in AuthControllerImpl.

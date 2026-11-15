@@ -5,3 +5,4 @@
 - [Processing-step IDs](PROCESS_INDEX.md)
 - [Backend, Keycloak, and Docker setup](SETUP.md)
 - [Android registration and attestation](ANDROID.md)
+- [Device Trust Management specification](DEVICE_TRUST_SPEC.md)

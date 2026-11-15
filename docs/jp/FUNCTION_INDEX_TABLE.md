@@ -27,25 +27,25 @@
 | [GF-00124](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/attestation.dart#L61) | メソッド | `AttestationsControllerImpl.build` | `lib/back/controller/attestation.dart` |
 | [GF-00125](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/attestation.dart#L70) | メソッド | `AttestationsControllerImpl.reload` | `lib/back/controller/attestation.dart` |
 | [GF-00126](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/attestation.dart#L75) | コールバック | `AttestationsControllerImpl.reload.callback` | `lib/back/controller/attestation.dart` |
-| [GF-00127](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L13) | コールバック | `top level.callback` | `lib/back/controller/auth.dart` |
-| [GF-00128](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L25) | コールバック | `top level.callback` | `lib/back/controller/auth.dart` |
-| [GF-00129](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L33) | コールバック | `top level.callback` | `lib/back/controller/auth.dart` |
-| [GF-00130](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L43) | メソッド | `AuthController.signIn` | `lib/back/controller/auth.dart` |
-| [GF-00131](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L48) | メソッド | `AuthController.refreshSession` | `lib/back/controller/auth.dart` |
-| [GF-00132](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L51) | メソッド | `AuthController.signOut` | `lib/back/controller/auth.dart` |
-| [GF-00133](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L54) | メソッド | `AuthController.clearLocalSession` | `lib/back/controller/auth.dart` |
-| [GF-00134](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L57) | メソッド | `AuthController.handleUnauthorized` | `lib/back/controller/auth.dart` |
-| [GF-00135](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L65) | メソッド | `AuthControllerImpl.build` | `lib/back/controller/auth.dart` |
-| [GF-00136](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L73) | メソッド | `AuthControllerImpl.signIn` | `lib/back/controller/auth.dart` |
-| [GF-00137](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L105) | メソッド | `AuthControllerImpl.refreshSession` | `lib/back/controller/auth.dart` |
-| [GF-00138](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L121) | メソッド | `AuthControllerImpl._refreshSession` | `lib/back/controller/auth.dart` |
-| [GF-00139](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L131) | メソッド | `AuthControllerImpl.signOut` | `lib/back/controller/auth.dart` |
-| [GF-00140](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L142) | メソッド | `AuthControllerImpl.clearLocalSession` | `lib/back/controller/auth.dart` |
-| [GF-00141](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L149) | メソッド | `AuthControllerImpl.handleUnauthorized` | `lib/back/controller/auth.dart` |
-| [GF-00142](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L173) | コールバック | `top level.callback` | `lib/back/controller/auth.dart` |
-| [GF-00143](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L175) | コールバック | `top level.callback.callback` | `lib/back/controller/auth.dart` |
-| [GF-00144](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L183) | コールバック | `top level.callback` | `lib/back/controller/auth.dart` |
-| [GF-00145](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L184) | コールバック | `top level.callback.callback` | `lib/back/controller/auth.dart` |
+| [GF-00127](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L15) | コールバック | `top level.callback` | `lib/back/controller/auth.dart` |
+| [GF-00128](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L31) | コールバック | `top level.callback` | `lib/back/controller/auth.dart` |
+| [GF-00129](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L39) | コールバック | `top level.callback` | `lib/back/controller/auth.dart` |
+| [GF-00130](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L49) | メソッド | `AuthController.signIn` | `lib/back/controller/auth.dart` |
+| [GF-00131](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L54) | メソッド | `AuthController.refreshSession` | `lib/back/controller/auth.dart` |
+| [GF-00132](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L57) | メソッド | `AuthController.signOut` | `lib/back/controller/auth.dart` |
+| [GF-00133](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L60) | メソッド | `AuthController.clearLocalSession` | `lib/back/controller/auth.dart` |
+| [GF-00134](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L63) | メソッド | `AuthController.handleUnauthorized` | `lib/back/controller/auth.dart` |
+| [GF-00135](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L71) | メソッド | `AuthControllerImpl.build` | `lib/back/controller/auth.dart` |
+| [GF-00136](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L96) | メソッド | `AuthControllerImpl.signIn` | `lib/back/controller/auth.dart` |
+| [GF-00137](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L172) | メソッド | `AuthControllerImpl.refreshSession` | `lib/back/controller/auth.dart` |
+| [GF-00138](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L188) | メソッド | `AuthControllerImpl._refreshSession` | `lib/back/controller/auth.dart` |
+| [GF-00139](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L223) | メソッド | `AuthControllerImpl.signOut` | `lib/back/controller/auth.dart` |
+| [GF-00140](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L234) | メソッド | `AuthControllerImpl.clearLocalSession` | `lib/back/controller/auth.dart` |
+| [GF-00141](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L241) | メソッド | `AuthControllerImpl.handleUnauthorized` | `lib/back/controller/auth.dart` |
+| [GF-00142](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L265) | コールバック | `top level.callback` | `lib/back/controller/auth.dart` |
+| [GF-00143](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L267) | コールバック | `top level.callback.callback` | `lib/back/controller/auth.dart` |
+| [GF-00144](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L275) | コールバック | `top level.callback` | `lib/back/controller/auth.dart` |
+| [GF-00145](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L276) | コールバック | `top level.callback.callback` | `lib/back/controller/auth.dart` |
 | [GF-00146](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/base.dart#L9) | コールバック | `top level.callback` | `lib/back/controller/base.dart` |
 | [GF-00147](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/base.dart#L14) | コールバック | `top level.callback` | `lib/back/controller/base.dart` |
 | [GF-00148](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/base.dart#L19) | コールバック | `top level.callback` | `lib/back/controller/base.dart` |
@@ -151,7 +151,7 @@
 | [GF-00248](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/role.dart#L148) | メソッド | `RoleControllerImpl.putGroupRole` | `lib/back/controller/role.dart` |
 | [GF-00249](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/role.dart#L167) | メソッド | `RoleControllerImpl.deleteGroupRole` | `lib/back/controller/role.dart` |
 | [GF-00250](https://github.com/GorapeFlutter/gf-app/blob/main/lib/entity/model/attestation.dart#L3) | コンストラクター | `AttestationRecord` | `lib/entity/model/attestation.dart` |
-| [GF-00251](https://github.com/GorapeFlutter/gf-app/blob/main/lib/entity/model/attestation.dart#L26) | コンストラクター | `AttestationRecord.fromJson` | `lib/entity/model/attestation.dart` |
+| [GF-00251](https://github.com/GorapeFlutter/gf-app/blob/main/lib/entity/model/attestation.dart#L28) | コンストラクター | `AttestationRecord.fromJson` | `lib/entity/model/attestation.dart` |
 | [GF-00252](https://github.com/GorapeFlutter/gf-app/blob/main/lib/entity/model/auth_session.dart#L9) | コンストラクター | `AuthSession` | `lib/entity/model/auth_session.dart` |
 | [GF-00253](https://github.com/GorapeFlutter/gf-app/blob/main/lib/entity/model/auth_session.dart#L14) | getter | `AuthSession.claims` | `lib/entity/model/auth_session.dart` |
 | [GF-00254](https://github.com/GorapeFlutter/gf-app/blob/main/lib/entity/model/auth_session.dart#L25) | getter | `AuthSession.subject` | `lib/entity/model/auth_session.dart` |
@@ -302,9 +302,9 @@
 | [GF-00399](https://github.com/GorapeFlutter/gf-app/blob/main/lib/config/langages/app_text.dart#L74) | メソッド | `AppStrings.translate` | `lib/config/langages/app_text.dart` |
 | [GF-00400](https://github.com/GorapeFlutter/gf-app/blob/main/lib/config/langages/app_text.dart#L122) | コールバック | `AppStrings.translate.callback` | `lib/config/langages/app_text.dart` |
 | [GF-00401](https://github.com/GorapeFlutter/gf-app/blob/main/lib/config/langages/app_text.dart#L197) | 関数 | `top level.tr` | `lib/config/langages/app_text.dart` |
-| [GF-00402](https://github.com/GorapeFlutter/gf-app/blob/main/lib/main.dart#L7) | 関数 | `top level.main` | `lib/main.dart` |
-| [GF-00403](https://github.com/GorapeFlutter/gf-app/blob/main/lib/main.dart#L13) | 関数 | `top level._retryPolicy` | `lib/main.dart` |
-| [GF-00404](https://github.com/GorapeFlutter/gf-app/blob/main/lib/main.dart#L24) | 関数 | `top level._isPermanent` | `lib/main.dart` |
+| [GF-00402](https://github.com/GorapeFlutter/gf-app/blob/main/lib/main.dart#L9) | 関数 | `top level.main` | `lib/main.dart` |
+| [GF-00403](https://github.com/GorapeFlutter/gf-app/blob/main/lib/main.dart#L16) | 関数 | `top level._retryPolicy` | `lib/main.dart` |
+| [GF-00404](https://github.com/GorapeFlutter/gf-app/blob/main/lib/main.dart#L27) | 関数 | `top level._isPermanent` | `lib/main.dart` |
 | [GF-00405](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/attestation.dart#L6) | メソッド | `AttestationRepository.capabilities` | `lib/back/repository/attestation.dart` |
 | [GF-00406](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/attestation.dart#L9) | メソッド | `AttestationRepository.list` | `lib/back/repository/attestation.dart` |
 | [GF-00407](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/attestation.dart#L14) | コンストラクター | `AttestationRepositoryImpl` | `lib/back/repository/attestation.dart` |
@@ -330,9 +330,9 @@
 | [GF-00427](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/auth.dart#L178) | メソッド | `AppAuthRepository.refresh` | `lib/back/repository/auth.dart` |
 | [GF-00428](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/auth.dart#L211) | メソッド | `AppAuthRepository.signOut` | `lib/back/repository/auth.dart` |
 | [GF-00429](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/auth.dart#L239) | メソッド | `AppAuthRepository._fetchServiceConfiguration` | `lib/back/repository/auth.dart` |
-| [GF-00430](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/auth.dart#L272) | メソッド | `AppAuthRepository._tokensFrom` | `lib/back/repository/auth.dart` |
-| [GF-00431](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/auth.dart#L290) | メソッド | `AppAuthRepository._platformError` | `lib/back/repository/auth.dart` |
-| [GF-00432](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/auth.dart#L310) | 関数 | `top level.newAuthRepository` | `lib/back/repository/auth.dart` |
+| [GF-00430](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/auth.dart#L273) | メソッド | `AppAuthRepository._tokensFrom` | `lib/back/repository/auth.dart` |
+| [GF-00431](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/auth.dart#L291) | メソッド | `AppAuthRepository._platformError` | `lib/back/repository/auth.dart` |
+| [GF-00432](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/auth.dart#L311) | 関数 | `top level.newAuthRepository` | `lib/back/repository/auth.dart` |
 | [GF-00433](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/connection.dart#L4) | メソッド | `ConnectionRepository.health` | `lib/back/repository/connection.dart` |
 | [GF-00434](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/connection.dart#L9) | コンストラクター | `ConnectionRepositoryImpl` | `lib/back/repository/connection.dart` |
 | [GF-00435](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/connection.dart#L14) | メソッド | `ConnectionRepositoryImpl.health` | `lib/back/repository/connection.dart` |
@@ -366,99 +366,99 @@
 | [GF-00463](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/device_key.dart#L127) | メソッド | `AndroidDeviceKeyRepository.sign` | `lib/back/repository/device_key.dart` |
 | [GF-00464](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/device_key.dart#L146) | メソッド | `AndroidDeviceKeyRepository.hasKey` | `lib/back/repository/device_key.dart` |
 | [GF-00465](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/device_key.dart#L154) | メソッド | `AndroidDeviceKeyRepository.deleteKey` | `lib/back/repository/device_key.dart` |
-| [GF-00466](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/device_key.dart#L163) | コンストラクター | `UnsupportedDeviceKeyRepository` | `lib/back/repository/device_key.dart` |
-| [GF-00467](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/device_key.dart#L173) | メソッド | `UnsupportedDeviceKeyRepository.availability` | `lib/back/repository/device_key.dart` |
-| [GF-00468](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/device_key.dart#L178) | メソッド | `UnsupportedDeviceKeyRepository.generateKey` | `lib/back/repository/device_key.dart` |
-| [GF-00469](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/device_key.dart#L185) | メソッド | `UnsupportedDeviceKeyRepository.sign` | `lib/back/repository/device_key.dart` |
-| [GF-00470](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/device_key.dart#L192) | メソッド | `UnsupportedDeviceKeyRepository.hasKey` | `lib/back/repository/device_key.dart` |
-| [GF-00471](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/device_key.dart#L196) | メソッド | `UnsupportedDeviceKeyRepository.deleteKey` | `lib/back/repository/device_key.dart` |
-| [GF-00472](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/device_key.dart#L201) | 関数 | `top level.newDeviceKeyRepository` | `lib/back/repository/device_key.dart` |
-| [GF-00473](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/device_key.dart#L236) | メソッド | `DeviceKeyStoreRepository.load` | `lib/back/repository/device_key.dart` |
-| [GF-00474](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/device_key.dart#L239) | メソッド | `DeviceKeyStoreRepository.forProject` | `lib/back/repository/device_key.dart` |
-| [GF-00475](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/device_key.dart#L242) | メソッド | `DeviceKeyStoreRepository.save` | `lib/back/repository/device_key.dart` |
-| [GF-00476](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/device_key.dart#L245) | メソッド | `DeviceKeyStoreRepository.delete` | `lib/back/repository/device_key.dart` |
-| [GF-00477](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/device_key.dart#L250) | コンストラクター | `DeviceKeyStoreRepositoryImpl` | `lib/back/repository/device_key.dart` |
-| [GF-00478](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/device_key.dart#L254) | メソッド | `DeviceKeyStoreRepositoryImpl._recordKey` | `lib/back/repository/device_key.dart` |
-| [GF-00479](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/device_key.dart#L258) | メソッド | `DeviceKeyStoreRepositoryImpl._indexKey` | `lib/back/repository/device_key.dart` |
-| [GF-00480](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/device_key.dart#L262) | メソッド | `DeviceKeyStoreRepositoryImpl.load` | `lib/back/repository/device_key.dart` |
-| [GF-00481](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/device_key.dart#L274) | メソッド | `DeviceKeyStoreRepositoryImpl.forProject` | `lib/back/repository/device_key.dart` |
-| [GF-00482](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/device_key.dart#L293) | コールバック | `DeviceKeyStoreRepositoryImpl.forProject.callback` | `lib/back/repository/device_key.dart` |
-| [GF-00483](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/device_key.dart#L301) | メソッド | `DeviceKeyStoreRepositoryImpl.save` | `lib/back/repository/device_key.dart` |
-| [GF-00484](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/device_key.dart#L310) | コールバック | `DeviceKeyStoreRepositoryImpl.save.callback` | `lib/back/repository/device_key.dart` |
-| [GF-00485](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/device_key.dart#L320) | メソッド | `DeviceKeyStoreRepositoryImpl.delete` | `lib/back/repository/device_key.dart` |
-| [GF-00486](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/device_key.dart#L326) | コールバック | `DeviceKeyStoreRepositoryImpl.delete.callback` | `lib/back/repository/device_key.dart` |
-| [GF-00487](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/device_key.dart#L331) | コールバック | `DeviceKeyStoreRepositoryImpl.delete.callback` | `lib/back/repository/device_key.dart` |
-| [GF-00488](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/device_key.dart#L340) | 関数 | `top level.newDeviceKeyStoreRepository` | `lib/back/repository/device_key.dart` |
-| [GF-00489](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L24) | メソッド | `GorapeApi.health` | `lib/back/repository/gorape.dart` |
-| [GF-00490](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L27) | メソッド | `GorapeApi.listProjects` | `lib/back/repository/gorape.dart` |
-| [GF-00491](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L30) | メソッド | `GorapeApi.getProject` | `lib/back/repository/gorape.dart` |
-| [GF-00492](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L33) | メソッド | `GorapeApi.listDevices` | `lib/back/repository/gorape.dart` |
-| [GF-00493](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L36) | メソッド | `GorapeApi.getDevice` | `lib/back/repository/gorape.dart` |
-| [GF-00494](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L39) | メソッド | `GorapeApi.revokeDevice` | `lib/back/repository/gorape.dart` |
-| [GF-00495](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L42) | メソッド | `GorapeApi.listGroups` | `lib/back/repository/gorape.dart` |
-| [GF-00496](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L45) | メソッド | `GorapeApi.getGroup` | `lib/back/repository/gorape.dart` |
-| [GF-00497](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L48) | メソッド | `GorapeApi.createGroup` | `lib/back/repository/gorape.dart` |
-| [GF-00498](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L51) | メソッド | `GorapeApi.updateGroup` | `lib/back/repository/gorape.dart` |
-| [GF-00499](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L58) | メソッド | `GorapeApi.deleteGroup` | `lib/back/repository/gorape.dart` |
-| [GF-00500](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L61) | メソッド | `GorapeApi.listGroupDevices` | `lib/back/repository/gorape.dart` |
-| [GF-00501](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L64) | メソッド | `GorapeApi.bindDeviceToGroup` | `lib/back/repository/gorape.dart` |
-| [GF-00502](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L71) | メソッド | `GorapeApi.unbindDeviceFromGroup` | `lib/back/repository/gorape.dart` |
-| [GF-00503](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L78) | メソッド | `GorapeApi.listProjectRoles` | `lib/back/repository/gorape.dart` |
-| [GF-00504](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L81) | メソッド | `GorapeApi.putProjectRole` | `lib/back/repository/gorape.dart` |
-| [GF-00505](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L84) | メソッド | `GorapeApi.deleteProjectRole` | `lib/back/repository/gorape.dart` |
-| [GF-00506](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L87) | メソッド | `GorapeApi.listGroupRoles` | `lib/back/repository/gorape.dart` |
-| [GF-00507](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L93) | メソッド | `GorapeApi.putGroupRole` | `lib/back/repository/gorape.dart` |
-| [GF-00508](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L100) | メソッド | `GorapeApi.deleteGroupRole` | `lib/back/repository/gorape.dart` |
-| [GF-00509](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L107) | メソッド | `GorapeApi.createRegistrationChallenge` | `lib/back/repository/gorape.dart` |
-| [GF-00510](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L113) | メソッド | `GorapeApi.verifyRegistration` | `lib/back/repository/gorape.dart` |
-| [GF-00511](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L119) | メソッド | `GorapeApi.createProofChallenge` | `lib/back/repository/gorape.dart` |
-| [GF-00512](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L122) | メソッド | `GorapeApi.verifyProof` | `lib/back/repository/gorape.dart` |
-| [GF-00513](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L129) | メソッド | `GorapeApi.attestationCapabilities` | `lib/back/repository/gorape.dart` |
-| [GF-00514](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L132) | メソッド | `GorapeApi.attestations` | `lib/back/repository/gorape.dart` |
-| [GF-00515](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L166) | 関数 | `top level.newGorapeApi` | `lib/back/repository/gorape.dart` |
-| [GF-00516](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L186) | コンストラクター | `GorapeApiClient` | `lib/back/repository/gorape.dart` |
-| [GF-00517](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L204) | メソッド | `GorapeApiClient._normalizeBaseUrl` | `lib/back/repository/gorape.dart` |
-| [GF-00518](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L213) | メソッド | `GorapeApiClient.health` | `lib/back/repository/gorape.dart` |
-| [GF-00519](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L220) | メソッド | `GorapeApiClient.listProjects` | `lib/back/repository/gorape.dart` |
-| [GF-00520](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L226) | コールバック | `GorapeApiClient.listProjects.callback` | `lib/back/repository/gorape.dart` |
-| [GF-00521](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L233) | メソッド | `GorapeApiClient.getProject` | `lib/back/repository/gorape.dart` |
-| [GF-00522](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L240) | メソッド | `GorapeApiClient.listDevices` | `lib/back/repository/gorape.dart` |
-| [GF-00523](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L249) | コールバック | `GorapeApiClient.listDevices.callback` | `lib/back/repository/gorape.dart` |
-| [GF-00524](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L256) | メソッド | `GorapeApiClient.getDevice` | `lib/back/repository/gorape.dart` |
-| [GF-00525](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L266) | メソッド | `GorapeApiClient.revokeDevice` | `lib/back/repository/gorape.dart` |
-| [GF-00526](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L275) | メソッド | `GorapeApiClient.listGroups` | `lib/back/repository/gorape.dart` |
-| [GF-00527](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L284) | コールバック | `GorapeApiClient.listGroups.callback` | `lib/back/repository/gorape.dart` |
-| [GF-00528](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L291) | メソッド | `GorapeApiClient.getGroup` | `lib/back/repository/gorape.dart` |
-| [GF-00529](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L301) | メソッド | `GorapeApiClient.createGroup` | `lib/back/repository/gorape.dart` |
-| [GF-00530](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L315) | メソッド | `GorapeApiClient.updateGroup` | `lib/back/repository/gorape.dart` |
-| [GF-00531](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L330) | メソッド | `GorapeApiClient.deleteGroup` | `lib/back/repository/gorape.dart` |
-| [GF-00532](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L339) | メソッド | `GorapeApiClient.listGroupDevices` | `lib/back/repository/gorape.dart` |
-| [GF-00533](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L351) | コールバック | `GorapeApiClient.listGroupDevices.callback` | `lib/back/repository/gorape.dart` |
-| [GF-00534](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L358) | メソッド | `GorapeApiClient.bindDeviceToGroup` | `lib/back/repository/gorape.dart` |
-| [GF-00535](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L372) | メソッド | `GorapeApiClient.unbindDeviceFromGroup` | `lib/back/repository/gorape.dart` |
-| [GF-00536](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L386) | メソッド | `GorapeApiClient.listProjectRoles` | `lib/back/repository/gorape.dart` |
-| [GF-00537](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L395) | コールバック | `GorapeApiClient.listProjectRoles.callback` | `lib/back/repository/gorape.dart` |
-| [GF-00538](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L402) | メソッド | `GorapeApiClient.putProjectRole` | `lib/back/repository/gorape.dart` |
-| [GF-00539](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L415) | メソッド | `GorapeApiClient.deleteProjectRole` | `lib/back/repository/gorape.dart` |
-| [GF-00540](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L424) | メソッド | `GorapeApiClient.listGroupRoles` | `lib/back/repository/gorape.dart` |
-| [GF-00541](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L436) | コールバック | `GorapeApiClient.listGroupRoles.callback` | `lib/back/repository/gorape.dart` |
-| [GF-00542](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L443) | メソッド | `GorapeApiClient.putGroupRole` | `lib/back/repository/gorape.dart` |
-| [GF-00543](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L457) | メソッド | `GorapeApiClient.deleteGroupRole` | `lib/back/repository/gorape.dart` |
-| [GF-00544](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L471) | メソッド | `GorapeApiClient.createRegistrationChallenge` | `lib/back/repository/gorape.dart` |
-| [GF-00545](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L485) | メソッド | `GorapeApiClient.verifyRegistration` | `lib/back/repository/gorape.dart` |
-| [GF-00546](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L499) | メソッド | `GorapeApiClient.createProofChallenge` | `lib/back/repository/gorape.dart` |
-| [GF-00547](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L512) | メソッド | `GorapeApiClient.verifyProof` | `lib/back/repository/gorape.dart` |
-| [GF-00548](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L526) | メソッド | `GorapeApiClient.attestationCapabilities` | `lib/back/repository/gorape.dart` |
-| [GF-00549](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L538) | メソッド | `GorapeApiClient.attestations` | `lib/back/repository/gorape.dart` |
-| [GF-00550](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L550) | コールバック | `GorapeApiClient.attestations.callback` | `lib/back/repository/gorape.dart` |
-| [GF-00551](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L611) | メソッド | `GorapeApiClient._request` | `lib/back/repository/gorape.dart` |
-| [GF-00552](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L667) | メソッド | `GorapeApiClient._requireAccessToken` | `lib/back/repository/gorape.dart` |
-| [GF-00553](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L679) | メソッド | `GorapeApiClient._send` | `lib/back/repository/gorape.dart` |
-| [GF-00554](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L712) | メソッド | `GorapeApiClient._mapError` | `lib/back/repository/gorape.dart` |
-| [GF-00555](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L762) | メソッド | `GorapeApiClient._segment` | `lib/back/repository/gorape.dart` |
-| [GF-00556](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L765) | メソッド | `GorapeApiClient._asList` | `lib/back/repository/gorape.dart` |
-| [GF-00557](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L771) | メソッド | `GorapeApiClient._bindingList` | `lib/back/repository/gorape.dart` |
-| [GF-00558](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L779) | メソッド | `GorapeApiClient._asMap` | `lib/back/repository/gorape.dart` |
+| [GF-00466](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/device_key.dart#L301) | コンストラクター | `UnsupportedDeviceKeyRepository` | `lib/back/repository/device_key.dart` |
+| [GF-00467](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/device_key.dart#L311) | メソッド | `UnsupportedDeviceKeyRepository.availability` | `lib/back/repository/device_key.dart` |
+| [GF-00468](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/device_key.dart#L316) | メソッド | `UnsupportedDeviceKeyRepository.generateKey` | `lib/back/repository/device_key.dart` |
+| [GF-00469](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/device_key.dart#L323) | メソッド | `UnsupportedDeviceKeyRepository.sign` | `lib/back/repository/device_key.dart` |
+| [GF-00470](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/device_key.dart#L330) | メソッド | `UnsupportedDeviceKeyRepository.hasKey` | `lib/back/repository/device_key.dart` |
+| [GF-00471](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/device_key.dart#L334) | メソッド | `UnsupportedDeviceKeyRepository.deleteKey` | `lib/back/repository/device_key.dart` |
+| [GF-00472](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/device_key.dart#L339) | 関数 | `top level.newDeviceKeyRepository` | `lib/back/repository/device_key.dart` |
+| [GF-00473](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/device_key.dart#L371) | メソッド | `DeviceKeyStoreRepository.load` | `lib/back/repository/device_key.dart` |
+| [GF-00474](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/device_key.dart#L374) | メソッド | `DeviceKeyStoreRepository.forProject` | `lib/back/repository/device_key.dart` |
+| [GF-00475](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/device_key.dart#L377) | メソッド | `DeviceKeyStoreRepository.save` | `lib/back/repository/device_key.dart` |
+| [GF-00476](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/device_key.dart#L380) | メソッド | `DeviceKeyStoreRepository.delete` | `lib/back/repository/device_key.dart` |
+| [GF-00477](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/device_key.dart#L385) | コンストラクター | `DeviceKeyStoreRepositoryImpl` | `lib/back/repository/device_key.dart` |
+| [GF-00478](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/device_key.dart#L389) | メソッド | `DeviceKeyStoreRepositoryImpl._recordKey` | `lib/back/repository/device_key.dart` |
+| [GF-00479](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/device_key.dart#L393) | メソッド | `DeviceKeyStoreRepositoryImpl._indexKey` | `lib/back/repository/device_key.dart` |
+| [GF-00480](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/device_key.dart#L397) | メソッド | `DeviceKeyStoreRepositoryImpl.load` | `lib/back/repository/device_key.dart` |
+| [GF-00481](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/device_key.dart#L409) | メソッド | `DeviceKeyStoreRepositoryImpl.forProject` | `lib/back/repository/device_key.dart` |
+| [GF-00482](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/device_key.dart#L428) | コールバック | `DeviceKeyStoreRepositoryImpl.forProject.callback` | `lib/back/repository/device_key.dart` |
+| [GF-00483](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/device_key.dart#L436) | メソッド | `DeviceKeyStoreRepositoryImpl.save` | `lib/back/repository/device_key.dart` |
+| [GF-00484](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/device_key.dart#L445) | コールバック | `DeviceKeyStoreRepositoryImpl.save.callback` | `lib/back/repository/device_key.dart` |
+| [GF-00485](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/device_key.dart#L455) | メソッド | `DeviceKeyStoreRepositoryImpl.delete` | `lib/back/repository/device_key.dart` |
+| [GF-00486](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/device_key.dart#L461) | コールバック | `DeviceKeyStoreRepositoryImpl.delete.callback` | `lib/back/repository/device_key.dart` |
+| [GF-00487](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/device_key.dart#L466) | コールバック | `DeviceKeyStoreRepositoryImpl.delete.callback` | `lib/back/repository/device_key.dart` |
+| [GF-00488](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/device_key.dart#L475) | 関数 | `top level.newDeviceKeyStoreRepository` | `lib/back/repository/device_key.dart` |
+| [GF-00489](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L26) | メソッド | `GorapeApi.health` | `lib/back/repository/gorape.dart` |
+| [GF-00490](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L29) | メソッド | `GorapeApi.listProjects` | `lib/back/repository/gorape.dart` |
+| [GF-00491](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L32) | メソッド | `GorapeApi.getProject` | `lib/back/repository/gorape.dart` |
+| [GF-00492](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L35) | メソッド | `GorapeApi.listDevices` | `lib/back/repository/gorape.dart` |
+| [GF-00493](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L38) | メソッド | `GorapeApi.getDevice` | `lib/back/repository/gorape.dart` |
+| [GF-00494](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L41) | メソッド | `GorapeApi.revokeDevice` | `lib/back/repository/gorape.dart` |
+| [GF-00495](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L44) | メソッド | `GorapeApi.listGroups` | `lib/back/repository/gorape.dart` |
+| [GF-00496](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L47) | メソッド | `GorapeApi.getGroup` | `lib/back/repository/gorape.dart` |
+| [GF-00497](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L50) | メソッド | `GorapeApi.createGroup` | `lib/back/repository/gorape.dart` |
+| [GF-00498](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L53) | メソッド | `GorapeApi.updateGroup` | `lib/back/repository/gorape.dart` |
+| [GF-00499](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L60) | メソッド | `GorapeApi.deleteGroup` | `lib/back/repository/gorape.dart` |
+| [GF-00500](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L63) | メソッド | `GorapeApi.listGroupDevices` | `lib/back/repository/gorape.dart` |
+| [GF-00501](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L66) | メソッド | `GorapeApi.bindDeviceToGroup` | `lib/back/repository/gorape.dart` |
+| [GF-00502](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L73) | メソッド | `GorapeApi.unbindDeviceFromGroup` | `lib/back/repository/gorape.dart` |
+| [GF-00503](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L80) | メソッド | `GorapeApi.listProjectRoles` | `lib/back/repository/gorape.dart` |
+| [GF-00504](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L83) | メソッド | `GorapeApi.putProjectRole` | `lib/back/repository/gorape.dart` |
+| [GF-00505](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L86) | メソッド | `GorapeApi.deleteProjectRole` | `lib/back/repository/gorape.dart` |
+| [GF-00506](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L89) | メソッド | `GorapeApi.listGroupRoles` | `lib/back/repository/gorape.dart` |
+| [GF-00507](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L95) | メソッド | `GorapeApi.putGroupRole` | `lib/back/repository/gorape.dart` |
+| [GF-00508](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L102) | メソッド | `GorapeApi.deleteGroupRole` | `lib/back/repository/gorape.dart` |
+| [GF-00509](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L109) | メソッド | `GorapeApi.createRegistrationChallenge` | `lib/back/repository/gorape.dart` |
+| [GF-00510](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L115) | メソッド | `GorapeApi.verifyRegistration` | `lib/back/repository/gorape.dart` |
+| [GF-00511](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L121) | メソッド | `GorapeApi.createProofChallenge` | `lib/back/repository/gorape.dart` |
+| [GF-00512](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L124) | メソッド | `GorapeApi.verifyProof` | `lib/back/repository/gorape.dart` |
+| [GF-00513](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L131) | メソッド | `GorapeApi.attestationCapabilities` | `lib/back/repository/gorape.dart` |
+| [GF-00514](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L134) | メソッド | `GorapeApi.attestations` | `lib/back/repository/gorape.dart` |
+| [GF-00515](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L168) | 関数 | `top level.newGorapeApi` | `lib/back/repository/gorape.dart` |
+| [GF-00516](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L188) | コンストラクター | `GorapeApiClient` | `lib/back/repository/gorape.dart` |
+| [GF-00517](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L206) | メソッド | `GorapeApiClient._normalizeBaseUrl` | `lib/back/repository/gorape.dart` |
+| [GF-00518](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L215) | メソッド | `GorapeApiClient.health` | `lib/back/repository/gorape.dart` |
+| [GF-00519](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L222) | メソッド | `GorapeApiClient.listProjects` | `lib/back/repository/gorape.dart` |
+| [GF-00520](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L228) | コールバック | `GorapeApiClient.listProjects.callback` | `lib/back/repository/gorape.dart` |
+| [GF-00521](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L235) | メソッド | `GorapeApiClient.getProject` | `lib/back/repository/gorape.dart` |
+| [GF-00522](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L242) | メソッド | `GorapeApiClient.listDevices` | `lib/back/repository/gorape.dart` |
+| [GF-00523](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L251) | コールバック | `GorapeApiClient.listDevices.callback` | `lib/back/repository/gorape.dart` |
+| [GF-00524](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L258) | メソッド | `GorapeApiClient.getDevice` | `lib/back/repository/gorape.dart` |
+| [GF-00525](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L268) | メソッド | `GorapeApiClient.revokeDevice` | `lib/back/repository/gorape.dart` |
+| [GF-00526](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L277) | メソッド | `GorapeApiClient.listGroups` | `lib/back/repository/gorape.dart` |
+| [GF-00527](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L286) | コールバック | `GorapeApiClient.listGroups.callback` | `lib/back/repository/gorape.dart` |
+| [GF-00528](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L293) | メソッド | `GorapeApiClient.getGroup` | `lib/back/repository/gorape.dart` |
+| [GF-00529](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L303) | メソッド | `GorapeApiClient.createGroup` | `lib/back/repository/gorape.dart` |
+| [GF-00530](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L317) | メソッド | `GorapeApiClient.updateGroup` | `lib/back/repository/gorape.dart` |
+| [GF-00531](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L332) | メソッド | `GorapeApiClient.deleteGroup` | `lib/back/repository/gorape.dart` |
+| [GF-00532](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L341) | メソッド | `GorapeApiClient.listGroupDevices` | `lib/back/repository/gorape.dart` |
+| [GF-00533](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L353) | コールバック | `GorapeApiClient.listGroupDevices.callback` | `lib/back/repository/gorape.dart` |
+| [GF-00534](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L360) | メソッド | `GorapeApiClient.bindDeviceToGroup` | `lib/back/repository/gorape.dart` |
+| [GF-00535](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L374) | メソッド | `GorapeApiClient.unbindDeviceFromGroup` | `lib/back/repository/gorape.dart` |
+| [GF-00536](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L388) | メソッド | `GorapeApiClient.listProjectRoles` | `lib/back/repository/gorape.dart` |
+| [GF-00537](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L397) | コールバック | `GorapeApiClient.listProjectRoles.callback` | `lib/back/repository/gorape.dart` |
+| [GF-00538](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L404) | メソッド | `GorapeApiClient.putProjectRole` | `lib/back/repository/gorape.dart` |
+| [GF-00539](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L417) | メソッド | `GorapeApiClient.deleteProjectRole` | `lib/back/repository/gorape.dart` |
+| [GF-00540](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L426) | メソッド | `GorapeApiClient.listGroupRoles` | `lib/back/repository/gorape.dart` |
+| [GF-00541](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L438) | コールバック | `GorapeApiClient.listGroupRoles.callback` | `lib/back/repository/gorape.dart` |
+| [GF-00542](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L445) | メソッド | `GorapeApiClient.putGroupRole` | `lib/back/repository/gorape.dart` |
+| [GF-00543](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L459) | メソッド | `GorapeApiClient.deleteGroupRole` | `lib/back/repository/gorape.dart` |
+| [GF-00544](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L473) | メソッド | `GorapeApiClient.createRegistrationChallenge` | `lib/back/repository/gorape.dart` |
+| [GF-00545](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L487) | メソッド | `GorapeApiClient.verifyRegistration` | `lib/back/repository/gorape.dart` |
+| [GF-00546](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L501) | メソッド | `GorapeApiClient.createProofChallenge` | `lib/back/repository/gorape.dart` |
+| [GF-00547](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L514) | メソッド | `GorapeApiClient.verifyProof` | `lib/back/repository/gorape.dart` |
+| [GF-00548](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L528) | メソッド | `GorapeApiClient.attestationCapabilities` | `lib/back/repository/gorape.dart` |
+| [GF-00549](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L540) | メソッド | `GorapeApiClient.attestations` | `lib/back/repository/gorape.dart` |
+| [GF-00550](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L552) | コールバック | `GorapeApiClient.attestations.callback` | `lib/back/repository/gorape.dart` |
+| [GF-00551](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L613) | メソッド | `GorapeApiClient._request` | `lib/back/repository/gorape.dart` |
+| [GF-00552](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L676) | メソッド | `GorapeApiClient._requireAccessToken` | `lib/back/repository/gorape.dart` |
+| [GF-00553](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L688) | メソッド | `GorapeApiClient._send` | `lib/back/repository/gorape.dart` |
+| [GF-00554](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L765) | メソッド | `GorapeApiClient._mapError` | `lib/back/repository/gorape.dart` |
+| [GF-00555](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L815) | メソッド | `GorapeApiClient._segment` | `lib/back/repository/gorape.dart` |
+| [GF-00556](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L818) | メソッド | `GorapeApiClient._asList` | `lib/back/repository/gorape.dart` |
+| [GF-00557](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L824) | メソッド | `GorapeApiClient._bindingList` | `lib/back/repository/gorape.dart` |
+| [GF-00558](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L832) | メソッド | `GorapeApiClient._asMap` | `lib/back/repository/gorape.dart` |
 | [GF-00559](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/group.dart#L7) | メソッド | `GroupRepository.list` | `lib/back/repository/group.dart` |
 | [GF-00560](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/group.dart#L10) | メソッド | `GroupRepository.get` | `lib/back/repository/group.dart` |
 | [GF-00561](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/group.dart#L13) | メソッド | `GroupRepository.create` | `lib/back/repository/group.dart` |
@@ -621,23 +621,23 @@
 | [GF-00718](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L25) | メソッド | `DeviceDetailScreen.createState` | `lib/ui/screens/device_detail_screen.dart` |
 | [GF-00719](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L34) | getter | `_DeviceDetailScreenState._refKey` | `lib/ui/screens/device_detail_screen.dart` |
 | [GF-00720](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L38) | メソッド | `_DeviceDetailScreenState.build` | `lib/ui/screens/device_detail_screen.dart` |
-| [GF-00724](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L179) | コールバック | `_DeviceDetailScreenState.build.callback` | `lib/ui/screens/device_detail_screen.dart` |
-| [GF-00725](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L188) | コールバック | `_DeviceDetailScreenState.build.callback` | `lib/ui/screens/device_detail_screen.dart` |
-| [GF-00726](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L190) | コールバック | `_DeviceDetailScreenState.build.callback` | `lib/ui/screens/device_detail_screen.dart` |
-| [GF-00727](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L194) | コールバック | `_DeviceDetailScreenState.build.callback.callback` | `lib/ui/screens/device_detail_screen.dart` |
-| [GF-00728](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L201) | コールバック | `_DeviceDetailScreenState.build.callback` | `lib/ui/screens/device_detail_screen.dart` |
-| [GF-00729](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L275) | メソッド | `_DeviceDetailScreenState._refresh` | `lib/ui/screens/device_detail_screen.dart` |
-| [GF-00730](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L287) | メソッド | `_DeviceDetailScreenState._verifyPossession` | `lib/ui/screens/device_detail_screen.dart` |
-| [GF-00731](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L291) | コールバック | `_DeviceDetailScreenState._verifyPossession.callback` | `lib/ui/screens/device_detail_screen.dart` |
-| [GF-00732](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L314) | コールバック | `_DeviceDetailScreenState._verifyPossession.callback` | `lib/ui/screens/device_detail_screen.dart` |
-| [GF-00733](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L322) | コールバック | `_DeviceDetailScreenState._verifyPossession.callback` | `lib/ui/screens/device_detail_screen.dart` |
-| [GF-00734](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L329) | メソッド | `_DeviceDetailScreenState._revokeDevice` | `lib/ui/screens/device_detail_screen.dart` |
-| [GF-00735](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L334) | コールバック | `_DeviceDetailScreenState._revokeDevice.callback` | `lib/ui/screens/device_detail_screen.dart` |
-| [GF-00736](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L340) | コールバック | `_DeviceDetailScreenState._revokeDevice.callback.callback` | `lib/ui/screens/device_detail_screen.dart` |
-| [GF-00737](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L345) | コールバック | `_DeviceDetailScreenState._revokeDevice.callback.callback` | `lib/ui/screens/device_detail_screen.dart` |
-| [GF-00738](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L358) | コールバック | `_DeviceDetailScreenState._revokeDevice.callback` | `lib/ui/screens/device_detail_screen.dart` |
-| [GF-00739](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L378) | コールバック | `_DeviceDetailScreenState._revokeDevice.callback` | `lib/ui/screens/device_detail_screen.dart` |
-| [GF-00740](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L386) | コールバック | `_DeviceDetailScreenState._revokeDevice.callback` | `lib/ui/screens/device_detail_screen.dart` |
+| [GF-00724](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L178) | コールバック | `_DeviceDetailScreenState.build.callback` | `lib/ui/screens/device_detail_screen.dart` |
+| [GF-00725](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L187) | コールバック | `_DeviceDetailScreenState.build.callback` | `lib/ui/screens/device_detail_screen.dart` |
+| [GF-00726](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L189) | コールバック | `_DeviceDetailScreenState.build.callback` | `lib/ui/screens/device_detail_screen.dart` |
+| [GF-00727](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L193) | コールバック | `_DeviceDetailScreenState.build.callback.callback` | `lib/ui/screens/device_detail_screen.dart` |
+| [GF-00728](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L200) | コールバック | `_DeviceDetailScreenState.build.callback` | `lib/ui/screens/device_detail_screen.dart` |
+| [GF-00729](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L287) | メソッド | `_DeviceDetailScreenState._refresh` | `lib/ui/screens/device_detail_screen.dart` |
+| [GF-00730](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L299) | メソッド | `_DeviceDetailScreenState._verifyPossession` | `lib/ui/screens/device_detail_screen.dart` |
+| [GF-00731](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L303) | コールバック | `_DeviceDetailScreenState._verifyPossession.callback` | `lib/ui/screens/device_detail_screen.dart` |
+| [GF-00732](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L326) | コールバック | `_DeviceDetailScreenState._verifyPossession.callback` | `lib/ui/screens/device_detail_screen.dart` |
+| [GF-00733](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L334) | コールバック | `_DeviceDetailScreenState._verifyPossession.callback` | `lib/ui/screens/device_detail_screen.dart` |
+| [GF-00734](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L341) | メソッド | `_DeviceDetailScreenState._revokeDevice` | `lib/ui/screens/device_detail_screen.dart` |
+| [GF-00735](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L346) | コールバック | `_DeviceDetailScreenState._revokeDevice.callback` | `lib/ui/screens/device_detail_screen.dart` |
+| [GF-00736](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L352) | コールバック | `_DeviceDetailScreenState._revokeDevice.callback.callback` | `lib/ui/screens/device_detail_screen.dart` |
+| [GF-00737](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L357) | コールバック | `_DeviceDetailScreenState._revokeDevice.callback.callback` | `lib/ui/screens/device_detail_screen.dart` |
+| [GF-00738](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L370) | コールバック | `_DeviceDetailScreenState._revokeDevice.callback` | `lib/ui/screens/device_detail_screen.dart` |
+| [GF-00739](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L390) | コールバック | `_DeviceDetailScreenState._revokeDevice.callback` | `lib/ui/screens/device_detail_screen.dart` |
+| [GF-00740](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L398) | コールバック | `_DeviceDetailScreenState._revokeDevice.callback` | `lib/ui/screens/device_detail_screen.dart` |
 | [GF-00741](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/devices_screen.dart#L14) | コンストラクター | `DevicesScreen` | `lib/ui/screens/devices_screen.dart` |
 | [GF-00742](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/devices_screen.dart#L24) | メソッド | `DevicesScreen.build` | `lib/ui/screens/devices_screen.dart` |
 | [GF-00743](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/devices_screen.dart#L33) | コールバック | `DevicesScreen.build.callback` | `lib/ui/screens/devices_screen.dart` |
@@ -807,19 +807,19 @@
 | [GF-00908](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L35) | メソッド | `_RegisterDeviceScreenState.initState` | `lib/ui/screens/register_device_screen.dart` |
 | [GF-00909](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L42) | メソッド | `_RegisterDeviceScreenState.dispose` | `lib/ui/screens/register_device_screen.dart` |
 | [GF-00910](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L49) | メソッド | `_RegisterDeviceScreenState.build` | `lib/ui/screens/register_device_screen.dart` |
-| [GF-00919](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L141) | コールバック | `_RegisterDeviceScreenState.build.callback` | `lib/ui/screens/register_device_screen.dart` |
-| [GF-00920](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L143) | コールバック | `_RegisterDeviceScreenState.build.callback.callback` | `lib/ui/screens/register_device_screen.dart` |
-| [GF-00921](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L214) | メソッド | `_RegisterDeviceScreenState._register` | `lib/ui/screens/register_device_screen.dart` |
-| [GF-00922](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L218) | コールバック | `_RegisterDeviceScreenState._register.callback` | `lib/ui/screens/register_device_screen.dart` |
-| [GF-00923](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L235) | コールバック | `_RegisterDeviceScreenState._register.callback` | `lib/ui/screens/register_device_screen.dart` |
-| [GF-00924](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L254) | コールバック | `_RegisterDeviceScreenState._register.callback.callback` | `lib/ui/screens/register_device_screen.dart` |
-| [GF-00925](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L259) | コールバック | `_RegisterDeviceScreenState._register.callback.callback` | `lib/ui/screens/register_device_screen.dart` |
-| [GF-00926](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L276) | コールバック | `_RegisterDeviceScreenState._register.callback` | `lib/ui/screens/register_device_screen.dart` |
-| [GF-00927](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L284) | コールバック | `_RegisterDeviceScreenState._register.callback` | `lib/ui/screens/register_device_screen.dart` |
-| [GF-00928](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L293) | コンストラクター | `_CheckLine` | `lib/ui/screens/register_device_screen.dart` |
-| [GF-00929](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L304) | メソッド | `_CheckLine.build` | `lib/ui/screens/register_device_screen.dart` |
-| [GF-00930](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L334) | コンストラクター | `_FlowStep` | `lib/ui/screens/register_device_screen.dart` |
-| [GF-00931](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L340) | メソッド | `_FlowStep.build` | `lib/ui/screens/register_device_screen.dart` |
+| [GF-00919](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L131) | コールバック | `_RegisterDeviceScreenState.build.callback` | `lib/ui/screens/register_device_screen.dart` |
+| [GF-00920](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L133) | コールバック | `_RegisterDeviceScreenState.build.callback.callback` | `lib/ui/screens/register_device_screen.dart` |
+| [GF-00921](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L204) | メソッド | `_RegisterDeviceScreenState._register` | `lib/ui/screens/register_device_screen.dart` |
+| [GF-00922](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L208) | コールバック | `_RegisterDeviceScreenState._register.callback` | `lib/ui/screens/register_device_screen.dart` |
+| [GF-00923](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L225) | コールバック | `_RegisterDeviceScreenState._register.callback` | `lib/ui/screens/register_device_screen.dart` |
+| [GF-00924](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L249) | コールバック | `_RegisterDeviceScreenState._register.callback.callback` | `lib/ui/screens/register_device_screen.dart` |
+| [GF-00925](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L254) | コールバック | `_RegisterDeviceScreenState._register.callback.callback` | `lib/ui/screens/register_device_screen.dart` |
+| [GF-00926](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L271) | コールバック | `_RegisterDeviceScreenState._register.callback` | `lib/ui/screens/register_device_screen.dart` |
+| [GF-00927](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L279) | コールバック | `_RegisterDeviceScreenState._register.callback` | `lib/ui/screens/register_device_screen.dart` |
+| [GF-00928](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L288) | コンストラクター | `_CheckLine` | `lib/ui/screens/register_device_screen.dart` |
+| [GF-00929](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L299) | メソッド | `_CheckLine.build` | `lib/ui/screens/register_device_screen.dart` |
+| [GF-00930](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L329) | コンストラクター | `_FlowStep` | `lib/ui/screens/register_device_screen.dart` |
+| [GF-00931](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L335) | メソッド | `_FlowStep.build` | `lib/ui/screens/register_device_screen.dart` |
 | [GF-00932](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L17) | コンストラクター | `SettingsScreen` | `lib/ui/screens/settings_screen.dart` |
 | [GF-00933](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L27) | メソッド | `SettingsScreen.build` | `lib/ui/screens/settings_screen.dart` |
 | [GF-00934](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L32) | コールバック | `SettingsScreen.build.callback` | `lib/ui/screens/settings_screen.dart` |
@@ -976,11 +976,11 @@
 | [GF-01085](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L79) | メソッド | `DeviceUsecaseImpl.availability` | `lib/back/usecase/device.dart` |
 | [GF-01086](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L83) | メソッド | `DeviceUsecaseImpl.localKey` | `lib/back/usecase/device.dart` |
 | [GF-01087](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L88) | メソッド | `DeviceUsecaseImpl.register` | `lib/back/usecase/device.dart` |
-| [GF-01088](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L189) | メソッド | `DeviceUsecaseImpl.provePossession` | `lib/back/usecase/device.dart` |
-| [GF-01089](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L243) | メソッド | `DeviceUsecaseImpl.revoke` | `lib/back/usecase/device.dart` |
-| [GF-01090](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L264) | メソッド | `DeviceUsecaseImpl._ensureBackendSupports` | `lib/back/usecase/device.dart` |
-| [GF-01091](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L290) | メソッド | `DeviceUsecaseImpl._decodeChallenge` | `lib/back/usecase/device.dart` |
-| [GF-01092](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L307) | 関数 | `top level.newDeviceUsecase` | `lib/back/usecase/device.dart` |
+| [GF-01088](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L192) | メソッド | `DeviceUsecaseImpl.provePossession` | `lib/back/usecase/device.dart` |
+| [GF-01089](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L246) | メソッド | `DeviceUsecaseImpl.revoke` | `lib/back/usecase/device.dart` |
+| [GF-01090](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L267) | メソッド | `DeviceUsecaseImpl._ensureBackendSupports` | `lib/back/usecase/device.dart` |
+| [GF-01091](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L293) | メソッド | `DeviceUsecaseImpl._decodeChallenge` | `lib/back/usecase/device.dart` |
+| [GF-01092](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L310) | 関数 | `top level.newDeviceUsecase` | `lib/back/usecase/device.dart` |
 | [GF-01093](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/group.dart#L7) | メソッド | `GroupUsecase.list` | `lib/back/usecase/group.dart` |
 | [GF-01094](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/group.dart#L10) | メソッド | `GroupUsecase.get` | `lib/back/usecase/group.dart` |
 | [GF-01095](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/group.dart#L13) | メソッド | `GroupUsecase.create` | `lib/back/usecase/group.dart` |
@@ -1027,25 +1027,48 @@
 | [GF-01136](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/role.dart#L59) | メソッド | `RoleUsecaseImpl.putGroupRole` | `lib/back/usecase/role.dart` |
 | [GF-01137](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/role.dart#L67) | メソッド | `RoleUsecaseImpl.deleteGroupRole` | `lib/back/usecase/role.dart` |
 | [GF-01138](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/role.dart#L76) | 関数 | `top level.newRoleUsecase` | `lib/back/usecase/role.dart` |
-| [GF-01139](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L37) | メソッド | `MainActivity.configureFlutterEngine` | `android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt` |
-| [GF-01140](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L60) | メソッド | `MainActivity.dispatch` | `android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt` |
-| [GF-01141](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L86) | メソッド | `MainActivity.availability` | `android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt` |
-| [GF-01142](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L110) | メソッド | `MainActivity.generateKey` | `android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt` |
-| [GF-01143](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L159) | メソッド | `MainActivity.generateKeyPair` | `android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt` |
-| [GF-01144](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L188) | メソッド | `MainActivity.sign` | `android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt` |
-| [GF-01145](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L204) | メソッド | `MainActivity.hasKey` | `android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt` |
-| [GF-01146](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L207) | メソッド | `MainActivity.deleteKey` | `android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt` |
-| [GF-01147](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L212) | メソッド | `MainActivity.loadKeyStore` | `android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt` |
-| [GF-01148](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L217) | メソッド | `MainActivity.deleteAliasQuietly` | `android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt` |
-| [GF-01149](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L228) | メソッド | `MainActivity.requireArgument` | `android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt` |
-| [GF-01150](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L234) | メソッド | `MainActivity.decodeBase64Url` | `android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt` |
-| [GF-01151](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L242) | メソッド | `MainActivity.encodeBase64Url` | `android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt` |
-| [GF-01152](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L250) | メソッド | `MainActivity.publicKeyPem` | `android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt` |
-| [GF-01153](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L255) | メソッド | `MainActivity.certificatePem` | `android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt` |
-| [GF-01154](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L260) | メソッド | `MainActivity.pem` | `android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt` |
-| [GF-01155](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L41) | コールバック | `MainActivity.configureFlutterEngine.methodCallHandler` | `android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt` |
-| [GF-01156](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L42) | コールバック | `MainActivity.configureFlutterEngine.executorTask` | `android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt` |
-| [GF-01157](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L44) | コールバック | `MainActivity.configureFlutterEngine.mainThreadResult` | `android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt` |
-| [GF-01158](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L46) | コールバック | `MainActivity.configureFlutterEngine.successResult` | `android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt` |
-| [GF-01159](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L47) | コールバック | `MainActivity.configureFlutterEngine.errorResult` | `android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt` |
-| [GF-01160](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L43) | コールバック | `MainActivity.configureFlutterEngine.captureOutcome` | `android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt` |
+| [GF-01139](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L42) | メソッド | `MainActivity.configureFlutterEngine` | `android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt` |
+| [GF-01140](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L65) | メソッド | `MainActivity.dispatch` | `android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt` |
+| [GF-01141](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L91) | メソッド | `MainActivity.availability` | `android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt` |
+| [GF-01142](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L115) | メソッド | `MainActivity.generateKey` | `android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt` |
+| [GF-01143](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L176) | メソッド | `MainActivity.generateKeyPair` | `android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt` |
+| [GF-01144](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L205) | メソッド | `MainActivity.sign` | `android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt` |
+| [GF-01145](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L221) | メソッド | `MainActivity.hasKey` | `android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt` |
+| [GF-01146](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L224) | メソッド | `MainActivity.deleteKey` | `android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt` |
+| [GF-01147](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L229) | メソッド | `MainActivity.loadKeyStore` | `android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt` |
+| [GF-01148](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L234) | メソッド | `MainActivity.deleteAliasQuietly` | `android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt` |
+| [GF-01149](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L245) | メソッド | `MainActivity.requireArgument` | `android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt` |
+| [GF-01150](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L251) | メソッド | `MainActivity.decodeBase64Url` | `android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt` |
+| [GF-01151](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L259) | メソッド | `MainActivity.encodeBase64Url` | `android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt` |
+| [GF-01152](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L267) | メソッド | `MainActivity.publicKeyPem` | `android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt` |
+| [GF-01153](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L272) | メソッド | `MainActivity.certificatePem` | `android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt` |
+| [GF-01154](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L277) | メソッド | `MainActivity.pem` | `android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt` |
+| [GF-01155](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L46) | コールバック | `MainActivity.configureFlutterEngine.methodCallHandler` | `android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt` |
+| [GF-01156](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L47) | コールバック | `MainActivity.configureFlutterEngine.executorTask` | `android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt` |
+| [GF-01157](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L49) | コールバック | `MainActivity.configureFlutterEngine.mainThreadResult` | `android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt` |
+| [GF-01158](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L51) | コールバック | `MainActivity.configureFlutterEngine.successResult` | `android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt` |
+| [GF-01159](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L52) | コールバック | `MainActivity.configureFlutterEngine.errorResult` | `android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt` |
+| [GF-01160](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L48) | コールバック | `MainActivity.configureFlutterEngine.captureOutcome` | `android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt` |
+| [GF-01161](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/share/mcode.dart#L5) | コンストラクタ | `MCode` | `lib/back/share/mcode.dart` |
+| [GF-01162](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/share/mcode.dart#L11) | メソッド | `MCode.padded` | `lib/back/share/mcode.dart` |
+| [GF-01163](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/share/logger.dart#L19) | メソッド | `AppLogLevel.parse` | `lib/back/share/logger.dart` |
+| [GF-01164](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/share/logger.dart#L33) | コンストラクタ | `AppLoggerConfig` | `lib/back/share/logger.dart` |
+| [GF-01165](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/share/logger.dart#L50) | ファクトリー | `AppLoggerConfig.fromEnvironment` | `lib/back/share/logger.dart` |
+| [GF-01166](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/share/logger.dart#L80) | コンストラクタ | `AppLogger` | `lib/back/share/logger.dart` |
+| [GF-01167](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/share/logger.dart#L112) | メソッド | `AppLogger.debug` | `lib/back/share/logger.dart` |
+| [GF-01168](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/share/logger.dart#L116) | メソッド | `AppLogger.info` | `lib/back/share/logger.dart` |
+| [GF-01169](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/share/logger.dart#L120) | メソッド | `AppLogger.warning` | `lib/back/share/logger.dart` |
+| [GF-01170](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/share/logger.dart#L134) | メソッド | `AppLogger.error` | `lib/back/share/logger.dart` |
+| [GF-01171](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/share/logger.dart#L149) | メソッド | `AppLogger.fatal` | `lib/back/share/logger.dart` |
+| [GF-01172](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/share/logger.dart#L163) | 関数 | `AppLogger.redactPath` | `lib/back/share/logger.dart` |
+| [GF-01173](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/share/logger.dart#L183) | メソッド | `AppLogger._write` | `lib/back/share/logger.dart` |
+| [GF-01174](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/share/logger.dart#L220) | 関数 | `AppLogger._sanitizeFields` | `lib/back/share/logger.dart` |
+| [GF-01175](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/share/logger.dart#L231) | 関数 | `AppLogger._sanitizeValue` | `lib/back/share/logger.dart` |
+| [GF-01176](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/share/logger.dart#L254) | 関数 | `AppLogger._sanitizeString` | `lib/back/share/logger.dart` |
+| [GF-01177](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/share/logger.dart#L266) | 関数 | `AppLogger._developerSink` | `lib/back/share/logger.dart` |
+| [GF-01178](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/device_key.dart#L165) | constructor | `PlatformDeviceKeyRepository` | `lib/back/repository/device_key.dart` |
+| [GF-01179](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/device_key.dart#L177) | メソッド | `PlatformDeviceKeyRepository.availability` | `lib/back/repository/device_key.dart` |
+| [GF-01180](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/device_key.dart#L207) | メソッド | `PlatformDeviceKeyRepository.generateKey` | `lib/back/repository/device_key.dart` |
+| [GF-01181](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/device_key.dart#L265) | メソッド | `PlatformDeviceKeyRepository.sign` | `lib/back/repository/device_key.dart` |
+| [GF-01182](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/device_key.dart#L284) | メソッド | `PlatformDeviceKeyRepository.hasKey` | `lib/back/repository/device_key.dart` |
+| [GF-01183](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/device_key.dart#L292) | メソッド | `PlatformDeviceKeyRepository.deleteKey` | `lib/back/repository/device_key.dart` |

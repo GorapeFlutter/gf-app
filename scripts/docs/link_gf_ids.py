@@ -81,6 +81,17 @@ def source_comment_locations(
     locations: dict[str, list[tuple[str, str, int]]] = defaultdict(list)
     app_files = sorted((app_repo / "lib").rglob("*.dart"))
     app_files.extend(sorted((app_repo / "android/app/src/main").rglob("*.kt")))
+    for source_root, patterns in (
+        ("platform", ("*.swift",)),
+        ("ios/Runner", ("*.swift",)),
+        ("macos/Runner", ("*.swift",)),
+        ("windows/runner", ("*.cpp", "*.cc", "*.h")),
+        ("linux/runner", ("*.cpp", "*.cc", "*.h")),
+    ):
+        root = app_repo / source_root
+        if root.exists():
+            for pattern in patterns:
+                app_files.extend(sorted(root.rglob(pattern)))
     add_source_comments(locations, app_repo, app_files, "gf-app")
 
     backend_files: list[Path] = []

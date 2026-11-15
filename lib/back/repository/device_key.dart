@@ -159,6 +159,144 @@ final class AndroidDeviceKeyRepository implements DeviceKeyRepository {
   );
 }
 
+/// Native Secure Enclave / CNG-TPM / TPM2 key store bridge. These providers
+/// report local key protection separately from remotely verifiable attestation.
+final class PlatformDeviceKeyRepository implements DeviceKeyRepository {
+  /// GF-01178 — Initializes a platform-specific native key repository.
+  PlatformDeviceKeyRepository({
+    required this.platform,
+    required this.channelName,
+    MethodChannel? channel,
+  }) : _channel = channel ?? MethodChannel(channelName);
+
+  @override
+  final String platform;
+  final String channelName;
+  final MethodChannel _channel;
+
+  /// GF-01179 — Reads local key capability without claiming remote attestation.
+  @override
+  Future<DeviceKeyAvailability> availability() async {
+    try {
+      final result = await _channel.invokeMapMethod<String, dynamic>(
+        'availability',
+      );
+      if (result == null) {
+        return DeviceKeyAvailability.unsupported(
+          '$platform native key provider returned no capability result.',
+        );
+      }
+      return DeviceKeyAvailability(
+        supported: result['supported'] == true,
+        hardwareBacked: result['hardwareBacked'] == true,
+        attestationSupported: result['attestationSupported'] == true,
+        securityLevel: result['securityLevel'] as String?,
+        reason: result['reason'] as String?,
+      );
+    } on MissingPluginException {
+      return DeviceKeyAvailability.unsupported(
+        '$platform native hardware key provider is not installed.',
+      );
+    } on PlatformException catch (error) {
+      return DeviceKeyAvailability.unsupported(
+        error.message ?? '$platform native key provider is unavailable.',
+      );
+    }
+  }
+
+  /// GF-01180 — Creates a native P-256 key and retains its assurance boundary.
+  @override
+  Future<GeneratedDeviceKey> generateKey({
+    required String keyIdentifier,
+    required Uint8List attestationChallenge,
+  }) async {
+    final result = await _channel
+        .invokeMapMethod<String, dynamic>('generateKey', {
+          'keyIdentifier': keyIdentifier,
+          'challenge': Base64Url.encode(attestationChallenge),
+        });
+    if (result == null) {
+      throw PlatformException(
+        code: 'key_generation_failed',
+        message: '$platform native key store returned no key.',
+      );
+    }
+    final publicKeyPem = result['publicKeyPem'];
+    if (publicKeyPem is! String ||
+        !publicKeyPem.startsWith('-----BEGIN PUBLIC KEY-----')) {
+      throw PlatformException(
+        code: 'missing_public_key',
+        message: '$platform native key store returned no public key.',
+      );
+    }
+    final rawEvidence = result['attestationEvidence'];
+    if (rawEvidence is! Map) {
+      throw PlatformException(
+        code: 'missing_assurance_boundary',
+        message:
+            '$platform provider did not describe its attestation boundary.',
+      );
+    }
+    final evidence = <String, dynamic>{};
+    for (final entry in rawEvidence.entries) {
+      if (entry.key is! String) {
+        throw PlatformException(
+          code: 'malformed_attestation_evidence',
+          message: '$platform attestation metadata is malformed.',
+        );
+      }
+      evidence[entry.key as String] = entry.value;
+    }
+    final chain =
+        (result['certificateChain'] as List<dynamic>?)
+            ?.whereType<String>()
+            .toList(growable: false) ??
+        const <String>[];
+    if (chain.isNotEmpty) evidence['certificate_chain'] = chain;
+    return GeneratedDeviceKey(
+      keyIdentifier: result['keyIdentifier'] as String? ?? keyIdentifier,
+      publicKeyPem: publicKeyPem,
+      algorithm: result['algorithm'] as String? ?? 'ES256',
+      securityLevel: result['securityLevel'] as String?,
+      evidence: evidence,
+    );
+  }
+
+  /// GF-01181 — Signs challenge bytes with the native non-exportable key.
+  @override
+  Future<String> sign({
+    required String keyIdentifier,
+    required Uint8List data,
+  }) async {
+    final result = await _channel.invokeMethod<String>('sign', {
+      'keyIdentifier': keyIdentifier,
+      'data': Base64Url.encode(data),
+    });
+    if (result == null || result.isEmpty) {
+      throw PlatformException(
+        code: 'signature_failed',
+        message: '$platform native key store returned no signature.',
+      );
+    }
+    return result;
+  }
+
+  /// GF-01182 — Checks for the key in the platform-specific namespace.
+  @override
+  Future<bool> hasKey(String keyIdentifier) async =>
+      await _channel.invokeMethod<bool>('hasKey', {
+        'keyIdentifier': keyIdentifier,
+      }) ??
+      false;
+
+  /// GF-01183 — Deletes only the named native device key.
+  @override
+  Future<void> deleteKey(String keyIdentifier) => _channel.invokeMethod<void>(
+    'deleteKey',
+    {'keyIdentifier': keyIdentifier},
+  );
+}
+
 final class UnsupportedDeviceKeyRepository implements DeviceKeyRepository {
   /// GF-00466 — Initializes UnsupportedDeviceKeyRepository.
   const UnsupportedDeviceKeyRepository({
@@ -199,38 +337,35 @@ final class UnsupportedDeviceKeyRepository implements DeviceKeyRepository {
 }
 
 /// GF-00472 — Creates an instance for new device key repository.
-DeviceKeyRepository newDeviceKeyRepository(
-  RuntimePlatform platform,
-) => switch (platform) {
-  RuntimePlatform.android => AndroidDeviceKeyRepository(),
-  RuntimePlatform.windows => const UnsupportedDeviceKeyRepository(
-    platform: 'windows',
-    reason:
-        'Windows TPM attestation is reported as unsupported by the current Gorape backend.',
-  ),
-  RuntimePlatform.ios => const UnsupportedDeviceKeyRepository(
-    platform: 'ios',
-    reason:
-        'iOS attestation is reported as unsupported by the current Gorape backend.',
-  ),
-  RuntimePlatform.macos => const UnsupportedDeviceKeyRepository(
-    platform: 'macos',
-    reason:
-        'macOS attestation is reported as unsupported by the current Gorape backend.',
-  ),
-  RuntimePlatform.linux => const UnsupportedDeviceKeyRepository(
-    platform: 'linux',
-    reason: 'Gorape does not define a Linux attestation platform.',
-  ),
-  RuntimePlatform.web => const UnsupportedDeviceKeyRepository(
-    platform: 'web',
-    reason: 'Browsers do not expose the OS attestation key store used here.',
-  ),
-  RuntimePlatform.unknown => const UnsupportedDeviceKeyRepository(
-    platform: 'unknown',
-    reason: 'Unknown platform.',
-  ),
-};
+DeviceKeyRepository newDeviceKeyRepository(RuntimePlatform platform) =>
+    switch (platform) {
+      RuntimePlatform.android => AndroidDeviceKeyRepository(),
+      RuntimePlatform.windows => PlatformDeviceKeyRepository(
+        platform: 'windows',
+        channelName: 'com.gorapeflutter.gf_app/device_key',
+      ),
+      RuntimePlatform.ios => PlatformDeviceKeyRepository(
+        platform: 'ios',
+        channelName: 'com.gorapeflutter.gf_app/device_key',
+      ),
+      RuntimePlatform.macos => PlatformDeviceKeyRepository(
+        platform: 'macos',
+        channelName: 'com.gorapeflutter.gf_app/device_key',
+      ),
+      RuntimePlatform.linux => PlatformDeviceKeyRepository(
+        platform: 'linux',
+        channelName: 'com.gorapeflutter.gf_app/device_key',
+      ),
+      RuntimePlatform.web => const UnsupportedDeviceKeyRepository(
+        platform: 'web',
+        reason:
+            'Browsers do not expose the OS attestation key store used here.',
+      ),
+      RuntimePlatform.unknown => const UnsupportedDeviceKeyRepository(
+        platform: 'unknown',
+        reason: 'Unknown platform.',
+      ),
+    };
 
 abstract interface class DeviceKeyStoreRepository {
   /// GF-00473 — Handles load in DeviceKeyStoreRepository.

@@ -5,6 +5,8 @@ import '../repository/passkey.dart';
 import '../repository/passkey_device.dart';
 import '../repository/platform.dart';
 import '../share/error.dart';
+import '../share/logger.dart';
+import '../share/mcode.dart';
 
 abstract interface class PasskeyDeviceUsecase {
   Future<PasskeyRegistrationResult> register({
@@ -45,53 +47,99 @@ final class PasskeyDeviceUsecaseImpl implements PasskeyDeviceUsecase {
     }
     final platform = _platforms.current();
     _ensurePasskeyPlatform(platform);
+    final logger = AppLogger.instance;
+    logger.info(
+      AppMCodes.passkeyRegistrationStarted,
+      fields: {'platform': platform.wireName},
+    );
 
-    final options = await _devices.createRegistrationOptions(
-      projectId,
-      platform: platform.wireName,
-      displayName: name,
-    );
-    _ensureLiveChallenge(
-      options.challengeId,
-      options.isExpired,
-      ceremony: 'パスキー登録',
-    );
-    if (platform == RuntimePlatform.linux) {
-      final browser = _requireBrowserPasskeys();
-      final browserUrl = options.browserUrl;
-      final browserApiOrigin = options.browserApiOrigin;
-      if (browserUrl == null ||
-          browserUrl.isEmpty ||
-          browserApiOrigin == null ||
-          browserApiOrigin.isEmpty) {
-        throw const ConfigurationException(
-          'Gorape Linux passkey portalが設定されていません。',
-          code: 'passkey_portal_unconfigured',
-        );
-      }
-      final completion = await browser.registerInBrowser(
-        browserUrl: browserUrl,
-        browserApiOrigin: browserApiOrigin,
-        challengeId: options.challengeId,
-      );
-      final deviceId = completion['device_id'];
-      if (deviceId == null || deviceId.isEmpty) {
-        throw const FormatException(
-          'Linux browser ceremony returned no device ID.',
-        );
-      }
-      return _devices.registrationResult(projectId, deviceId);
-    }
-    final credential = await _passkeys.register(options.publicKey);
-    return _devices.verifyRegistration(
-      projectId,
-      PasskeyRegistrationVerifyRequest(
-        challengeId: options.challengeId,
+    // GF-02174 — Record passkey ceremony stages without credential payloads.
+    try {
+      final options = await _devices.createRegistrationOptions(
+        projectId,
         platform: platform.wireName,
         displayName: name,
-        credential: credential,
-      ),
-    );
+      );
+      logger.debug(
+        AppMCodes.passkeyOptionsReceived,
+        fields: {'platform': platform.wireName},
+      );
+      _ensureLiveChallenge(
+        options.challengeId,
+        options.isExpired,
+        ceremony: 'パスキー登録',
+      );
+      if (platform == RuntimePlatform.linux) {
+        final browser = _requireBrowserPasskeys();
+        final browserUrl = options.browserUrl;
+        final browserApiOrigin = options.browserApiOrigin;
+        if (browserUrl == null ||
+            browserUrl.isEmpty ||
+            browserApiOrigin == null ||
+            browserApiOrigin.isEmpty) {
+          throw const ConfigurationException(
+            'Gorape Linux passkey portalが設定されていません。',
+            code: 'passkey_portal_unconfigured',
+          );
+        }
+        final completion = await browser.registerInBrowser(
+          browserUrl: browserUrl,
+          browserApiOrigin: browserApiOrigin,
+          challengeId: options.challengeId,
+        );
+        final deviceId = completion['device_id'];
+        if (deviceId == null || deviceId.isEmpty) {
+          throw const FormatException(
+            'Linux browser ceremony returned no device ID.',
+          );
+        }
+        logger.debug(
+          AppMCodes.passkeyProviderCompleted,
+          fields: {'platform': platform.wireName},
+        );
+        final result = await _devices.registrationResult(projectId, deviceId);
+        logger.info(
+          AppMCodes.passkeyRegistrationCompleted,
+          fields: {
+            'platform': platform.wireName,
+            'attestation_type': result.attestationType,
+            'security_level': result.securityLevel,
+          },
+        );
+        return result;
+      }
+      final credential = await _passkeys.register(options.publicKey);
+      logger.debug(
+        AppMCodes.passkeyProviderCompleted,
+        fields: {'platform': platform.wireName},
+      );
+      final result = await _devices.verifyRegistration(
+        projectId,
+        PasskeyRegistrationVerifyRequest(
+          challengeId: options.challengeId,
+          platform: platform.wireName,
+          displayName: name,
+          credential: credential,
+        ),
+      );
+      logger.info(
+        AppMCodes.passkeyRegistrationCompleted,
+        fields: {
+          'platform': platform.wireName,
+          'attestation_type': result.attestationType,
+          'security_level': result.securityLevel,
+        },
+      );
+      return result;
+    } on Object catch (error, stackTrace) {
+      logger.error(
+        AppMCodes.passkeyRegistrationFailed,
+        fields: {'platform': platform.wireName},
+        error: error,
+        stackTrace: stackTrace,
+      );
+      rethrow;
+    }
   }
 
   @override
@@ -100,45 +148,77 @@ final class PasskeyDeviceUsecaseImpl implements PasskeyDeviceUsecase {
     required String deviceId,
   }) async {
     final platform = _platforms.current();
-    final options = await _devices.createAuthenticationOptions(
-      projectId,
-      deviceId,
-      platform: platform.wireName,
+    final logger = AppLogger.instance;
+    logger.info(
+      AppMCodes.passkeyProofStarted,
+      fields: {'platform': platform.wireName},
     );
-    _ensureLiveChallenge(
-      options.challengeId,
-      options.isExpired,
-      ceremony: '所有証明',
-    );
-    if (platform == RuntimePlatform.linux) {
-      final browser = _requireBrowserPasskeys();
-      final browserUrl = options.browserUrl;
-      final browserApiOrigin = options.browserApiOrigin;
-      if (browserUrl == null ||
-          browserUrl.isEmpty ||
-          browserApiOrigin == null ||
-          browserApiOrigin.isEmpty) {
-        throw const ConfigurationException(
-          'Gorape Linux passkey portalが設定されていません。',
-          code: 'passkey_portal_unconfigured',
-        );
-      }
-      await browser.authenticateInBrowser(
-        browserUrl: browserUrl,
-        browserApiOrigin: browserApiOrigin,
-        challengeId: options.challengeId,
+    // GF-02175 — Record possession ceremony stages without assertion payloads.
+    try {
+      final options = await _devices.createAuthenticationOptions(
+        projectId,
+        deviceId,
+        platform: platform.wireName,
       );
-      return;
+      logger.debug(
+        AppMCodes.passkeyOptionsReceived,
+        fields: {'platform': platform.wireName, 'operation': 'proof'},
+      );
+      _ensureLiveChallenge(
+        options.challengeId,
+        options.isExpired,
+        ceremony: '所有証明',
+      );
+      if (platform == RuntimePlatform.linux) {
+        final browser = _requireBrowserPasskeys();
+        final browserUrl = options.browserUrl;
+        final browserApiOrigin = options.browserApiOrigin;
+        if (browserUrl == null ||
+            browserUrl.isEmpty ||
+            browserApiOrigin == null ||
+            browserApiOrigin.isEmpty) {
+          throw const ConfigurationException(
+            'Gorape Linux passkey portalが設定されていません。',
+            code: 'passkey_portal_unconfigured',
+          );
+        }
+        await browser.authenticateInBrowser(
+          browserUrl: browserUrl,
+          browserApiOrigin: browserApiOrigin,
+          challengeId: options.challengeId,
+        );
+        logger.info(
+          AppMCodes.passkeyProofCompleted,
+          fields: {'platform': platform.wireName},
+        );
+        return;
+      }
+      final credential = await _passkeys.authenticate(options.publicKey);
+      logger.debug(
+        AppMCodes.passkeyProviderCompleted,
+        fields: {'platform': platform.wireName, 'operation': 'proof'},
+      );
+      await _devices.verifyAuthentication(
+        projectId,
+        deviceId,
+        PasskeyAuthenticationVerifyRequest(
+          challengeId: options.challengeId,
+          credential: credential,
+        ),
+      );
+      logger.info(
+        AppMCodes.passkeyProofCompleted,
+        fields: {'platform': platform.wireName},
+      );
+    } on Object catch (error, stackTrace) {
+      logger.error(
+        AppMCodes.passkeyProofFailed,
+        fields: {'platform': platform.wireName},
+        error: error,
+        stackTrace: stackTrace,
+      );
+      rethrow;
     }
-    final credential = await _passkeys.authenticate(options.publicKey);
-    await _devices.verifyAuthentication(
-      projectId,
-      deviceId,
-      PasskeyAuthenticationVerifyRequest(
-        challengeId: options.challengeId,
-        credential: credential,
-      ),
-    );
   }
 
   static void _ensurePasskeyPlatform(RuntimePlatform platform) {

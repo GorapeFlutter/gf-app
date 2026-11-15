@@ -3,10 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'app.dart';
 import 'back/share/error.dart';
+import 'back/share/logger.dart';
+import 'back/share/mcode.dart';
 
 /// GF-00402 — Starts the Flutter application.
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  AppLogger.instance.info(AppMCodes.appStarted);
   runApp(const ProviderScope(retry: _retryPolicy, child: GorapeApp()));
 }
 

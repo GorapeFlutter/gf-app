@@ -19,6 +19,7 @@ GORAPE_COMPOSE_FILES=(
   "docker/redis.yaml"
   "docker/keycloak.yaml"
   "docker/server.yaml"
+  "docker/sample.yaml"
   "docker/swagger.yaml"
   "docker/godoc.yaml"
   "docker/localstack.yaml"

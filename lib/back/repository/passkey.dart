@@ -35,10 +35,13 @@ abstract interface class BrowserPasskeyRepository implements PasskeyRepository {
 }
 
 final class PasskeyRepositoryImpl implements PasskeyRepository {
-  PasskeyRepositoryImpl({PasskeyAuthenticatorInterface? authenticator})
-    : _authenticator = authenticator ?? PasskeyAuthenticator();
+  PasskeyRepositoryImpl({
+    PasskeyAuthenticatorInterface? authenticator,
+    this.platform = RuntimePlatform.android,
+  }) : _authenticator = authenticator ?? PasskeyAuthenticator();
 
   final PasskeyAuthenticatorInterface _authenticator;
+  final RuntimePlatform platform;
 
   @override
   Future<Map<String, dynamic>> register(
@@ -262,6 +265,12 @@ final class LinuxBrowserPasskeyRepository implements BrowserPasskeyRepository {
 }
 
 PasskeyRepository newPasskeyRepository(RuntimePlatform platform) =>
-    platform == RuntimePlatform.linux
-    ? LinuxBrowserPasskeyRepository()
-    : PasskeyRepositoryImpl();
+    switch (platform) {
+      RuntimePlatform.android => PasskeyRepositoryImpl(platform: platform),
+      RuntimePlatform.ios ||
+      RuntimePlatform.macos => PasskeyRepositoryImpl(platform: platform),
+      RuntimePlatform.windows => PasskeyRepositoryImpl(platform: platform),
+      RuntimePlatform.web => PasskeyRepositoryImpl(platform: platform),
+      RuntimePlatform.linux => LinuxBrowserPasskeyRepository(),
+      RuntimePlatform.unknown => PasskeyRepositoryImpl(platform: platform),
+    };

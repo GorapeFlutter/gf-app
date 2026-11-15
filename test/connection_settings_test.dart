@@ -67,7 +67,9 @@ void main() {
     test('round-trips through JSON', () {
       final settings = newConnectionConfig()
           .defaultsFor(RuntimePlatform.android)
-          .copyWith(apiBaseUrl: 'https://gorape.example.com/');
+          .copyWith(
+            apiBaseUrl: 'https://gorape.example.com/',
+          );
       final decoded = ConnectionSettings.decode(settings.encode());
 
       expect(decoded, settings);

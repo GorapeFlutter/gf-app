@@ -105,11 +105,14 @@ final class DeviceUsecaseImpl implements DeviceUsecase {
 
     // GF-02024 — Check whether this platform can create an attested key.
     final availability = await _keys.availability();
-    if (!availability.supported) {
+    if (!availability.supported ||
+        !availability.hardwareBacked ||
+        !availability.attestationSupported) {
       throw DeviceKeyUnsupportedException(
-        availability.reason ?? 'このOSではOS保護鍵を生成できません。',
+        availability.reason ??
+            'このOSでサーバー検証可能なhardware key attestationを利用できません。',
         platform: effectivePlatform,
-        guidance: 'Android実機で実行してください。',
+        guidance: 'GorapeがこのPFの同一鍵Attestationをimplementedとして報告する構成が必要です。',
       );
     }
 

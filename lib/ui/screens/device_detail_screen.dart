@@ -43,8 +43,7 @@ class _DeviceDetailScreenState extends ConsumerState<DeviceDetailScreen> {
     final attestations = ref.watch(attestationsProvider(_refKey));
     final role = ref.watch(projectRoleProvider(widget.projectId));
     final canEdit = role.canEdit;
-    final session = ref.watch(authControllerProvider).value;
-    final canProve = canEdit && (session?.isPasskeyAuthenticated ?? false);
+    final canProve = canEdit;
 
     return Scaffold(
       appBar: AppBar(
@@ -233,6 +232,19 @@ class _DeviceDetailScreenState extends ConsumerState<DeviceDetailScreen> {
                                             spacing: 8,
                                             runSpacing: 4,
                                             children: [
+                                              if (record.assuranceLevel != null &&
+                                                  record.assuranceLevel!.isNotEmpty)
+                                                StatusChip(
+                                                  label: record.assuranceLevel!,
+                                                  color: switch (record
+                                                      .assuranceLevel) {
+                                                    'hardware_attested' =>
+                                                      Colors.teal,
+                                                    'device_bound_unattested' =>
+                                                      Colors.blue,
+                                                    _ => Colors.orange,
+                                                  },
+                                                ),
                                               StatusChip(
                                                 label: record.securityLevel,
                                                 color: switch (record

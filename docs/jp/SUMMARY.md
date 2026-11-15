@@ -5,3 +5,4 @@
 - [関数内処理ステップID一覧](PROCESS_INDEX.md)
 - [Backend、Keycloak、Dockerのセットアップ](SETUP.md)
 - [Android登録とattestation](ANDROID.md)
+- [Device Trust Management仕様](DEVICE_TRUST_SPEC.md)

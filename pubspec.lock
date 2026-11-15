@@ -114,7 +114,7 @@ packages:
     source: hosted
     version: "1.16.0"
   crypto:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: crypto
       sha256: e3626ae6270383c9e3a549f34c9e4cd26c09ae6a9adaab2bf4737a00340efdc4
@@ -406,7 +406,7 @@ packages:
     source: hosted
     version: "1.0.0"
   jose:
-    dependency: transitive
+    dependency: "direct dev"
     description:
       name: jose
       sha256: a0a339d0a0652dc1bd89f8b92d38479e07e16db83858fb55fa57212479f323f7

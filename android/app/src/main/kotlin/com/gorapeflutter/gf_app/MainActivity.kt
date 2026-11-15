@@ -4,6 +4,7 @@ import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.security.keystore.KeyGenParameterSpec
+import android.security.keystore.KeyInfo
 import android.security.keystore.KeyProperties
 import android.util.Base64
 import io.flutter.embedding.android.FlutterActivity
@@ -12,9 +13,13 @@ import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import java.security.KeyPair
 import java.security.KeyPairGenerator
+import java.security.KeyFactory
 import java.security.KeyStore
 import java.security.Signature
+import java.security.interfaces.ECPublicKey
 import java.security.spec.ECGenParameterSpec
+import java.math.BigInteger
+import java.util.UUID
 import java.util.concurrent.Executors
 
 /**
@@ -131,6 +136,20 @@ class MainActivity : FlutterActivity() {
 
         // GF-02089 — Require a certificate chain from Android Key Attestation.
         val keyPair = generated.first
+        // GF-02176 — Reject software-backed device identity keys before returning evidence.
+        val keyInfo = try {
+            val entry = keyStore.getEntry(alias, null) as? KeyStore.PrivateKeyEntry
+                ?: throw IllegalStateException("Android Keystore private key is unavailable.")
+            KeyFactory.getInstance(entry.privateKey.algorithm, keyStoreName)
+                .getKeySpec(entry.privateKey, KeyInfo::class.java)
+        } catch (error: Exception) {
+            deleteAliasQuietly(keyStore, alias)
+            throw error
+        }
+        if (!keyInfo.isInsideSecureHardware) {
+            deleteAliasQuietly(keyStore, alias)
+            throw IllegalStateException("Software-backed device identity keys are not permitted.")
+        }
         val chain = keyStore.getCertificateChain(alias)
         if (chain.isNullOrEmpty()) {
             deleteAliasQuietly(keyStore, alias)
@@ -141,15 +160,13 @@ class MainActivity : FlutterActivity() {
         }
 
         // GF-02090 — Package the public key, evidence chain, and security level.
-        val hardwareBacked =
-            packageManager.hasSystemFeature(hardwareKeystoreFeature)
         return mapOf(
             "keyIdentifier" to alias,
             "publicKeyPem" to publicKeyPem(keyPair),
             "algorithm" to "ES256",
             "securityLevel" to when {
                 generated.second -> "strongbox"
-                hardwareBacked -> "trusted_environment"
+                keyInfo.isInsideSecureHardware -> "trusted_environment"
                 else -> "software"
             },
             "certificateChain" to chain.map { certificatePem(it.encoded) },

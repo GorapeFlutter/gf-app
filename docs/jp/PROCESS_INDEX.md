@@ -16,31 +16,31 @@
 | [GF-02009](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/auth.dart#L126) | tokenをrefreshし、新しいtokenを保存する | `lib/back/usecase/auth.dart` |
 | [GF-02010](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/auth.dart#L139) | 対応platformのremote sessionをproviderからsign-outする | `lib/back/usecase/auth.dart` |
 | [GF-02011](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/auth.dart#L149) | remote sign-out後にローカルsessionを削除する | `lib/back/usecase/auth.dart` |
-| [GF-02012](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L619) | API URI、JSON body、request headerを組み立てる | `lib/back/repository/gorape.dart` |
-| [GF-02013](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L630) | 最初のAPI requestを送信する | `lib/back/repository/gorape.dart` |
-| [GF-02014](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L638) | 期限切れaccess tokenのrefreshを一度だけ試す | `lib/back/repository/gorape.dart` |
-| [GF-02015](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L646) | 新しいtokenで元のAPI requestを一度だけ再試行する | `lib/back/repository/gorape.dart` |
-| [GF-02016](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L655) | 成功したJSON responseをdecodeする | `lib/back/repository/gorape.dart` |
-| [GF-02017](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L663) | HTTP errorをアプリケーション例外へ変換する | `lib/back/repository/gorape.dart` |
-| [GF-02018](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L687) | HTTP methodに応じてrequestを振り分ける | `lib/back/repository/gorape.dart` |
-| [GF-02019](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L696) | request timeoutをnetwork errorへ変換する | `lib/back/repository/gorape.dart` |
-| [GF-02020](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L703) | HTTP clientの接続失敗をnetwork errorへ変換する | `lib/back/repository/gorape.dart` |
-| [GF-02021](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L717) | JSONから構造化されたAPI error情報を読む | `lib/back/repository/gorape.dart` |
-| [GF-02022](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L728) | 認証拒否errorに確認事項を付加する | `lib/back/repository/gorape.dart` |
+| [GF-02012](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L621) | API URI、JSON body、request headerを組み立てる | `lib/back/repository/gorape.dart` |
+| [GF-02013](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L636) | 最初のAPI requestを送信する | `lib/back/repository/gorape.dart` |
+| [GF-02014](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L646) | 期限切れaccess tokenのrefreshを一度だけ試す | `lib/back/repository/gorape.dart` |
+| [GF-02015](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L654) | 新しいtokenで元のAPI requestを一度だけ再試行する | `lib/back/repository/gorape.dart` |
+| [GF-02016](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L664) | 成功したJSON responseをdecodeする | `lib/back/repository/gorape.dart` |
+| [GF-02017](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L672) | HTTP errorをアプリケーション例外へ変換する | `lib/back/repository/gorape.dart` |
+| [GF-02018](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L704) | HTTP methodに応じてrequestを振り分ける | `lib/back/repository/gorape.dart` |
+| [GF-02019](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L740) | request timeoutをnetwork errorへ変換する | `lib/back/repository/gorape.dart` |
+| [GF-02020](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L756) | HTTP clientの接続失敗をnetwork errorへ変換する | `lib/back/repository/gorape.dart` |
+| [GF-02021](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L770) | JSONから構造化されたAPI error情報を読む | `lib/back/repository/gorape.dart` |
+| [GF-02022](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L781) | 認証拒否errorに確認事項を付加する | `lib/back/repository/gorape.dart` |
 | [GF-02023](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L96) | 登録名を正規化し、入力を検証する | `lib/back/usecase/device.dart` |
 | [GF-02024](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L106) | 端末側のOS鍵・attestation対応状況を確認する | `lib/back/usecase/device.dart` |
-| [GF-02025](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L116) | backend verifierが設定済みであることを確認する | `lib/back/usecase/device.dart` |
-| [GF-02026](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L119) | 一度だけ使える登録challengeを要求する | `lib/back/usecase/device.dart` |
-| [GF-02027](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L131) | decodeしたchallengeを新しいOS鍵に結び付ける | `lib/back/usecase/device.dart` |
-| [GF-02028](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L148) | 公開鍵とattestation evidenceを送信する | `lib/back/usecase/device.dart` |
-| [GF-02029](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L171) | server検証成功後にローカルkey aliasを保存する | `lib/back/usecase/device.dart` |
-| [GF-02030](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L179) | 登録失敗時に生成した鍵を削除する | `lib/back/usecase/device.dart` |
-| [GF-02031](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L196) | 登録済みローカル秘密鍵を読み、利用可能か確認する | `lib/back/usecase/device.dart` |
-| [GF-02032](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L210) | 新しい所有証明challengeを要求する | `lib/back/usecase/device.dart` |
-| [GF-02033](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L220) | OS key store内でchallengeの生bytesに署名する | `lib/back/usecase/device.dart` |
-| [GF-02034](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L231) | 署名をserver検証へ送信する | `lib/back/usecase/device.dart` |
-| [GF-02035](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L250) | backendの正本であるdevice recordを失効する | `lib/back/usecase/device.dart` |
-| [GF-02036](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L254) | ローカル鍵とmetadataをbest-effortで削除する | `lib/back/usecase/device.dart` |
+| [GF-02025](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L119) | backend verifierが設定済みであることを確認する | `lib/back/usecase/device.dart` |
+| [GF-02026](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L122) | 一度だけ使える登録challengeを要求する | `lib/back/usecase/device.dart` |
+| [GF-02027](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L134) | decodeしたchallengeを新しいOS鍵に結び付ける | `lib/back/usecase/device.dart` |
+| [GF-02028](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L151) | 公開鍵とattestation evidenceを送信する | `lib/back/usecase/device.dart` |
+| [GF-02029](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L174) | server検証成功後にローカルkey aliasを保存する | `lib/back/usecase/device.dart` |
+| [GF-02030](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L182) | 登録失敗時に生成した鍵を削除する | `lib/back/usecase/device.dart` |
+| [GF-02031](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L199) | 登録済みローカル秘密鍵を読み、利用可能か確認する | `lib/back/usecase/device.dart` |
+| [GF-02032](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L213) | 新しい所有証明challengeを要求する | `lib/back/usecase/device.dart` |
+| [GF-02033](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L223) | OS key store内でchallengeの生bytesに署名する | `lib/back/usecase/device.dart` |
+| [GF-02034](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L234) | 署名をserver検証へ送信する | `lib/back/usecase/device.dart` |
+| [GF-02035](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L253) | backendの正本であるdevice recordを失効する | `lib/back/usecase/device.dart` |
+| [GF-02036](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L257) | ローカル鍵とmetadataをbest-effortで削除する | `lib/back/usecase/device.dart` |
 | [GF-02037](https://github.com/GorapeFlutter/gf-app/blob/main/lib/app.dart#L47) | platform、設定、認証stateを読み解く | `lib/app.dart` |
 | [GF-02038](https://github.com/GorapeFlutter/gf-app/blob/main/lib/app.dart#L53) | 設定読み込み中にsplash screenを表示する | `lib/app.dart` |
 | [GF-02039](https://github.com/GorapeFlutter/gf-app/blob/main/lib/app.dart#L57) | retry操作を付けて接続設定errorを表示する | `lib/app.dart` |
@@ -86,37 +86,37 @@
 | [GF-02079](https://github.com/GorapeFlutter/gf-app/blob/main/lib/entity/model/role.dart#L212) | claimとattributeからgroup roleを構築する | `lib/entity/model/role.dart` |
 | [GF-02080](https://github.com/GorapeFlutter/gf-app/blob/main/lib/entity/model/role.dart#L241) | roleを含むgroup pathを解釈する | `lib/entity/model/role.dart` |
 | [GF-02081](https://github.com/GorapeFlutter/gf-app/blob/main/lib/entity/model/role.dart#L275) | UI権限判定に使うrole snapshotを作成する | `lib/entity/model/role.dart` |
-| [GF-02082](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L62) | native method-channel操作を振り分ける | `android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt` |
-| [GF-02083](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L66) | 鍵生成前に登録challengeをdecodeする | `MainActivity.kt` |
-| [GF-02084](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L72) | 署名前に所有証明bytesをdecodeする | `MainActivity.kt` |
-| [GF-02085](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L88) | StrongBoxとhardware-backed Keystoreの対応を検出する | `MainActivity.kt` |
-| [GF-02086](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L92) | platform対応状況とsecurity levelを返す | `MainActivity.kt` |
-| [GF-02087](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L112) | 新規鍵生成前に古いaliasを削除する | `MainActivity.kt` |
-| [GF-02088](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L119) | StrongBoxを優先し、必要ならdevice TEEへfallbackする | `MainActivity.kt` |
-| [GF-02089](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L132) | Android Key Attestation certificate chainを要求する | `MainActivity.kt` |
-| [GF-02090](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L143) | 公開鍵、evidence chain、security levelをまとめる | `MainActivity.kt` |
-| [GF-02091](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L165) | signing purpose、digest、challengeを鍵に結び付ける | `MainActivity.kt` |
-| [GF-02092](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L179) | Android Keystore内でkey pairを生成する | `MainActivity.kt` |
-| [GF-02093](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L190) | Keystore aliasでprivate-key entryを読み込む | `MainActivity.kt` |
-| [GF-02094](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L196) | SHA256withECDSAでchallengeの生bytesに署名する | `MainActivity.kt` |
-| [GF-02095](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L200) | DER署名をpaddingなしBase64urlで返す | `MainActivity.kt` |
-| [GF-02096](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L216) | 登録フォームのerrorを消し処理中stateにする | `lib/ui/screens/register_device_screen.dart` |
-| [GF-02097](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L224) | 端末登録application flowを呼び出す | `lib/ui/screens/register_device_screen.dart` |
-| [GF-02098](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L232) | 検証済み端末の詳細と次の操作を表示する | `lib/ui/screens/register_device_screen.dart` |
-| [GF-02099](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L269) | 親画面へ通知し、入力した端末名を消去する | `lib/ui/screens/register_device_screen.dart` |
-| [GF-02100](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L273) | 登録失敗をフォーム上に表示する | `lib/ui/screens/register_device_screen.dart` |
-| [GF-02101](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L281) | 成否にかかわらずフォームを待機stateへ戻す | `lib/ui/screens/register_device_screen.dart` |
-| [GF-02102](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L289) | 所有証明errorを消して二重送信を防ぐ | `lib/ui/screens/device_detail_screen.dart` |
-| [GF-02103](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L297) | challenge署名による所有証明を実行する | `lib/ui/screens/device_detail_screen.dart` |
-| [GF-02104](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L305) | 成功を通知し端末のevidenceを再読み込みする | `lib/ui/screens/device_detail_screen.dart` |
-| [GF-02105](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L311) | 所有証明失敗を端末詳細画面に表示する | `lib/ui/screens/device_detail_screen.dart` |
-| [GF-02106](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L319) | 成否にかかわらず所有証明のlockを解除する | `lib/ui/screens/device_detail_screen.dart` |
-| [GF-02107](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L331) | 端末失効の前にユーザー確認を求める | `lib/ui/screens/device_detail_screen.dart` |
-| [GF-02108](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L356) | 端末失効の処理中stateにする | `lib/ui/screens/device_detail_screen.dart` |
-| [GF-02109](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L364) | backend端末を失効しローカル鍵をcleanupする | `lib/ui/screens/device_detail_screen.dart` |
-| [GF-02110](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L369) | 完了を通知し失効端末の詳細を閉じる | `lib/ui/screens/device_detail_screen.dart` |
-| [GF-02111](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L375) | 失効失敗時も現在の画面を維持する | `lib/ui/screens/device_detail_screen.dart` |
-| [GF-02112](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L383) | 成否にかかわらず失効処理のlockを解除する | `lib/ui/screens/device_detail_screen.dart` |
+| [GF-02082](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L67) | native method-channel操作を振り分ける | `android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt` |
+| [GF-02083](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L71) | 鍵生成前に登録challengeをdecodeする | `MainActivity.kt` |
+| [GF-02084](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L77) | 署名前に所有証明bytesをdecodeする | `MainActivity.kt` |
+| [GF-02085](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L93) | StrongBoxとhardware-backed Keystoreの対応を検出する | `MainActivity.kt` |
+| [GF-02086](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L97) | platform対応状況とsecurity levelを返す | `MainActivity.kt` |
+| [GF-02087](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L117) | 新規鍵生成前に古いaliasを削除する | `MainActivity.kt` |
+| [GF-02088](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L124) | StrongBoxを優先し、必要ならdevice TEEへfallbackする | `MainActivity.kt` |
+| [GF-02089](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L137) | Android Key Attestation certificate chainを要求する | `MainActivity.kt` |
+| [GF-02090](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L162) | 公開鍵、evidence chain、security levelをまとめる | `MainActivity.kt` |
+| [GF-02091](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L182) | signing purpose、digest、challengeを鍵に結び付ける | `MainActivity.kt` |
+| [GF-02092](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L196) | Android Keystore内でkey pairを生成する | `MainActivity.kt` |
+| [GF-02093](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L207) | Keystore aliasでprivate-key entryを読み込む | `MainActivity.kt` |
+| [GF-02094](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L213) | SHA256withECDSAでchallengeの生bytesに署名する | `MainActivity.kt` |
+| [GF-02095](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L217) | DER署名をpaddingなしBase64urlで返す | `MainActivity.kt` |
+| [GF-02096](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L206) | 登録フォームのerrorを消し処理中stateにする | `lib/ui/screens/register_device_screen.dart` |
+| [GF-02097](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L214) | 端末登録application flowを呼び出す | `lib/ui/screens/register_device_screen.dart` |
+| [GF-02098](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L222) | 検証済み端末の詳細と次の操作を表示する | `lib/ui/screens/register_device_screen.dart` |
+| [GF-02099](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L264) | 親画面へ通知し、入力した端末名を消去する | `lib/ui/screens/register_device_screen.dart` |
+| [GF-02100](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L268) | 登録失敗をフォーム上に表示する | `lib/ui/screens/register_device_screen.dart` |
+| [GF-02101](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L276) | 成否にかかわらずフォームを待機stateへ戻す | `lib/ui/screens/register_device_screen.dart` |
+| [GF-02102](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L301) | 所有証明errorを消して二重送信を防ぐ | `lib/ui/screens/device_detail_screen.dart` |
+| [GF-02103](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L309) | challenge署名による所有証明を実行する | `lib/ui/screens/device_detail_screen.dart` |
+| [GF-02104](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L317) | 成功を通知し端末のevidenceを再読み込みする | `lib/ui/screens/device_detail_screen.dart` |
+| [GF-02105](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L323) | 所有証明失敗を端末詳細画面に表示する | `lib/ui/screens/device_detail_screen.dart` |
+| [GF-02106](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L331) | 成否にかかわらず所有証明のlockを解除する | `lib/ui/screens/device_detail_screen.dart` |
+| [GF-02107](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L343) | 端末失効の前にユーザー確認を求める | `lib/ui/screens/device_detail_screen.dart` |
+| [GF-02108](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L368) | 端末失効の処理中stateにする | `lib/ui/screens/device_detail_screen.dart` |
+| [GF-02109](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L376) | backend端末を失効しローカル鍵をcleanupする | `lib/ui/screens/device_detail_screen.dart` |
+| [GF-02110](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L381) | 完了を通知し失効端末の詳細を閉じる | `lib/ui/screens/device_detail_screen.dart` |
+| [GF-02111](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L387) | 失効失敗時も現在の画面を維持する | `lib/ui/screens/device_detail_screen.dart` |
+| [GF-02112](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L395) | 成否にかかわらず失効処理のlockを解除する | `lib/ui/screens/device_detail_screen.dart` |
 | [GF-02113](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L385) | 表示中の結果を消し設定保存中stateにする | `lib/ui/screens/settings_screen.dart` |
 | [GF-02114](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L394) | Controller経由で設定を検証・保存する | `lib/ui/screens/settings_screen.dart` |
 | [GF-02115](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L397) | 設定保存の成功をユーザーに知らせる | `lib/ui/screens/settings_screen.dart` |
@@ -159,15 +159,32 @@
 | [GF-02152](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_management_screen.dart#L128) | group情報を入力しdialog取消を処理する | `lib/ui/screens/group_management_screen.dart` |
 | [GF-02153](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_management_screen.dart#L136) | groupを作成しserver生成recordを受け取る | `lib/ui/screens/group_management_screen.dart` |
 | [GF-02154](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_management_screen.dart#L144) | 作成完了を知らせ、新しいgroup詳細を開く | `lib/ui/screens/group_management_screen.dart` |
-| [GF-02155](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L80) | sign-in前にloading stateへ切り替える | `lib/back/controller/auth.dart` |
-| [GF-02156](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L83) | sign-in usecaseを呼びsessionをstateへ反映する | `lib/back/controller/auth.dart` |
-| [GF-02157](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L90) | 想定内の認証errorをUI向けstateとして保持する | `lib/back/controller/auth.dart` |
-| [GF-02158](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L93) | 想定外errorを認証失敗として包む | `lib/back/controller/auth.dart` |
-| [GF-02159](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L108) | 実行中refreshを再利用し重複requestを防ぐ | `lib/back/controller/auth.dart` |
-| [GF-02160](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L111) | refreshを一度開始し、終了時に進行中markerを消す | `lib/back/controller/auth.dart` |
-| [GF-02161](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L152) | 拒否されたcredentialを消してから認証errorを通知する | `lib/back/controller/auth.dart` |
-| [GF-02162](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L738) | validation errorにattestationの確認事項を付ける | `lib/back/repository/gorape.dart` |
-| [GF-02163](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L747) | forbidden操作にbackend role認可の説明を付ける | `lib/back/repository/gorape.dart` |
-| [GF-02164](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L269) | backend verifierがimplementedの場合だけ続行する | `lib/back/usecase/device.dart` |
-| [GF-02165](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L293) | challengeをdecodeし、空bytesを拒否する | `lib/back/usecase/device.dart` |
-| [GF-02166](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L298) | 不正challengeをdomain errorへ変換する | `lib/back/usecase/device.dart` |
+| [GF-02155](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L103) | sign-in前にloading stateへ切り替える | `lib/back/controller/auth.dart` |
+| [GF-02156](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L112) | sign-in usecaseを呼びsessionをstateへ反映する | `lib/back/controller/auth.dart` |
+| [GF-02157](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L122) | 想定内の認証errorをUI向けstateとして保持する | `lib/back/controller/auth.dart` |
+| [GF-02158](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L140) | 想定外errorを認証失敗として包む | `lib/back/controller/auth.dart` |
+| [GF-02159](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L175) | 実行中refreshを再利用し重複requestを防ぐ | `lib/back/controller/auth.dart` |
+| [GF-02160](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L178) | refreshを一度開始し、終了時に進行中markerを消す | `lib/back/controller/auth.dart` |
+| [GF-02161](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L244) | 拒否されたcredentialを消してから認証errorを通知する | `lib/back/controller/auth.dart` |
+| [GF-02162](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L791) | validation errorにattestationの確認事項を付ける | `lib/back/repository/gorape.dart` |
+| [GF-02163](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L800) | forbidden操作にbackend role認可の説明を付ける | `lib/back/repository/gorape.dart` |
+| [GF-02164](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L272) | backend verifierがimplementedの場合だけ続行する | `lib/back/usecase/device.dart` |
+| [GF-02165](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L296) | challengeをdecodeし、空bytesを拒否する | `lib/back/usecase/device.dart` |
+| [GF-02166](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L301) | 不正challengeをdomain errorへ変換する | `lib/back/usecase/device.dart` |
+| [GF-02169](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L77) | credential情報を出さずにsession復元結果を記録する | `lib/back/controller/auth.dart` |
+| [GF-02170](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L106) | tokenを出さずにsign-in方式と結果を記録する | `lib/back/controller/auth.dart` |
+| [GF-02171](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L157) | Keycloak passkey actionの結果を記録する | `lib/back/controller/auth.dart` |
+| [GF-02172](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L191) | token情報を出さずにrefresh結果を記録する | `lib/back/controller/auth.dart` |
+| [GF-02173](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L701) | API method、ID除去済みpath、status、durationを記録する | `lib/back/repository/gorape.dart` |
+| [GF-02174](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/passkey_device.dart#L56) | credential payloadを出さずに登録ceremony段階を記録する | `lib/back/usecase/passkey_device.dart` |
+| [GF-02175](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/passkey_device.dart#L156) | assertion payloadを出さずに所有証明段階を記録する | `lib/back/usecase/passkey_device.dart` |
+| [GF-02176](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L139) | AndroidのDevice Identity keyがsoftware-backedなら拒否する | `android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt` |
+| [GF-02177](https://github.com/GorapeFlutter/gf-app/blob/main/platform/apple/SecureNativeKeyChannels.swift#L17) | Apple Secure EnclaveのDevice key channelを登録する | `platform/apple/SecureNativeKeyChannels.swift` |
+| [GF-02178](https://github.com/GorapeFlutter/gf-app/blob/main/platform/apple/SecureNativeKeyChannels.swift#L102) | Secure EnclaveでP-256鍵を生成し非attested保証境界を返す | `platform/apple/SecureNativeKeyChannels.swift` |
+| [GF-02179](https://github.com/GorapeFlutter/gf-app/blob/main/platform/apple/SecureNativeKeyChannels.swift#L185) | private materialをexportせずSecure Enclave鍵で署名する | `platform/apple/SecureNativeKeyChannels.swift` |
+| [GF-02180](https://github.com/GorapeFlutter/gf-app/blob/main/windows/runner/windows_native_keys.cpp#L259) | Platform Crypto Providerでnon-exportable P-256鍵を作成する | `windows/runner/windows_native_keys.cpp` |
+| [GF-02181](https://github.com/GorapeFlutter/gf-app/blob/main/windows/runner/windows_native_keys.cpp#L298) | TPM-backed CNG keyで署名する | `windows/runner/windows_native_keys.cpp` |
+| [GF-02182](https://github.com/GorapeFlutter/gf-app/blob/main/windows/runner/windows_native_keys.cpp#L417) | Windows Device CNG/TPM channelを登録する | `windows/runner/windows_native_keys.cpp` |
+| [GF-02183](https://github.com/GorapeFlutter/gf-app/blob/main/linux/runner/linux_native_keys.cc#L325) | TPM2 P-256鍵を生成しTPM-wrapped blobのみ保存する | `linux/runner/linux_native_keys.cc` |
+| [GF-02184](https://github.com/GorapeFlutter/gf-app/blob/main/linux/runner/linux_native_keys.cc#L363) | TPM2 protected keyを再loadして署名する | `linux/runner/linux_native_keys.cc` |
+| [GF-02185](https://github.com/GorapeFlutter/gf-app/blob/main/linux/runner/linux_native_keys.cc#L466) | Linux TPM2 Device channelを登録する | `linux/runner/linux_native_keys.cc` |

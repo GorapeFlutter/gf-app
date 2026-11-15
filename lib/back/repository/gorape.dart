@@ -16,6 +16,8 @@ import '../../entity/response/common.dart';
 import '../../entity/response/attestation.dart';
 import '../../entity/response/passkey.dart';
 import '../share/error.dart';
+import '../share/logger.dart';
+import '../share/mcode.dart';
 
 /// Gorape API surface used by the Flutter client.
 ///
@@ -623,12 +625,18 @@ class GorapeApiClient implements GorapeApi {
     if (body != null) {
       headers['Content-Type'] = 'application/json';
     }
-    if (authenticated) {
-      headers['Authorization'] = 'Bearer ${_requireAccessToken()}';
+
+    Future<http.Response> sendAuthenticated() {
+      final token = _requireAccessToken();
+      final requestHeaders = Map<String, String>.from(headers);
+      requestHeaders['Authorization'] = 'Bearer $token';
+      return _send(method, uri, requestHeaders, encoded);
     }
 
-    // GF-02013 — Send the initial API request.
-    var response = await _send(method, uri, headers, encoded);
+    // GF-02013 — Send the initial API request with Bearer credentials.
+    var response = authenticated
+        ? await sendAuthenticated()
+        : await _send(method, uri, headers, encoded);
 
     // Keycloak access tokens are short-lived. Refresh once and retry instead of
     // discarding the session on the first 401 caused by an expired token.
@@ -644,8 +652,9 @@ class GorapeApiClient implements GorapeApi {
       }
       if (refreshed) {
         // GF-02015 — Retry the original request once with the refreshed token.
-        headers['Authorization'] = 'Bearer ${_requireAccessToken()}';
-        response = await _send(method, uri, headers, encoded);
+        response = authenticated
+            ? await sendAuthenticated()
+            : await _send(method, uri, headers, encoded);
       }
     }
 
@@ -683,16 +692,51 @@ class GorapeApiClient implements GorapeApi {
     Map<String, String> headers,
     String? encoded,
   ) async {
+    final logger = AppLogger.instance;
+    final requestFields = <String, Object?>{
+      'method': method,
+      'path': AppLogger.redactPath(uri.path),
+    };
+    final stopwatch = Stopwatch()..start();
+    // GF-02173 — Record HTTP outcome metadata without headers or body content.
+    logger.debug(AppMCodes.apiRequestStarted, fields: requestFields);
     try {
       // GF-02018 — Dispatch the request using the selected HTTP verb.
-      return await switch (method) {
+      final response = await switch (method) {
         'GET' => _http.get(uri, headers: headers),
         'POST' => _http.post(uri, headers: headers, body: encoded),
         'PATCH' => _http.patch(uri, headers: headers, body: encoded),
         'DELETE' => _http.delete(uri, headers: headers, body: encoded),
         _ => throw UnsupportedError('Unsupported HTTP method: $method'),
       }.timeout(timeout);
-    } on TimeoutException {
+      stopwatch.stop();
+      final responseFields = <String, Object?>{
+        ...requestFields,
+        'status_code': response.statusCode,
+        'duration_ms': stopwatch.elapsedMilliseconds,
+      };
+      final requestId = response.headers['x-request-id'];
+      if (requestId != null && requestId.isNotEmpty) {
+        responseFields['request_id'] = requestId;
+      }
+      if (response.statusCode >= 500) {
+        logger.error(AppMCodes.apiResponseReceived, fields: responseFields);
+      } else if (response.statusCode >= 400) {
+        logger.warning(AppMCodes.apiResponseReceived, fields: responseFields);
+      } else {
+        logger.debug(AppMCodes.apiResponseReceived, fields: responseFields);
+      }
+      return response;
+    } on TimeoutException catch (error) {
+      stopwatch.stop();
+      logger.warning(
+        AppMCodes.apiRequestFailed,
+        fields: {
+          ...requestFields,
+          'duration_ms': stopwatch.elapsedMilliseconds,
+        },
+        error: error,
+      );
       // GF-02019 — Map transport timeouts to a user-facing network error.
       throw const NetworkException(
         'Gorape APIへの接続がタイムアウトしました。',
@@ -700,6 +744,15 @@ class GorapeApiClient implements GorapeApi {
         guidance: 'Dockerコンテナとネットワーク接続を確認してください。',
       );
     } on http.ClientException catch (error) {
+      stopwatch.stop();
+      logger.error(
+        AppMCodes.apiRequestFailed,
+        fields: {
+          ...requestFields,
+          'duration_ms': stopwatch.elapsedMilliseconds,
+        },
+        error: error,
+      );
       // GF-02020 — Map client transport failures to a network error.
       throw NetworkException(
         'Gorape APIへ接続できませんでした。',

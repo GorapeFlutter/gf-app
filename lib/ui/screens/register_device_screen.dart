@@ -52,13 +52,10 @@ class _RegisterDeviceScreenState extends ConsumerState<RegisterDeviceScreen> {
     final platform = ref.watch(runtimePlatformProvider);
     final support = ref.watch(platformSupportProvider);
     final role = ref.watch(projectRoleProvider(widget.projectId));
-    final session = ref.watch(authControllerProvider).value;
-    final passkeyAuthenticated = session?.isPasskeyAuthenticated ?? false;
     final passkeyReady = support.passkeyCeremony;
     final canRegister =
         !_busy &&
         role.canEdit &&
-        passkeyAuthenticated &&
         passkeyReady &&
         _nameController.text.trim().isNotEmpty;
 
@@ -77,13 +74,6 @@ class _RegisterDeviceScreenState extends ConsumerState<RegisterDeviceScreen> {
                 ? 'Keycloakトークンにこのプロジェクトのロールがありません。'
                       'Gorape側でeditor権限があっても、UIからは登録できません。'
                 : '閲覧者のためデバイスを登録できません。管理者または編集者のロールが必要です。',
-          ),
-        if (role.canEdit && !passkeyAuthenticated)
-          const Card(
-            child: Padding(
-              padding: EdgeInsets.all(12),
-              child: AppText('MCODE-00508'),
-            ),
           ),
         if (_error != null) ...[
           ErrorCard(error: _error!, compact: true),
@@ -221,7 +211,7 @@ class _RegisterDeviceScreenState extends ConsumerState<RegisterDeviceScreen> {
       },
     );
     try {
-      // GF-02097 — Invoke the device-registration application flow.
+      // GF-02097 — Invoke the WebAuthn device-registration ceremony for this platform.
       final result = await ref
           .read(deviceControllerProvider)
           .registerPasskey(
@@ -229,7 +219,7 @@ class _RegisterDeviceScreenState extends ConsumerState<RegisterDeviceScreen> {
             displayName: _nameController.text,
           );
       if (!mounted) return;
-      // GF-02098 — Present the verified device details and next actions.
+      // GF-02098 — Present the verified device details and assurance level.
       await showDialog<void>(
         context: context,
         builder: /* GF-00923 — Runs an inline callback in _RegisterDeviceScreenState._register. */
@@ -241,8 +231,13 @@ class _RegisterDeviceScreenState extends ConsumerState<RegisterDeviceScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   KeyValueRow('MCODE-00103', result.device.displayName),
+                  KeyValueRow('Assurance Level', result.assuranceLevel),
                   KeyValueRow('Attestation format', result.attestationType),
                   KeyValueRow('Security Level', result.securityLevel),
+                  KeyValueRow(
+                    'Device-bound (BE=0)',
+                    result.backupEligible ? 'No (Syncable)' : 'Yes (Device-bound)',
+                  ),
                   KeyValueRow('Verifier', result.verifierVersion),
                   KeyValueRow('Device ID', result.device.id, monospace: true),
                   const SizedBox(height: 8),

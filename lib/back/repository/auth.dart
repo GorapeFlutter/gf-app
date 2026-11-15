@@ -247,6 +247,7 @@ final class AppAuthRepository implements AuthRepository {
       final response = await _http
           .get(Uri.parse('$issuer/.well-known/openid-configuration'))
           .timeout(discoveryTimeout);
+
       if (response.statusCode < 200 || response.statusCode >= 300) return null;
       final decoded = jsonDecode(response.body);
       if (decoded is! Map<String, dynamic>) return null;
@@ -314,8 +315,12 @@ AuthRepository newAuthRepository(
   http.Client? httpClient,
   BrowserAuthFlow? browserAuthFlow,
 }) => switch (platform) {
-  RuntimePlatform.android || RuntimePlatform.ios || RuntimePlatform.macos =>
-    AppAuthRepository(settings: settings, httpClient: httpClient),
+  RuntimePlatform.android ||
+  RuntimePlatform.ios ||
+  RuntimePlatform.macos => AppAuthRepository(
+    settings: settings,
+    httpClient: httpClient,
+  ),
   RuntimePlatform.windows ||
   RuntimePlatform.linux ||
   RuntimePlatform.web => BrowserAuthRepository(
