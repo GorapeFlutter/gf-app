@@ -5,7 +5,7 @@
 - [GF-00001](https://github.com/GorapeFlutter/gf-app/blob/main/lib/app.dart#L39)〜[GF-00013](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/language.dart#L12): エンドツーエンドの処理フロー
 - [GF-00100](https://github.com/GorapeFlutter/gf-app/blob/main/lib/app.dart#L14)〜: 手書きのDart関数・メソッド・getter/setter・constructor・callback
 - [GF-02000](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/auth.dart#L53)〜: 複数段階の関数内にある論理的な処理ステップ
-- [GF-10001](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/base.go#L13)〜[GF-10036](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/usecase/passkey_device.go#L479): Gorape backend handler、usecase、WebAuthn RP、MDS、revocation、authentication assurance、外部サービス検証API
+- [GF-10001](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/base.go#L13)〜[GF-10036](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/usecase/passkey_device.go#L483): Gorape backend handler、usecase、WebAuthn RP、MDS、revocation、authentication assurance、外部サービス検証API
 - Kotlinネイティブ関数も関数ID一覧に含みます。テスト・生成コードは対象外です。
 
 関数IDの全件は [`FUNCTION_INDEX.md`](FUNCTION_INDEX.md)、関数内ステップIDは [`PROCESS_INDEX.md`](PROCESS_INDEX.md) を参照してください。
@@ -120,7 +120,7 @@ flowchart LR
     Passkey --> RP --> DB
 ```
 
-Backend IDは[GF-10001](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/base.go#L13)〜[GF-10036](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/usecase/passkey_device.go#L479)で、gf-appのDart/Android IDとは別rangeです。実装へのGitHub linkはこのアーキテクチャ図とendpoint tableから参照できます。
+Backend IDは[GF-10001](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/base.go#L13)〜[GF-10036](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/usecase/passkey_device.go#L483)で、gf-appのDart/Android IDとは別rangeです。実装へのGitHub linkはこのアーキテクチャ図とendpoint tableから参照できます。
 全backend IDの一覧は[Gorapeのsource index](https://github.com/Gorapeflutter/gorape/blob/main/docs/book/src/source-index.md)にあります。
 
 ## 処理ID一覧

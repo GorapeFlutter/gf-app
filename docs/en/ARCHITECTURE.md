@@ -6,7 +6,7 @@ services. IDs in the diagrams match the English source comments.
 - [GF-00001](https://github.com/GorapeFlutter/gf-app/blob/main/lib/app.dart#L39)–[GF-00013](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/language.dart#L12): end-to-end application flows
 - [GF-00100](https://github.com/GorapeFlutter/gf-app/blob/main/lib/app.dart#L14)–[GF-01183](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/device_key.dart#L292): handwritten Dart and native platform functions/callbacks
 - [GF-02000](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/auth.dart#L53)–[GF-02185](https://github.com/GorapeFlutter/gf-app/blob/main/linux/runner/linux_native_keys.cc#L466): logical steps inside multi-stage and native functions
-- [GF-10001](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/base.go#L13)–[GF-10036](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/usecase/passkey_device.go#L479): Gorape backend handlers, usecases, WebAuthn RP, MDS, revocation, authentication assurance, and external service proof verification APIs
+- [GF-10001](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/base.go#L13)–[GF-10036](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/usecase/passkey_device.go#L483): Gorape backend handlers, usecases, WebAuthn RP, MDS, revocation, authentication assurance, and external service proof verification APIs
 - Tests and generated code are not included.
 
 See the [function ID index](FUNCTION_INDEX.md) and
@@ -137,7 +137,7 @@ flowchart LR
     Passkey --> RP --> DB
 ```
 
-The backend ID range is [GF-10001](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/base.go#L13) through [GF-10036](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/usecase/passkey_device.go#L479). It is maintained in the
+The backend ID range is [GF-10001](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/base.go#L13) through [GF-10036](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/usecase/passkey_device.go#L483). It is maintained in the
 Gorape repository and linked separately from gf-app's Dart/Android IDs. See the
 [backend source index](https://github.com/Gorapeflutter/gorape/blob/main/docs/book/src/source-index.md).
 Platform provisioning uses [GF-10023](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/usecase/provisioning.go#L33) and [GF-10024](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/usecase/provisioning.go#L59).

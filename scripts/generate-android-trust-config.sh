@@ -161,8 +161,12 @@ fi
 server_config="$output_dir/server.yaml"
 info "Generating $server_config from $template"
 python3 - "$template" "$server_config" <<'PY'
+import base64
+import hashlib
+import os
 import pathlib
 import re
+import subprocess
 import sys
 
 template = pathlib.Path(sys.argv[1])
@@ -189,6 +193,53 @@ else:
         )
     replacement = f'{match.group("indent")}attestation: {{android_trust_anchors: ["{anchor}"]}}'
     text = text[: match.start()] + replacement + text[match.end() :]
+
+text = re.sub(
+    r"(?m)^(?P<indent>[ \t]*)android-key:\s*\[\]\s*$",
+    rf'\g<indent>android-key: ["{anchor}"]',
+    text,
+)
+
+keystore = pathlib.Path(
+    os.environ.get(
+        "ANDROID_DEBUG_KEYSTORE",
+        os.path.expanduser("~/.android/debug.keystore"),
+    )
+)
+if keystore.is_file():
+    try:
+        der = subprocess.check_output(
+            [
+                "keytool",
+                "-exportcert",
+                "-keystore",
+                str(keystore),
+                "-alias",
+                "androiddebugkey",
+                "-storepass",
+                "android",
+                "-keypass",
+                "android",
+            ],
+            stderr=subprocess.DEVNULL,
+        )
+        digest = hashlib.sha256(der).digest()
+        hex_digest = digest.hex()
+        apk_origin = "android:apk-key-hash:" + base64.urlsafe_b64encode(digest).decode("ascii").rstrip("=")
+        text = re.sub(
+            r"(?m)^(?P<indent>[ \t]*)applications:\s*\{\}\s*$",
+            f'\\g<indent>applications:\n\\g<indent>  com.gorapeflutter.gf_app:\n\\g<indent>    - {hex_digest}',
+            text,
+        )
+        if apk_origin not in text:
+            text = re.sub(
+                r"(?m)^(?P<indent>[ \t]*)rp_origins:\s*$",
+                f"\\g<indent>rp_origins:\n\\g<indent>  - {apk_origin}",
+                text,
+            )
+    except Exception:
+        pass
+
 destination.write_text(text, encoding="utf-8")
 print(f"Set legacy Android trust anchor to {anchor}")
 PY
