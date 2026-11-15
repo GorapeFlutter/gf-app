@@ -202,7 +202,7 @@ const Map<String, AppMessage> appMessageCatalog = <String, AppMessage>{
   ),
   "MCODE-00102": AppMessage(ja: "登録情報", en: "Registration details"),
   "MCODE-00103": AppMessage(ja: "表示名", en: "Display name"),
-  "MCODE-00104": AppMessage(ja: "例: Pixel 8 Pro", en: "e.g. Pixel 8 Pro"),
+  "MCODE-00104": AppMessage(ja: "例: Android 端末", en: "e.g. Android Device"),
   "MCODE-00105": AppMessage(
     ja: "チャレンジを取得して登録",
     en: "Get challenge and register",

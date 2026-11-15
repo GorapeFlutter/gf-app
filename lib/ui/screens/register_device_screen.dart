@@ -134,7 +134,7 @@ class _RegisterDeviceScreenState extends ConsumerState<RegisterDeviceScreen> {
                     ),
                 decoration: InputDecoration(
                   labelText: tr(context, '表示名'),
-                  hintText: tr(context, '例: Pixel 8 Pro'),
+                  hintText: tr(context, '例: Android 端末'),
                   prefixIcon: Icon(Icons.badge_outlined),
                 ),
               ),

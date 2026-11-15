@@ -109,8 +109,7 @@ API transport only. Android Credential Manager uses the separate RP ID
 from the organization Pages repository. The statement includes both
 `delegate_permission/common.get_login_creds` and
 `delegate_permission/common.handle_all_urls` for package
-`com.gorapeflutter.gf_app`. Google Password Manager registration was verified on
-Pixel 6 with the current debug signing key. The API may remain on local HTTPS;
+`com.gorapeflutter.gf_app`. The API may remain on local HTTPS;
 the RP association is fetched from the Pages domain.
 
 Keycloak redirects, passwordless WebAuthn, the passkey-only login flow, AMR

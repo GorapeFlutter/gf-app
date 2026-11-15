@@ -133,7 +133,7 @@ Application:
           apple: [/app/etc/apple/apple-webauthn-roots.pem]
 ```
 
-ローカルDockerのRP IDは`gorapeflutter.github.io`です。Keycloakの`localhost`とは別RPで、Android debug signing key由来の`android:apk-key-hash` originを許可します。ローカル試験用にattestation `none`を許可します。Organization Pages repository `../gorapeflutter.github.io`が`https://gorapeflutter.github.io/.well-known/assetlinks.json`を公開し、Android package `com.gorapeflutter.gf_app`と現在のdebug signing certificateを`delegate_permission/common.get_login_creds`および`delegate_permission/common.handle_all_urls`で関連付けます。この構成でPixel 6のGoogle Password Managerによるdebug APKのpasskey登録が成功しました。API接続先は引き続き`https://localhost:8443`で、RP domainとは別です。API用のローカルCAはDigital Asset Linksに使いません。
+ローカルDockerのRP IDを設定し、Android debug signing key由来の`android:apk-key-hash` originを許可します。ローカル試験用にattestation `none`を許可します。Organization Pages repositoryが`/.well-known/assetlinks.json`を公開し、Android package `com.gorapeflutter.gf_app`とdebug signing certificateを`delegate_permission/common.get_login_creds`および`delegate_permission/common.handle_all_urls`で関連付けます。API接続先は引き続き`https://localhost:8443`で、RP domainとは別です。API用のローカルCAはDigital Asset Linksに使いません。
 
 Backend実装では[GF-10010](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/repository/webauthn.go#L87)〜[GF-10011](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/repository/webauthn.go#L577)がRP identityを検証し、[GF-10016](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/usecase/passkey_device.go#L91)〜[GF-10017](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/usecase/passkey_device.go#L151)がregistration options発行とcredential検証を行います。
 Backend IDの一覧は[Gorape source index](https://github.com/Gorapeflutter/gorape/blob/main/docs/book/src/source-index.md)を参照してください。

@@ -124,8 +124,7 @@ testing. The organization Pages repository
 `https://gorapeflutter.github.io/.well-known/assetlinks.json`; its statement
 associates package `com.gorapeflutter.gf_app` with the current debug signing
 certificate with both `delegate_permission/common.get_login_creds` and
-`delegate_permission/common.handle_all_urls`. Android Credential Manager with
-Google Password Manager was verified on Pixel 6 using the debug APK. The API
+`delegate_permission/common.handle_all_urls`. The API
 endpoint remains `https://localhost:8443`; it is separate
 from the RP domain and its local CA is not used for Digital Asset Links.
 Backend implementation references: [GF-10010](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/repository/webauthn.go#L87)–[GF-10011](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/repository/webauthn.go#L577) validate the RP

@@ -349,7 +349,7 @@ WebAuthn CBOR objectの該当部分は次の形です。
 - [GF-00005](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L89)をパスキーattestationと呼ばないでください。これはAndroid Key Attestation extensionを使い、アプリが生成したAndroid Keystore keyのpropertiesを検証します。
 - `passkeys` 2.23.2はAndroid/iOS/macOS/Windows/Webでresponse全体を返します。Linuxはgf-appのWeb ceremony pageをChrome/Firefoxで使います。Gorape本体は画面を持ちません。
 - Android Credential ManagerやWindows/browser providerは`direct`を要求しても`none`を返し得ます。Apple platform credentialではpluginがattestation preferenceを指定できません。要求値やplatform文字列ではなく、実際の`fmt`を検証します。
-- Android RP domainには`delegate_permission/common.get_login_creds`と`delegate_permission/common.handle_all_urls`を含むDigital Asset Links、およびアプリ署名証明書が必要です。現在は`gorapeflutter.github.io`のGitHub Pagesで公開しています。Pixel 6のGoogle Password Managerでdebug APKの登録成功を確認しました。iOS/macOSにはAASA `webcredentials` entryとAssociated Domains entitlementが必要です。Webではsecure originを使い、RP IDをpage hostまたはそのparent domainにします。
+- Android RP domainには`delegate_permission/common.get_login_creds`と`delegate_permission/common.handle_all_urls`を含むDigital Asset Links、およびアプリ署名証明書が必要です。iOS/macOSにはAASA `webcredentials` entryとAssociated Domains entitlementが必要です。Webではsecure originを使い、RP IDをpage hostまたはそのparent domainにします。
 - `Application.Server.WebAuthn.rp_id`と正確な`rp_origins`をbackendに設定し、appとdomain associationを同じRP IDに合わせます。Androidの`android:apk-key-hash:`等のnative originもallowlistへ明示し、wildcard originは禁止します。
 - `Application.Server.Attestation.WebAuthn.allowed_formats`とformat別`trust_anchors`を設定します。既定は空allowlist、`allow_none: false`で全登録を拒否し、信頼されないchainや未対応formatも拒否します。
 - `none`、direct、enterprise attestation policyを分離します。model識別可能なattestationの全体必須化は同期passkeyを排除したり端末情報を漏らしたりします。Enterprise attestationは管理対象RPに限定してください。
