@@ -5,6 +5,7 @@ import 'messages.dart';
 /// Localized text widget. UI literals should be stable `MCODE-XXXXX` keys;
 /// Japanese source text is accepted as a compatibility path for dynamic values.
 class AppText extends material.StatelessWidget {
+  /// GF-00397 — Initializes AppText.
   const AppText(
     this.data, {
     super.key,
@@ -42,6 +43,7 @@ class AppText extends material.StatelessWidget {
   final Map<String, Object?> parameters;
   final Set<String> localizedParameters;
 
+  /// GF-00398 — Builds the localized text widget.
   @override
   material.Widget build(material.BuildContext context) {
     return material.Text(
@@ -69,6 +71,7 @@ class AppText extends material.StatelessWidget {
 }
 
 abstract final class AppStrings {
+  /// GF-00399 — Translates catalog keys and supported dynamic messages.
   static String translate(
     material.BuildContext context,
     String? source, {
@@ -116,6 +119,7 @@ abstract final class AppStrings {
     }
 
     var translated = source;
+    // GF-00400 — Sorts catalog phrases longest-first before replacing them.
     final messages = appMessageCatalog.values.toList()
       ..sort((a, b) => b.ja.length.compareTo(a.ja.length));
     for (final message in messages) {
@@ -190,5 +194,6 @@ abstract final class AppStrings {
   }
 }
 
+/// GF-00401 — Translates a source phrase using the current app locale.
 String tr(material.BuildContext context, String source) =>
     AppStrings.translate(context, source);

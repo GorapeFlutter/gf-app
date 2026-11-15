@@ -6,17 +6,17 @@
 | [GF-00103](https://github.com/GorapeFlutter/gf-app/blob/main/lib/app.dart#L44) | method | `AuthGate.build` | `lib/app.dart` |
 | [GF-00104](https://github.com/GorapeFlutter/gf-app/blob/main/lib/app.dart#L64) | callback | `AuthGate.build.callback` | `lib/app.dart` |
 | [GF-00105](https://github.com/GorapeFlutter/gf-app/blob/main/lib/app.dart#L98) | callback | `AuthGate.build.callback` | `lib/app.dart` |
-| [GF-00106](https://github.com/GorapeFlutter/gf-app/blob/main/lib/app.dart#L100) | callback | `AuthGate.build.callback` | `lib/app.dart` |
-| [GF-00107](https://github.com/GorapeFlutter/gf-app/blob/main/lib/app.dart#L104) | callback | `AuthGate.build.callback` | `lib/app.dart` |
-| [GF-00108](https://github.com/GorapeFlutter/gf-app/blob/main/lib/app.dart#L108) | callback | `AuthGate.build.callback.callback` | `lib/app.dart` |
-| [GF-00109](https://github.com/GorapeFlutter/gf-app/blob/main/lib/app.dart#L118) | constructor | `_SplashScreen` | `lib/app.dart` |
-| [GF-00110](https://github.com/GorapeFlutter/gf-app/blob/main/lib/app.dart#L123) | method | `_SplashScreen.build` | `lib/app.dart` |
+| [GF-00106](https://github.com/GorapeFlutter/gf-app/blob/main/lib/app.dart#L106) | callback | `AuthGate.build.callback` | `lib/app.dart` |
+| [GF-00107](https://github.com/GorapeFlutter/gf-app/blob/main/lib/app.dart#L110) | callback | `AuthGate.build.callback` | `lib/app.dart` |
+| [GF-00108](https://github.com/GorapeFlutter/gf-app/blob/main/lib/app.dart#L114) | callback | `AuthGate.build.callback.callback` | `lib/app.dart` |
+| [GF-00109](https://github.com/GorapeFlutter/gf-app/blob/main/lib/app.dart#L124) | constructor | `_SplashScreen` | `lib/app.dart` |
+| [GF-00110](https://github.com/GorapeFlutter/gf-app/blob/main/lib/app.dart#L129) | method | `_SplashScreen.build` | `lib/app.dart` |
 | [GF-00111](https://github.com/GorapeFlutter/gf-app/blob/main/lib/config/connection.dart#L5) | method | `ConnectionConfig.defaultsFor` | `lib/config/connection.dart` |
 | [GF-00112](https://github.com/GorapeFlutter/gf-app/blob/main/lib/config/connection.dart#L8) | method | `ConnectionConfig.defaultsFromEnvironment` | `lib/config/connection.dart` |
 | [GF-00113](https://github.com/GorapeFlutter/gf-app/blob/main/lib/config/connection.dart#L13) | constructor | `ConnectionConfigImpl` | `lib/config/connection.dart` |
 | [GF-00114](https://github.com/GorapeFlutter/gf-app/blob/main/lib/config/connection.dart#L16) | method | `ConnectionConfigImpl.defaultsFor` | `lib/config/connection.dart` |
-| [GF-00115](https://github.com/GorapeFlutter/gf-app/blob/main/lib/config/connection.dart#L31) | method | `ConnectionConfigImpl.defaultsFromEnvironment` | `lib/config/connection.dart` |
-| [GF-00116](https://github.com/GorapeFlutter/gf-app/blob/main/lib/config/connection.dart#L50) | function | `top level.newConnectionConfig` | `lib/config/connection.dart` |
+| [GF-00115](https://github.com/GorapeFlutter/gf-app/blob/main/lib/config/connection.dart#L43) | method | `ConnectionConfigImpl.defaultsFromEnvironment` | `lib/config/connection.dart` |
+| [GF-00116](https://github.com/GorapeFlutter/gf-app/blob/main/lib/config/connection.dart#L62) | function | `top level.newConnectionConfig` | `lib/config/connection.dart` |
 | [GF-00117](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/attestation.dart#L10) | method | `CapabilitiesController.reload` | `lib/back/controller/attestation.dart` |
 | [GF-00118](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/attestation.dart#L18) | constructor | `CapabilitiesControllerImpl` | `lib/back/controller/attestation.dart` |
 | [GF-00119](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/attestation.dart#L22) | method | `CapabilitiesControllerImpl.build` | `lib/back/controller/attestation.dart` |
@@ -31,21 +31,21 @@
 | [GF-00128](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L25) | callback | `top level.callback` | `lib/back/controller/auth.dart` |
 | [GF-00129](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L33) | callback | `top level.callback` | `lib/back/controller/auth.dart` |
 | [GF-00130](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L43) | method | `AuthController.signIn` | `lib/back/controller/auth.dart` |
-| [GF-00131](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L46) | method | `AuthController.refreshSession` | `lib/back/controller/auth.dart` |
-| [GF-00132](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L49) | method | `AuthController.signOut` | `lib/back/controller/auth.dart` |
-| [GF-00133](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L52) | method | `AuthController.clearLocalSession` | `lib/back/controller/auth.dart` |
-| [GF-00134](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L55) | method | `AuthController.handleUnauthorized` | `lib/back/controller/auth.dart` |
-| [GF-00135](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L63) | method | `AuthControllerImpl.build` | `lib/back/controller/auth.dart` |
-| [GF-00136](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L71) | method | `AuthControllerImpl.signIn` | `lib/back/controller/auth.dart` |
-| [GF-00137](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L94) | method | `AuthControllerImpl.refreshSession` | `lib/back/controller/auth.dart` |
-| [GF-00138](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L110) | method | `AuthControllerImpl._refreshSession` | `lib/back/controller/auth.dart` |
-| [GF-00139](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L120) | method | `AuthControllerImpl.signOut` | `lib/back/controller/auth.dart` |
-| [GF-00140](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L128) | method | `AuthControllerImpl.clearLocalSession` | `lib/back/controller/auth.dart` |
-| [GF-00141](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L135) | method | `AuthControllerImpl.handleUnauthorized` | `lib/back/controller/auth.dart` |
-| [GF-00142](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L159) | callback | `top level.callback` | `lib/back/controller/auth.dart` |
-| [GF-00143](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L161) | callback | `top level.callback.callback` | `lib/back/controller/auth.dart` |
-| [GF-00144](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L169) | callback | `top level.callback` | `lib/back/controller/auth.dart` |
-| [GF-00145](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L170) | callback | `top level.callback.callback` | `lib/back/controller/auth.dart` |
+| [GF-00131](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L48) | method | `AuthController.refreshSession` | `lib/back/controller/auth.dart` |
+| [GF-00132](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L51) | method | `AuthController.signOut` | `lib/back/controller/auth.dart` |
+| [GF-00133](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L54) | method | `AuthController.clearLocalSession` | `lib/back/controller/auth.dart` |
+| [GF-00134](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L57) | method | `AuthController.handleUnauthorized` | `lib/back/controller/auth.dart` |
+| [GF-00135](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L65) | method | `AuthControllerImpl.build` | `lib/back/controller/auth.dart` |
+| [GF-00136](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L73) | method | `AuthControllerImpl.signIn` | `lib/back/controller/auth.dart` |
+| [GF-00137](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L105) | method | `AuthControllerImpl.refreshSession` | `lib/back/controller/auth.dart` |
+| [GF-00138](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L121) | method | `AuthControllerImpl._refreshSession` | `lib/back/controller/auth.dart` |
+| [GF-00139](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L131) | method | `AuthControllerImpl.signOut` | `lib/back/controller/auth.dart` |
+| [GF-00140](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L142) | method | `AuthControllerImpl.clearLocalSession` | `lib/back/controller/auth.dart` |
+| [GF-00141](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L149) | method | `AuthControllerImpl.handleUnauthorized` | `lib/back/controller/auth.dart` |
+| [GF-00142](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L173) | callback | `top level.callback` | `lib/back/controller/auth.dart` |
+| [GF-00143](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L175) | callback | `top level.callback.callback` | `lib/back/controller/auth.dart` |
+| [GF-00144](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L183) | callback | `top level.callback` | `lib/back/controller/auth.dart` |
+| [GF-00145](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L184) | callback | `top level.callback.callback` | `lib/back/controller/auth.dart` |
 | [GF-00146](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/base.dart#L9) | callback | `top level.callback` | `lib/back/controller/base.dart` |
 | [GF-00147](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/base.dart#L14) | callback | `top level.callback` | `lib/back/controller/base.dart` |
 | [GF-00148](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/base.dart#L19) | callback | `top level.callback` | `lib/back/controller/base.dart` |
@@ -62,42 +62,42 @@
 | [GF-00159](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/connection.dart#L67) | constructor | `ConnectionHealthControllerImpl` | `lib/back/controller/connection.dart` |
 | [GF-00160](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/connection.dart#L71) | method | `ConnectionHealthControllerImpl.check` | `lib/back/controller/connection.dart` |
 | [GF-00161](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/connection.dart#L77) | function | `top level.newConnectionHealthController` | `lib/back/controller/connection.dart` |
-| [GF-00162](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/dependencies.dart#L25) | callback | `top level.callback` | `lib/back/controller/dependencies.dart` |
-| [GF-00163](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/dependencies.dart#L36) | callback | `top level.callback.callback` | `lib/back/controller/dependencies.dart` |
-| [GF-00164](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/dependencies.dart#L48) | callback | `top level.callback` | `lib/back/controller/dependencies.dart` |
-| [GF-00165](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/dependencies.dart#L52) | callback | `top level.callback` | `lib/back/controller/dependencies.dart` |
-| [GF-00166](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/dependencies.dart#L57) | callback | `top level.callback` | `lib/back/controller/dependencies.dart` |
-| [GF-00167](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/dependencies.dart#L61) | callback | `top level.callback` | `lib/back/controller/dependencies.dart` |
-| [GF-00168](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/dependencies.dart#L65) | callback | `top level.callback` | `lib/back/controller/dependencies.dart` |
-| [GF-00169](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/dependencies.dart#L70) | callback | `top level.callback` | `lib/back/controller/dependencies.dart` |
-| [GF-00170](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/dependencies.dart#L74) | callback | `top level.callback` | `lib/back/controller/dependencies.dart` |
-| [GF-00171](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/dependencies.dart#L78) | callback | `top level.callback` | `lib/back/controller/dependencies.dart` |
-| [GF-00172](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/dependencies.dart#L88) | callback | `top level.callback` | `lib/back/controller/dependencies.dart` |
-| [GF-00173](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/dependencies.dart#L92) | callback | `top level.callback` | `lib/back/controller/dependencies.dart` |
-| [GF-00174](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/dependencies.dart#L97) | callback | `top level.callback` | `lib/back/controller/dependencies.dart` |
-| [GF-00175](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/dependencies.dart#L101) | callback | `top level.callback` | `lib/back/controller/dependencies.dart` |
-| [GF-00176](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/dependencies.dart#L106) | callback | `top level.callback` | `lib/back/controller/dependencies.dart` |
-| [GF-00177](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/dependencies.dart#L110) | callback | `top level.callback` | `lib/back/controller/dependencies.dart` |
-| [GF-00178](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/dependencies.dart#L115) | callback | `top level.callback` | `lib/back/controller/dependencies.dart` |
-| [GF-00179](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/dependencies.dart#L119) | callback | `top level.callback` | `lib/back/controller/dependencies.dart` |
-| [GF-00180](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/dependencies.dart#L123) | callback | `top level.callback` | `lib/back/controller/dependencies.dart` |
-| [GF-00181](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/device.dart#L13) | method | `DevicesController.reload` | `lib/back/controller/device.dart` |
-| [GF-00182](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/device.dart#L20) | constructor | `DevicesControllerImpl` | `lib/back/controller/device.dart` |
-| [GF-00183](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/device.dart#L24) | method | `DevicesControllerImpl.build` | `lib/back/controller/device.dart` |
-| [GF-00184](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/device.dart#L31) | method | `DevicesControllerImpl.reload` | `lib/back/controller/device.dart` |
-| [GF-00185](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/device.dart#L36) | callback | `DevicesControllerImpl.reload.callback` | `lib/back/controller/device.dart` |
-| [GF-00186](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/device.dart#L48) | callback | `top level.callback` | `lib/back/controller/device.dart` |
-| [GF-00187](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/device.dart#L54) | callback | `top level.callback` | `lib/back/controller/device.dart` |
-| [GF-00188](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/device.dart#L60) | callback | `top level.callback` | `lib/back/controller/device.dart` |
-| [GF-00189](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/device.dart#L65) | callback | `top level.callback` | `lib/back/controller/device.dart` |
-| [GF-00190](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/device.dart#L70) | method | `DeviceController.register` | `lib/back/controller/device.dart` |
-| [GF-00191](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/device.dart#L76) | method | `DeviceController.provePossession` | `lib/back/controller/device.dart` |
-| [GF-00192](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/device.dart#L82) | method | `DeviceController.revoke` | `lib/back/controller/device.dart` |
-| [GF-00193](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/device.dart#L87) | constructor | `DeviceControllerImpl` | `lib/back/controller/device.dart` |
-| [GF-00194](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/device.dart#L91) | method | `DeviceControllerImpl.register` | `lib/back/controller/device.dart` |
-| [GF-00195](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/device.dart#L112) | method | `DeviceControllerImpl.provePossession` | `lib/back/controller/device.dart` |
-| [GF-00196](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/device.dart#L130) | method | `DeviceControllerImpl.revoke` | `lib/back/controller/device.dart` |
-| [GF-00197](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/device.dart#L149) | function | `top level.newDeviceController` | `lib/back/controller/device.dart` |
+| [GF-00162](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/dependencies.dart#L28) | callback | `top level.callback` | `lib/back/controller/dependencies.dart` |
+| [GF-00163](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/dependencies.dart#L39) | callback | `top level.callback.callback` | `lib/back/controller/dependencies.dart` |
+| [GF-00164](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/dependencies.dart#L51) | callback | `top level.callback` | `lib/back/controller/dependencies.dart` |
+| [GF-00165](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/dependencies.dart#L55) | callback | `top level.callback` | `lib/back/controller/dependencies.dart` |
+| [GF-00166](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/dependencies.dart#L60) | callback | `top level.callback` | `lib/back/controller/dependencies.dart` |
+| [GF-00167](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/dependencies.dart#L64) | callback | `top level.callback` | `lib/back/controller/dependencies.dart` |
+| [GF-00168](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/dependencies.dart#L68) | callback | `top level.callback` | `lib/back/controller/dependencies.dart` |
+| [GF-00169](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/dependencies.dart#L73) | callback | `top level.callback` | `lib/back/controller/dependencies.dart` |
+| [GF-00170](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/dependencies.dart#L77) | callback | `top level.callback` | `lib/back/controller/dependencies.dart` |
+| [GF-00171](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/dependencies.dart#L81) | callback | `top level.callback` | `lib/back/controller/dependencies.dart` |
+| [GF-00172](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/dependencies.dart#L108) | callback | `top level.callback` | `lib/back/controller/dependencies.dart` |
+| [GF-00173](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/dependencies.dart#L112) | callback | `top level.callback` | `lib/back/controller/dependencies.dart` |
+| [GF-00174](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/dependencies.dart#L117) | callback | `top level.callback` | `lib/back/controller/dependencies.dart` |
+| [GF-00175](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/dependencies.dart#L121) | callback | `top level.callback` | `lib/back/controller/dependencies.dart` |
+| [GF-00176](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/dependencies.dart#L126) | callback | `top level.callback` | `lib/back/controller/dependencies.dart` |
+| [GF-00177](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/dependencies.dart#L130) | callback | `top level.callback` | `lib/back/controller/dependencies.dart` |
+| [GF-00178](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/dependencies.dart#L135) | callback | `top level.callback` | `lib/back/controller/dependencies.dart` |
+| [GF-00179](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/dependencies.dart#L139) | callback | `top level.callback` | `lib/back/controller/dependencies.dart` |
+| [GF-00180](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/dependencies.dart#L143) | callback | `top level.callback` | `lib/back/controller/dependencies.dart` |
+| [GF-00181](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/dependencies.dart#L91) | method | `DevicesController.reload` | `lib/back/controller/device.dart` |
+| [GF-00182](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/dependencies.dart#L99) | constructor | `DevicesControllerImpl` | `lib/back/controller/device.dart` |
+| [GF-00183](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/dependencies.dart#L95) | method | `DevicesControllerImpl.build` | `lib/back/controller/device.dart` |
+| [GF-00184](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/device.dart#L32) | method | `DevicesControllerImpl.reload` | `lib/back/controller/device.dart` |
+| [GF-00185](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/device.dart#L37) | callback | `DevicesControllerImpl.reload.callback` | `lib/back/controller/device.dart` |
+| [GF-00186](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/device.dart#L49) | callback | `top level.callback` | `lib/back/controller/device.dart` |
+| [GF-00187](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/device.dart#L55) | callback | `top level.callback` | `lib/back/controller/device.dart` |
+| [GF-00188](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/device.dart#L61) | callback | `top level.callback` | `lib/back/controller/device.dart` |
+| [GF-00189](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/device.dart#L66) | callback | `top level.callback` | `lib/back/controller/device.dart` |
+| [GF-00190](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/device.dart#L71) | method | `DeviceController.register` | `lib/back/controller/device.dart` |
+| [GF-00191](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/device.dart#L82) | method | `DeviceController.provePossession` | `lib/back/controller/device.dart` |
+| [GF-00192](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/device.dart#L93) | method | `DeviceController.revoke` | `lib/back/controller/device.dart` |
+| [GF-00193](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/device.dart#L98) | constructor | `DeviceControllerImpl` | `lib/back/controller/device.dart` |
+| [GF-00194](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/device.dart#L102) | method | `DeviceControllerImpl.register` | `lib/back/controller/device.dart` |
+| [GF-00195](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/device.dart#L140) | method | `DeviceControllerImpl.provePossession` | `lib/back/controller/device.dart` |
+| [GF-00196](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/device.dart#L171) | method | `DeviceControllerImpl.revoke` | `lib/back/controller/device.dart` |
+| [GF-00197](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/device.dart#L190) | function | `top level.newDeviceController` | `lib/back/controller/device.dart` |
 | [GF-00198](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/group.dart#L10) | method | `GroupsController.reload` | `lib/back/controller/group.dart` |
 | [GF-00199](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/group.dart#L17) | constructor | `GroupsControllerImpl` | `lib/back/controller/group.dart` |
 | [GF-00200](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/group.dart#L22) | method | `GroupsControllerImpl.build` | `lib/back/controller/group.dart` |
@@ -154,12 +154,12 @@
 | [GF-00251](https://github.com/GorapeFlutter/gf-app/blob/main/lib/entity/model/attestation.dart#L26) | constructor | `AttestationRecord.fromJson` | `lib/entity/model/attestation.dart` |
 | [GF-00252](https://github.com/GorapeFlutter/gf-app/blob/main/lib/entity/model/auth_session.dart#L9) | constructor | `AuthSession` | `lib/entity/model/auth_session.dart` |
 | [GF-00253](https://github.com/GorapeFlutter/gf-app/blob/main/lib/entity/model/auth_session.dart#L14) | getter | `AuthSession.claims` | `lib/entity/model/auth_session.dart` |
-| [GF-00254](https://github.com/GorapeFlutter/gf-app/blob/main/lib/entity/model/auth_session.dart#L18) | getter | `AuthSession.subject` | `lib/entity/model/auth_session.dart` |
-| [GF-00255](https://github.com/GorapeFlutter/gf-app/blob/main/lib/entity/model/auth_session.dart#L21) | getter | `AuthSession.displayName` | `lib/entity/model/auth_session.dart` |
-| [GF-00256](https://github.com/GorapeFlutter/gf-app/blob/main/lib/entity/model/auth_session.dart#L28) | getter | `AuthSession.username` | `lib/entity/model/auth_session.dart` |
-| [GF-00257](https://github.com/GorapeFlutter/gf-app/blob/main/lib/entity/model/auth_session.dart#L31) | getter | `AuthSession.email` | `lib/entity/model/auth_session.dart` |
-| [GF-00258](https://github.com/GorapeFlutter/gf-app/blob/main/lib/entity/model/auth_session.dart#L34) | getter | `AuthSession.issuer` | `lib/entity/model/auth_session.dart` |
-| [GF-00259](https://github.com/GorapeFlutter/gf-app/blob/main/lib/entity/model/auth_session.dart#L37) | method | `AuthSession._claim` | `lib/entity/model/auth_session.dart` |
+| [GF-00254](https://github.com/GorapeFlutter/gf-app/blob/main/lib/entity/model/auth_session.dart#L25) | getter | `AuthSession.subject` | `lib/entity/model/auth_session.dart` |
+| [GF-00255](https://github.com/GorapeFlutter/gf-app/blob/main/lib/entity/model/auth_session.dart#L28) | getter | `AuthSession.displayName` | `lib/entity/model/auth_session.dart` |
+| [GF-00256](https://github.com/GorapeFlutter/gf-app/blob/main/lib/entity/model/auth_session.dart#L35) | getter | `AuthSession.username` | `lib/entity/model/auth_session.dart` |
+| [GF-00257](https://github.com/GorapeFlutter/gf-app/blob/main/lib/entity/model/auth_session.dart#L38) | getter | `AuthSession.email` | `lib/entity/model/auth_session.dart` |
+| [GF-00258](https://github.com/GorapeFlutter/gf-app/blob/main/lib/entity/model/auth_session.dart#L41) | getter | `AuthSession.issuer` | `lib/entity/model/auth_session.dart` |
+| [GF-00259](https://github.com/GorapeFlutter/gf-app/blob/main/lib/entity/model/auth_session.dart#L44) | method | `AuthSession._claim` | `lib/entity/model/auth_session.dart` |
 | [GF-00260](https://github.com/GorapeFlutter/gf-app/blob/main/lib/entity/model/auth_support.dart#L2) | constructor | `AuthSupport` | `lib/entity/model/auth_support.dart` |
 | [GF-00261](https://github.com/GorapeFlutter/gf-app/blob/main/lib/entity/model/auth_tokens.dart#L8) | constructor | `AuthTokens` | `lib/entity/model/auth_tokens.dart` |
 | [GF-00262](https://github.com/GorapeFlutter/gf-app/blob/main/lib/entity/model/auth_tokens.dart#L23) | method | `AuthTokens.isExpired` | `lib/entity/model/auth_tokens.dart` |
@@ -169,17 +169,17 @@
 | [GF-00266](https://github.com/GorapeFlutter/gf-app/blob/main/lib/entity/model/auth_tokens.dart#L61) | method | `AuthTokens.encode` | `lib/entity/model/auth_tokens.dart` |
 | [GF-00267](https://github.com/GorapeFlutter/gf-app/blob/main/lib/entity/model/auth_tokens.dart#L64) | constructor | `AuthTokens.decode` | `lib/entity/model/auth_tokens.dart` |
 | [GF-00268](https://github.com/GorapeFlutter/gf-app/blob/main/lib/entity/model/connection.dart#L10) | constructor | `ConnectionSettings` | `lib/entity/model/connection.dart` |
-| [GF-00269](https://github.com/GorapeFlutter/gf-app/blob/main/lib/entity/model/connection.dart#L28) | method | `ConnectionSettings.copyWith` | `lib/entity/model/connection.dart` |
-| [GF-00270](https://github.com/GorapeFlutter/gf-app/blob/main/lib/entity/model/connection.dart#L45) | getter | `ConnectionSettings.usesInsecureTransport` | `lib/entity/model/connection.dart` |
-| [GF-00271](https://github.com/GorapeFlutter/gf-app/blob/main/lib/entity/model/connection.dart#L52) | method | `ConnectionSettings.validate` | `lib/entity/model/connection.dart` |
-| [GF-00272](https://github.com/GorapeFlutter/gf-app/blob/main/lib/entity/model/connection.dart#L75) | method | `ConnectionSettings.toJson` | `lib/entity/model/connection.dart` |
-| [GF-00273](https://github.com/GorapeFlutter/gf-app/blob/main/lib/entity/model/connection.dart#L84) | constructor | `ConnectionSettings.fromJson` | `lib/entity/model/connection.dart` |
-| [GF-00274](https://github.com/GorapeFlutter/gf-app/blob/main/lib/entity/model/connection.dart#L105) | method | `ConnectionSettings.encode` | `lib/entity/model/connection.dart` |
-| [GF-00275](https://github.com/GorapeFlutter/gf-app/blob/main/lib/entity/model/connection.dart#L108) | constructor | `ConnectionSettings.decode` | `lib/entity/model/connection.dart` |
-| [GF-00276](https://github.com/GorapeFlutter/gf-app/blob/main/lib/entity/model/connection.dart#L117) | method | `ConnectionSettings._trimTrailingSlash` | `lib/entity/model/connection.dart` |
-| [GF-00277](https://github.com/GorapeFlutter/gf-app/blob/main/lib/entity/model/connection.dart#L126) | method | `ConnectionSettings.==` | `lib/entity/model/connection.dart` |
-| [GF-00278](https://github.com/GorapeFlutter/gf-app/blob/main/lib/entity/model/connection.dart#L137) | getter | `ConnectionSettings.hashCode` | `lib/entity/model/connection.dart` |
-| [GF-00279](https://github.com/GorapeFlutter/gf-app/blob/main/lib/entity/model/connection.dart#L147) | method | `ConnectionSettings._listEquals` | `lib/entity/model/connection.dart` |
+| [GF-00269](https://github.com/GorapeFlutter/gf-app/blob/main/lib/entity/model/connection.dart#L31) | method | `ConnectionSettings.copyWith` | `lib/entity/model/connection.dart` |
+| [GF-00270](https://github.com/GorapeFlutter/gf-app/blob/main/lib/entity/model/connection.dart#L48) | getter | `ConnectionSettings.usesInsecureTransport` | `lib/entity/model/connection.dart` |
+| [GF-00271](https://github.com/GorapeFlutter/gf-app/blob/main/lib/entity/model/connection.dart#L55) | method | `ConnectionSettings.validate` | `lib/entity/model/connection.dart` |
+| [GF-00272](https://github.com/GorapeFlutter/gf-app/blob/main/lib/entity/model/connection.dart#L78) | method | `ConnectionSettings.toJson` | `lib/entity/model/connection.dart` |
+| [GF-00273](https://github.com/GorapeFlutter/gf-app/blob/main/lib/entity/model/connection.dart#L87) | constructor | `ConnectionSettings.fromJson` | `lib/entity/model/connection.dart` |
+| [GF-00274](https://github.com/GorapeFlutter/gf-app/blob/main/lib/entity/model/connection.dart#L108) | method | `ConnectionSettings.encode` | `lib/entity/model/connection.dart` |
+| [GF-00275](https://github.com/GorapeFlutter/gf-app/blob/main/lib/entity/model/connection.dart#L111) | constructor | `ConnectionSettings.decode` | `lib/entity/model/connection.dart` |
+| [GF-00276](https://github.com/GorapeFlutter/gf-app/blob/main/lib/entity/model/connection.dart#L120) | method | `ConnectionSettings._trimTrailingSlash` | `lib/entity/model/connection.dart` |
+| [GF-00277](https://github.com/GorapeFlutter/gf-app/blob/main/lib/entity/model/connection.dart#L129) | method | `ConnectionSettings.==` | `lib/entity/model/connection.dart` |
+| [GF-00278](https://github.com/GorapeFlutter/gf-app/blob/main/lib/entity/model/connection.dart#L140) | getter | `ConnectionSettings.hashCode` | `lib/entity/model/connection.dart` |
+| [GF-00279](https://github.com/GorapeFlutter/gf-app/blob/main/lib/entity/model/connection.dart#L150) | method | `ConnectionSettings._listEquals` | `lib/entity/model/connection.dart` |
 | [GF-00280](https://github.com/GorapeFlutter/gf-app/blob/main/lib/entity/model/device.dart#L3) | constructor | `Device` | `lib/entity/model/device.dart` |
 | [GF-00281](https://github.com/GorapeFlutter/gf-app/blob/main/lib/entity/model/device.dart#L28) | getter | `Device.isActive` | `lib/entity/model/device.dart` |
 | [GF-00282](https://github.com/GorapeFlutter/gf-app/blob/main/lib/entity/model/device.dart#L31) | constructor | `Device.fromJson` | `lib/entity/model/device.dart` |
@@ -297,11 +297,11 @@
 | [GF-00394](https://github.com/GorapeFlutter/gf-app/blob/main/lib/entity/response/common.dart#L2) | constructor | `ApiErrorBody` | `lib/entity/response/common.dart` |
 | [GF-00395](https://github.com/GorapeFlutter/gf-app/blob/main/lib/entity/response/common.dart#L8) | constructor | `ApiErrorBody.fromJson` | `lib/entity/response/common.dart` |
 | [GF-00396](https://github.com/GorapeFlutter/gf-app/blob/main/lib/entity/response/device.dart#L5) | constructor | `RegistrationResult` | `lib/entity/response/device.dart` |
-| [GF-00397](https://github.com/GorapeFlutter/gf-app/blob/main/lib/config/langages/app_text.dart#L7) | constructor | `AppText` | `lib/config/langages/app_text.dart` |
-| [GF-00398](https://github.com/GorapeFlutter/gf-app/blob/main/lib/config/langages/app_text.dart#L41) | method | `AppText.build` | `lib/config/langages/app_text.dart` |
-| [GF-00399](https://github.com/GorapeFlutter/gf-app/blob/main/lib/config/langages/app_text.dart#L668) | method | `AppStrings.translate` | `lib/config/langages/app_text.dart` |
-| [GF-00400](https://github.com/GorapeFlutter/gf-app/blob/main/lib/config/langages/app_text.dart#L763) | callback | `AppStrings.translate.callback` | `lib/config/langages/app_text.dart` |
-| [GF-00401](https://github.com/GorapeFlutter/gf-app/blob/main/lib/config/langages/app_text.dart#L777) | function | `top level.tr` | `lib/config/langages/app_text.dart` |
+| [GF-00397](https://github.com/GorapeFlutter/gf-app/blob/main/lib/config/langages/app_text.dart#L8) | constructor | `AppText` | `lib/config/langages/app_text.dart` |
+| [GF-00398](https://github.com/GorapeFlutter/gf-app/blob/main/lib/config/langages/app_text.dart#L46) | method | `AppText.build` | `lib/config/langages/app_text.dart` |
+| [GF-00399](https://github.com/GorapeFlutter/gf-app/blob/main/lib/config/langages/app_text.dart#L74) | method | `AppStrings.translate` | `lib/config/langages/app_text.dart` |
+| [GF-00400](https://github.com/GorapeFlutter/gf-app/blob/main/lib/config/langages/app_text.dart#L122) | callback | `AppStrings.translate.callback` | `lib/config/langages/app_text.dart` |
+| [GF-00401](https://github.com/GorapeFlutter/gf-app/blob/main/lib/config/langages/app_text.dart#L197) | function | `top level.tr` | `lib/config/langages/app_text.dart` |
 | [GF-00402](https://github.com/GorapeFlutter/gf-app/blob/main/lib/main.dart#L7) | function | `top level.main` | `lib/main.dart` |
 | [GF-00403](https://github.com/GorapeFlutter/gf-app/blob/main/lib/main.dart#L13) | function | `top level._retryPolicy` | `lib/main.dart` |
 | [GF-00404](https://github.com/GorapeFlutter/gf-app/blob/main/lib/main.dart#L24) | function | `top level._isPermanent` | `lib/main.dart` |
@@ -311,28 +311,28 @@
 | [GF-00408](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/attestation.dart#L19) | method | `AttestationRepositoryImpl.capabilities` | `lib/back/repository/attestation.dart` |
 | [GF-00409](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/attestation.dart#L24) | method | `AttestationRepositoryImpl.list` | `lib/back/repository/attestation.dart` |
 | [GF-00410](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/attestation.dart#L30) | function | `top level.newAttestationRepository` | `lib/back/repository/attestation.dart` |
-| [GF-00411](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/auth.dart#L15) | getter | `AuthRepository.isSupported` | `lib/back/repository/auth.dart` |
-| [GF-00412](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/auth.dart#L18) | getter | `AuthRepository.unsupportedReason` | `lib/back/repository/auth.dart` |
-| [GF-00413](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/auth.dart#L21) | method | `AuthRepository.signIn` | `lib/back/repository/auth.dart` |
-| [GF-00414](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/auth.dart#L24) | method | `AuthRepository.refresh` | `lib/back/repository/auth.dart` |
-| [GF-00415](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/auth.dart#L27) | method | `AuthRepository.signOut` | `lib/back/repository/auth.dart` |
-| [GF-00416](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/auth.dart#L32) | constructor | `UnsupportedAuthRepository` | `lib/back/repository/auth.dart` |
-| [GF-00417](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/auth.dart#L38) | getter | `UnsupportedAuthRepository.isSupported` | `lib/back/repository/auth.dart` |
-| [GF-00418](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/auth.dart#L42) | method | `UnsupportedAuthRepository.signIn` | `lib/back/repository/auth.dart` |
-| [GF-00419](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/auth.dart#L48) | method | `UnsupportedAuthRepository.refresh` | `lib/back/repository/auth.dart` |
-| [GF-00420](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/auth.dart#L54) | method | `UnsupportedAuthRepository.signOut` | `lib/back/repository/auth.dart` |
-| [GF-00421](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/auth.dart#L60) | constructor | `AppAuthRepository` | `lib/back/repository/auth.dart` |
-| [GF-00422](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/auth.dart#L75) | getter | `AppAuthRepository._allowInsecure` | `lib/back/repository/auth.dart` |
-| [GF-00423](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/auth.dart#L78) | getter | `AppAuthRepository._issuerUsesHttp` | `lib/back/repository/auth.dart` |
-| [GF-00424](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/auth.dart#L81) | getter | `AppAuthRepository.isSupported` | `lib/back/repository/auth.dart` |
-| [GF-00425](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/auth.dart#L85) | getter | `AppAuthRepository.unsupportedReason` | `lib/back/repository/auth.dart` |
-| [GF-00426](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/auth.dart#L89) | method | `AppAuthRepository.signIn` | `lib/back/repository/auth.dart` |
-| [GF-00427](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/auth.dart#L117) | method | `AppAuthRepository.refresh` | `lib/back/repository/auth.dart` |
-| [GF-00428](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/auth.dart#L150) | method | `AppAuthRepository.signOut` | `lib/back/repository/auth.dart` |
-| [GF-00429](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/auth.dart#L178) | method | `AppAuthRepository._fetchServiceConfiguration` | `lib/back/repository/auth.dart` |
-| [GF-00430](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/auth.dart#L211) | method | `AppAuthRepository._tokensFrom` | `lib/back/repository/auth.dart` |
-| [GF-00431](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/auth.dart#L229) | method | `AppAuthRepository._platformError` | `lib/back/repository/auth.dart` |
-| [GF-00432](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/auth.dart#L249) | function | `top level.newAuthRepository` | `lib/back/repository/auth.dart` |
+| [GF-00411](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/auth.dart#L19) | getter | `AuthRepository.isSupported` | `lib/back/repository/auth.dart` |
+| [GF-00412](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/auth.dart#L22) | getter | `AuthRepository.unsupportedReason` | `lib/back/repository/auth.dart` |
+| [GF-00413](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/auth.dart#L25) | method | `AuthRepository.signIn` | `lib/back/repository/auth.dart` |
+| [GF-00414](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/auth.dart#L35) | method | `AuthRepository.refresh` | `lib/back/repository/auth.dart` |
+| [GF-00415](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/auth.dart#L38) | method | `AuthRepository.signOut` | `lib/back/repository/auth.dart` |
+| [GF-00416](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/auth.dart#L43) | constructor | `UnsupportedAuthRepository` | `lib/back/repository/auth.dart` |
+| [GF-00417](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/auth.dart#L49) | getter | `UnsupportedAuthRepository.isSupported` | `lib/back/repository/auth.dart` |
+| [GF-00418](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/auth.dart#L53) | method | `UnsupportedAuthRepository.signIn` | `lib/back/repository/auth.dart` |
+| [GF-00419](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/auth.dart#L66) | method | `UnsupportedAuthRepository.refresh` | `lib/back/repository/auth.dart` |
+| [GF-00420](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/auth.dart#L72) | method | `UnsupportedAuthRepository.signOut` | `lib/back/repository/auth.dart` |
+| [GF-00421](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/auth.dart#L78) | constructor | `AppAuthRepository` | `lib/back/repository/auth.dart` |
+| [GF-00422](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/auth.dart#L93) | getter | `AppAuthRepository._allowInsecure` | `lib/back/repository/auth.dart` |
+| [GF-00423](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/auth.dart#L96) | getter | `AppAuthRepository._issuerUsesHttp` | `lib/back/repository/auth.dart` |
+| [GF-00424](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/auth.dart#L99) | getter | `AppAuthRepository.isSupported` | `lib/back/repository/auth.dart` |
+| [GF-00425](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/auth.dart#L103) | getter | `AppAuthRepository.unsupportedReason` | `lib/back/repository/auth.dart` |
+| [GF-00426](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/auth.dart#L107) | method | `AppAuthRepository.signIn` | `lib/back/repository/auth.dart` |
+| [GF-00427](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/auth.dart#L178) | method | `AppAuthRepository.refresh` | `lib/back/repository/auth.dart` |
+| [GF-00428](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/auth.dart#L211) | method | `AppAuthRepository.signOut` | `lib/back/repository/auth.dart` |
+| [GF-00429](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/auth.dart#L239) | method | `AppAuthRepository._fetchServiceConfiguration` | `lib/back/repository/auth.dart` |
+| [GF-00430](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/auth.dart#L272) | method | `AppAuthRepository._tokensFrom` | `lib/back/repository/auth.dart` |
+| [GF-00431](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/auth.dart#L290) | method | `AppAuthRepository._platformError` | `lib/back/repository/auth.dart` |
+| [GF-00432](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/auth.dart#L310) | function | `top level.newAuthRepository` | `lib/back/repository/auth.dart` |
 | [GF-00433](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/connection.dart#L4) | method | `ConnectionRepository.health` | `lib/back/repository/connection.dart` |
 | [GF-00434](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/connection.dart#L9) | constructor | `ConnectionRepositoryImpl` | `lib/back/repository/connection.dart` |
 | [GF-00435](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/connection.dart#L14) | method | `ConnectionRepositoryImpl.health` | `lib/back/repository/connection.dart` |
@@ -415,50 +415,50 @@
 | [GF-00512](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L122) | method | `GorapeApi.verifyProof` | `lib/back/repository/gorape.dart` |
 | [GF-00513](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L129) | method | `GorapeApi.attestationCapabilities` | `lib/back/repository/gorape.dart` |
 | [GF-00514](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L132) | method | `GorapeApi.attestations` | `lib/back/repository/gorape.dart` |
-| [GF-00515](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L139) | function | `top level.newGorapeApi` | `lib/back/repository/gorape.dart` |
-| [GF-00516](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L159) | constructor | `GorapeApiClient` | `lib/back/repository/gorape.dart` |
-| [GF-00517](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L177) | method | `GorapeApiClient._normalizeBaseUrl` | `lib/back/repository/gorape.dart` |
-| [GF-00518](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L186) | method | `GorapeApiClient.health` | `lib/back/repository/gorape.dart` |
-| [GF-00519](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L193) | method | `GorapeApiClient.listProjects` | `lib/back/repository/gorape.dart` |
-| [GF-00520](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L199) | callback | `GorapeApiClient.listProjects.callback` | `lib/back/repository/gorape.dart` |
-| [GF-00521](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L206) | method | `GorapeApiClient.getProject` | `lib/back/repository/gorape.dart` |
-| [GF-00522](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L213) | method | `GorapeApiClient.listDevices` | `lib/back/repository/gorape.dart` |
-| [GF-00523](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L222) | callback | `GorapeApiClient.listDevices.callback` | `lib/back/repository/gorape.dart` |
-| [GF-00524](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L229) | method | `GorapeApiClient.getDevice` | `lib/back/repository/gorape.dart` |
-| [GF-00525](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L239) | method | `GorapeApiClient.revokeDevice` | `lib/back/repository/gorape.dart` |
-| [GF-00526](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L248) | method | `GorapeApiClient.listGroups` | `lib/back/repository/gorape.dart` |
-| [GF-00527](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L257) | callback | `GorapeApiClient.listGroups.callback` | `lib/back/repository/gorape.dart` |
-| [GF-00528](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L264) | method | `GorapeApiClient.getGroup` | `lib/back/repository/gorape.dart` |
-| [GF-00529](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L274) | method | `GorapeApiClient.createGroup` | `lib/back/repository/gorape.dart` |
-| [GF-00530](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L288) | method | `GorapeApiClient.updateGroup` | `lib/back/repository/gorape.dart` |
-| [GF-00531](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L303) | method | `GorapeApiClient.deleteGroup` | `lib/back/repository/gorape.dart` |
-| [GF-00532](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L312) | method | `GorapeApiClient.listGroupDevices` | `lib/back/repository/gorape.dart` |
-| [GF-00533](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L324) | callback | `GorapeApiClient.listGroupDevices.callback` | `lib/back/repository/gorape.dart` |
-| [GF-00534](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L331) | method | `GorapeApiClient.bindDeviceToGroup` | `lib/back/repository/gorape.dart` |
-| [GF-00535](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L345) | method | `GorapeApiClient.unbindDeviceFromGroup` | `lib/back/repository/gorape.dart` |
-| [GF-00536](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L359) | method | `GorapeApiClient.listProjectRoles` | `lib/back/repository/gorape.dart` |
-| [GF-00537](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L368) | callback | `GorapeApiClient.listProjectRoles.callback` | `lib/back/repository/gorape.dart` |
-| [GF-00538](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L375) | method | `GorapeApiClient.putProjectRole` | `lib/back/repository/gorape.dart` |
-| [GF-00539](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L388) | method | `GorapeApiClient.deleteProjectRole` | `lib/back/repository/gorape.dart` |
-| [GF-00540](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L397) | method | `GorapeApiClient.listGroupRoles` | `lib/back/repository/gorape.dart` |
-| [GF-00541](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L409) | callback | `GorapeApiClient.listGroupRoles.callback` | `lib/back/repository/gorape.dart` |
-| [GF-00542](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L416) | method | `GorapeApiClient.putGroupRole` | `lib/back/repository/gorape.dart` |
-| [GF-00543](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L430) | method | `GorapeApiClient.deleteGroupRole` | `lib/back/repository/gorape.dart` |
-| [GF-00544](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L444) | method | `GorapeApiClient.createRegistrationChallenge` | `lib/back/repository/gorape.dart` |
-| [GF-00545](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L458) | method | `GorapeApiClient.verifyRegistration` | `lib/back/repository/gorape.dart` |
-| [GF-00546](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L472) | method | `GorapeApiClient.createProofChallenge` | `lib/back/repository/gorape.dart` |
-| [GF-00547](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L485) | method | `GorapeApiClient.verifyProof` | `lib/back/repository/gorape.dart` |
-| [GF-00548](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L499) | method | `GorapeApiClient.attestationCapabilities` | `lib/back/repository/gorape.dart` |
-| [GF-00549](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L511) | method | `GorapeApiClient.attestations` | `lib/back/repository/gorape.dart` |
-| [GF-00550](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L523) | callback | `GorapeApiClient.attestations.callback` | `lib/back/repository/gorape.dart` |
-| [GF-00551](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L530) | method | `GorapeApiClient._request` | `lib/back/repository/gorape.dart` |
-| [GF-00552](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L586) | method | `GorapeApiClient._requireAccessToken` | `lib/back/repository/gorape.dart` |
-| [GF-00553](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L598) | method | `GorapeApiClient._send` | `lib/back/repository/gorape.dart` |
-| [GF-00554](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L631) | method | `GorapeApiClient._mapError` | `lib/back/repository/gorape.dart` |
-| [GF-00555](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L680) | method | `GorapeApiClient._segment` | `lib/back/repository/gorape.dart` |
-| [GF-00556](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L683) | method | `GorapeApiClient._asList` | `lib/back/repository/gorape.dart` |
-| [GF-00557](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L689) | method | `GorapeApiClient._bindingList` | `lib/back/repository/gorape.dart` |
-| [GF-00558](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L697) | method | `GorapeApiClient._asMap` | `lib/back/repository/gorape.dart` |
+| [GF-00515](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L166) | function | `top level.newGorapeApi` | `lib/back/repository/gorape.dart` |
+| [GF-00516](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L186) | constructor | `GorapeApiClient` | `lib/back/repository/gorape.dart` |
+| [GF-00517](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L204) | method | `GorapeApiClient._normalizeBaseUrl` | `lib/back/repository/gorape.dart` |
+| [GF-00518](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L213) | method | `GorapeApiClient.health` | `lib/back/repository/gorape.dart` |
+| [GF-00519](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L220) | method | `GorapeApiClient.listProjects` | `lib/back/repository/gorape.dart` |
+| [GF-00520](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L226) | callback | `GorapeApiClient.listProjects.callback` | `lib/back/repository/gorape.dart` |
+| [GF-00521](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L233) | method | `GorapeApiClient.getProject` | `lib/back/repository/gorape.dart` |
+| [GF-00522](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L240) | method | `GorapeApiClient.listDevices` | `lib/back/repository/gorape.dart` |
+| [GF-00523](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L249) | callback | `GorapeApiClient.listDevices.callback` | `lib/back/repository/gorape.dart` |
+| [GF-00524](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L256) | method | `GorapeApiClient.getDevice` | `lib/back/repository/gorape.dart` |
+| [GF-00525](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L266) | method | `GorapeApiClient.revokeDevice` | `lib/back/repository/gorape.dart` |
+| [GF-00526](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L275) | method | `GorapeApiClient.listGroups` | `lib/back/repository/gorape.dart` |
+| [GF-00527](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L284) | callback | `GorapeApiClient.listGroups.callback` | `lib/back/repository/gorape.dart` |
+| [GF-00528](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L291) | method | `GorapeApiClient.getGroup` | `lib/back/repository/gorape.dart` |
+| [GF-00529](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L301) | method | `GorapeApiClient.createGroup` | `lib/back/repository/gorape.dart` |
+| [GF-00530](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L315) | method | `GorapeApiClient.updateGroup` | `lib/back/repository/gorape.dart` |
+| [GF-00531](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L330) | method | `GorapeApiClient.deleteGroup` | `lib/back/repository/gorape.dart` |
+| [GF-00532](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L339) | method | `GorapeApiClient.listGroupDevices` | `lib/back/repository/gorape.dart` |
+| [GF-00533](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L351) | callback | `GorapeApiClient.listGroupDevices.callback` | `lib/back/repository/gorape.dart` |
+| [GF-00534](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L358) | method | `GorapeApiClient.bindDeviceToGroup` | `lib/back/repository/gorape.dart` |
+| [GF-00535](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L372) | method | `GorapeApiClient.unbindDeviceFromGroup` | `lib/back/repository/gorape.dart` |
+| [GF-00536](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L386) | method | `GorapeApiClient.listProjectRoles` | `lib/back/repository/gorape.dart` |
+| [GF-00537](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L395) | callback | `GorapeApiClient.listProjectRoles.callback` | `lib/back/repository/gorape.dart` |
+| [GF-00538](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L402) | method | `GorapeApiClient.putProjectRole` | `lib/back/repository/gorape.dart` |
+| [GF-00539](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L415) | method | `GorapeApiClient.deleteProjectRole` | `lib/back/repository/gorape.dart` |
+| [GF-00540](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L424) | method | `GorapeApiClient.listGroupRoles` | `lib/back/repository/gorape.dart` |
+| [GF-00541](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L436) | callback | `GorapeApiClient.listGroupRoles.callback` | `lib/back/repository/gorape.dart` |
+| [GF-00542](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L443) | method | `GorapeApiClient.putGroupRole` | `lib/back/repository/gorape.dart` |
+| [GF-00543](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L457) | method | `GorapeApiClient.deleteGroupRole` | `lib/back/repository/gorape.dart` |
+| [GF-00544](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L471) | method | `GorapeApiClient.createRegistrationChallenge` | `lib/back/repository/gorape.dart` |
+| [GF-00545](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L485) | method | `GorapeApiClient.verifyRegistration` | `lib/back/repository/gorape.dart` |
+| [GF-00546](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L499) | method | `GorapeApiClient.createProofChallenge` | `lib/back/repository/gorape.dart` |
+| [GF-00547](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L512) | method | `GorapeApiClient.verifyProof` | `lib/back/repository/gorape.dart` |
+| [GF-00548](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L526) | method | `GorapeApiClient.attestationCapabilities` | `lib/back/repository/gorape.dart` |
+| [GF-00549](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L538) | method | `GorapeApiClient.attestations` | `lib/back/repository/gorape.dart` |
+| [GF-00550](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L550) | callback | `GorapeApiClient.attestations.callback` | `lib/back/repository/gorape.dart` |
+| [GF-00551](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L611) | method | `GorapeApiClient._request` | `lib/back/repository/gorape.dart` |
+| [GF-00552](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L667) | method | `GorapeApiClient._requireAccessToken` | `lib/back/repository/gorape.dart` |
+| [GF-00553](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L679) | method | `GorapeApiClient._send` | `lib/back/repository/gorape.dart` |
+| [GF-00554](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L712) | method | `GorapeApiClient._mapError` | `lib/back/repository/gorape.dart` |
+| [GF-00555](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L762) | method | `GorapeApiClient._segment` | `lib/back/repository/gorape.dart` |
+| [GF-00556](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L765) | method | `GorapeApiClient._asList` | `lib/back/repository/gorape.dart` |
+| [GF-00557](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L771) | method | `GorapeApiClient._bindingList` | `lib/back/repository/gorape.dart` |
+| [GF-00558](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L779) | method | `GorapeApiClient._asMap` | `lib/back/repository/gorape.dart` |
 | [GF-00559](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/group.dart#L7) | method | `GroupRepository.list` | `lib/back/repository/group.dart` |
 | [GF-00560](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/group.dart#L10) | method | `GroupRepository.get` | `lib/back/repository/group.dart` |
 | [GF-00561](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/group.dart#L13) | method | `GroupRepository.create` | `lib/back/repository/group.dart` |
@@ -482,7 +482,7 @@
 | [GF-00579](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/platform.dart#L15) | constructor | `PlatformRepositoryImpl` | `lib/back/repository/platform.dart` |
 | [GF-00580](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/platform.dart#L18) | method | `PlatformRepositoryImpl.current` | `lib/back/repository/platform.dart` |
 | [GF-00581](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/platform.dart#L32) | method | `PlatformRepositoryImpl.supportFor` | `lib/back/repository/platform.dart` |
-| [GF-00582](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/platform.dart#L87) | function | `top level.newPlatformRepository` | `lib/back/repository/platform.dart` |
+| [GF-00582](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/platform.dart#L98) | function | `top level.newPlatformRepository` | `lib/back/repository/platform.dart` |
 | [GF-00583](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/policy.dart#L6) | getter | `DevicePolicyRepository.capabilities` | `lib/back/repository/policy.dart` |
 | [GF-00584](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/policy.dart#L9) | method | `DevicePolicyRepository.load` | `lib/back/repository/policy.dart` |
 | [GF-00585](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/policy.dart#L12) | method | `DevicePolicyRepository.save` | `lib/back/repository/policy.dart` |
@@ -573,31 +573,31 @@
 | [GF-00670](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/app_theme.dart#L14) | method | `AppTheme._build` | `lib/ui/app_theme.dart` |
 | [GF-00671](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/app_shell.dart#L16) | constructor | `AppShell` | `lib/ui/screens/app_shell.dart` |
 | [GF-00672](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/app_shell.dart#L19) | method | `AppShell.createState` | `lib/ui/screens/app_shell.dart` |
-| [GF-00673](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/app_shell.dart#L29) | method | `_AppShellState.build` | `lib/ui/screens/app_shell.dart` |
-| [GF-00674](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/app_shell.dart#L64) | callback | `_AppShellState.build.callback` | `lib/ui/screens/app_shell.dart` |
-| [GF-00675](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/app_shell.dart#L71) | callback | `_AppShellState.build.callback` | `lib/ui/screens/app_shell.dart` |
-| [GF-00676](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/app_shell.dart#L77) | callback | `_AppShellState.build.callback.callback` | `lib/ui/screens/app_shell.dart` |
-| [GF-00677](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/app_shell.dart#L87) | callback | `_AppShellState.build.callback` | `lib/ui/screens/app_shell.dart` |
-| [GF-00678](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/app_shell.dart#L126) | callback | `_AppShellState.build.callback` | `lib/ui/screens/app_shell.dart` |
-| [GF-00679](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/app_shell.dart#L128) | callback | `_AppShellState.build.callback.callback` | `lib/ui/screens/app_shell.dart` |
-| [GF-00680](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/app_shell.dart#L167) | method | `_AppShellState._buildBody` | `lib/ui/screens/app_shell.dart` |
-| [GF-00681](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/app_shell.dart#L177) | callback | `_AppShellState._buildBody.callback` | `lib/ui/screens/app_shell.dart` |
-| [GF-00682](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/app_shell.dart#L205) | callback | `_AppShellState._buildBody.callback` | `lib/ui/screens/app_shell.dart` |
-| [GF-00683](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/app_shell.dart#L211) | callback | `_AppShellState._buildBody.callback` | `lib/ui/screens/app_shell.dart` |
-| [GF-00684](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/app_shell.dart#L214) | callback | `_AppShellState._buildBody.callback.callback` | `lib/ui/screens/app_shell.dart` |
-| [GF-00685](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/app_shell.dart#L229) | callback | `_AppShellState._buildBody.callback` | `lib/ui/screens/app_shell.dart` |
-| [GF-00686](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/app_shell.dart#L231) | callback | `_AppShellState._buildBody.callback.callback` | `lib/ui/screens/app_shell.dart` |
-| [GF-00687](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/app_shell.dart#L237) | callback | `_AppShellState._buildBody.callback` | `lib/ui/screens/app_shell.dart` |
-| [GF-00688](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/app_shell.dart#L239) | callback | `_AppShellState._buildBody.callback.callback` | `lib/ui/screens/app_shell.dart` |
-| [GF-00689](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/app_shell.dart#L242) | callback | `_AppShellState._buildBody.callback` | `lib/ui/screens/app_shell.dart` |
-| [GF-00690](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/app_shell.dart#L244) | callback | `_AppShellState._buildBody.callback.callback` | `lib/ui/screens/app_shell.dart` |
-| [GF-00691](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/app_shell.dart#L254) | method | `_AppShellState._showProjectSheet` | `lib/ui/screens/app_shell.dart` |
-| [GF-00692](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/app_shell.dart#L260) | callback | `_AppShellState._showProjectSheet.callback` | `lib/ui/screens/app_shell.dart` |
-| [GF-00693](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/app_shell.dart#L267) | constructor | `_ProjectSheet` | `lib/ui/screens/app_shell.dart` |
-| [GF-00694](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/app_shell.dart#L270) | method | `_ProjectSheet.build` | `lib/ui/screens/app_shell.dart` |
-| [GF-00695](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/app_shell.dart#L296) | callback | `_ProjectSheet.build.callback` | `lib/ui/screens/app_shell.dart` |
-| [GF-00696](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/app_shell.dart#L311) | callback | `_ProjectSheet.build.callback.callback` | `lib/ui/screens/app_shell.dart` |
-| [GF-00697](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/app_shell.dart#L327) | callback | `_ProjectSheet.build.callback` | `lib/ui/screens/app_shell.dart` |
+| [GF-00673](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/app_shell.dart#L36) | method | `_AppShellState.build` | `lib/ui/screens/app_shell.dart` |
+| [GF-00674](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/app_shell.dart#L71) | callback | `_AppShellState.build.callback` | `lib/ui/screens/app_shell.dart` |
+| [GF-00675](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/app_shell.dart#L78) | callback | `_AppShellState.build.callback` | `lib/ui/screens/app_shell.dart` |
+| [GF-00676](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/app_shell.dart#L84) | callback | `_AppShellState.build.callback.callback` | `lib/ui/screens/app_shell.dart` |
+| [GF-00677](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/app_shell.dart#L94) | callback | `_AppShellState.build.callback` | `lib/ui/screens/app_shell.dart` |
+| [GF-00678](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/app_shell.dart#L133) | callback | `_AppShellState.build.callback` | `lib/ui/screens/app_shell.dart` |
+| [GF-00679](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/app_shell.dart#L135) | callback | `_AppShellState.build.callback.callback` | `lib/ui/screens/app_shell.dart` |
+| [GF-00680](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/app_shell.dart#L174) | method | `_AppShellState._buildBody` | `lib/ui/screens/app_shell.dart` |
+| [GF-00681](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/app_shell.dart#L184) | callback | `_AppShellState._buildBody.callback` | `lib/ui/screens/app_shell.dart` |
+| [GF-00682](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/app_shell.dart#L207) | callback | `_AppShellState._buildBody.callback` | `lib/ui/screens/app_shell.dart` |
+| [GF-00683](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/app_shell.dart#L213) | callback | `_AppShellState._buildBody.callback` | `lib/ui/screens/app_shell.dart` |
+| [GF-00684](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/app_shell.dart#L216) | callback | `_AppShellState._buildBody.callback.callback` | `lib/ui/screens/app_shell.dart` |
+| [GF-00685](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/app_shell.dart#L231) | callback | `_AppShellState._buildBody.callback` | `lib/ui/screens/app_shell.dart` |
+| [GF-00686](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/app_shell.dart#L233) | callback | `_AppShellState._buildBody.callback.callback` | `lib/ui/screens/app_shell.dart` |
+| [GF-00687](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/app_shell.dart#L239) | callback | `_AppShellState._buildBody.callback` | `lib/ui/screens/app_shell.dart` |
+| [GF-00688](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/app_shell.dart#L241) | callback | `_AppShellState._buildBody.callback.callback` | `lib/ui/screens/app_shell.dart` |
+| [GF-00689](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/app_shell.dart#L244) | callback | `_AppShellState._buildBody.callback` | `lib/ui/screens/app_shell.dart` |
+| [GF-00690](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/app_shell.dart#L246) | callback | `_AppShellState._buildBody.callback.callback` | `lib/ui/screens/app_shell.dart` |
+| [GF-00691](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/app_shell.dart#L256) | method | `_AppShellState._showProjectSheet` | `lib/ui/screens/app_shell.dart` |
+| [GF-00692](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/app_shell.dart#L262) | callback | `_AppShellState._showProjectSheet.callback` | `lib/ui/screens/app_shell.dart` |
+| [GF-00693](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/app_shell.dart#L269) | constructor | `_ProjectSheet` | `lib/ui/screens/app_shell.dart` |
+| [GF-00694](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/app_shell.dart#L272) | method | `_ProjectSheet.build` | `lib/ui/screens/app_shell.dart` |
+| [GF-00695](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/app_shell.dart#L298) | callback | `_ProjectSheet.build.callback` | `lib/ui/screens/app_shell.dart` |
+| [GF-00696](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/app_shell.dart#L313) | callback | `_ProjectSheet.build.callback.callback` | `lib/ui/screens/app_shell.dart` |
+| [GF-00697](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/app_shell.dart#L329) | callback | `_ProjectSheet.build.callback` | `lib/ui/screens/app_shell.dart` |
 | [GF-00698](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/cluster_screen.dart#L16) | constructor | `ClusterScopeScreen` | `lib/ui/screens/cluster_screen.dart` |
 | [GF-00699](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/cluster_screen.dart#L21) | method | `ClusterScopeScreen.build` | `lib/ui/screens/cluster_screen.dart` |
 | [GF-00700](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/cluster_screen.dart#L36) | constructor | `ClusterAdminScreen` | `lib/ui/screens/cluster_screen.dart` |
@@ -608,51 +608,48 @@
 | [GF-00705](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/cluster_screen.dart#L79) | method | `ClusterViewerScreen.build` | `lib/ui/screens/cluster_screen.dart` |
 | [GF-00706](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/cluster_screen.dart#L98) | constructor | `_ClusterOverview` | `lib/ui/screens/cluster_screen.dart` |
 | [GF-00707](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/cluster_screen.dart#L111) | method | `_ClusterOverview.build` | `lib/ui/screens/cluster_screen.dart` |
-| [GF-00708](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/cluster_screen.dart#L242) | callback | `_ClusterOverview.build.callback` | `lib/ui/screens/cluster_screen.dart` |
-| [GF-00709](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/cluster_screen.dart#L247) | callback | `_ClusterOverview.build.callback` | `lib/ui/screens/cluster_screen.dart` |
-| [GF-00710](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/cluster_screen.dart#L249) | callback | `_ClusterOverview.build.callback` | `lib/ui/screens/cluster_screen.dart` |
-| [GF-00711](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/cluster_screen.dart#L253) | callback | `_ClusterOverview.build.callback.callback` | `lib/ui/screens/cluster_screen.dart` |
-| [GF-00712](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/cluster_screen.dart#L256) | callback | `_ClusterOverview.build.callback` | `lib/ui/screens/cluster_screen.dart` |
-| [GF-00713](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/cluster_screen.dart#L284) | callback | `_ClusterOverview.build.callback.callback` | `lib/ui/screens/cluster_screen.dart` |
-| [GF-00714](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/cluster_screen.dart#L349) | method | `_ClusterOverview._roleOrDash` | `lib/ui/screens/cluster_screen.dart` |
-| [GF-00715](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/cluster_screen.dart#L362) | constructor | `_ClaimChip` | `lib/ui/screens/cluster_screen.dart` |
-| [GF-00716](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/cluster_screen.dart#L373) | method | `_ClaimChip.build` | `lib/ui/screens/cluster_screen.dart` |
+| [GF-00708](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/cluster_screen.dart#L240) | callback | `_ClusterOverview.build.callback` | `lib/ui/screens/cluster_screen.dart` |
+| [GF-00709](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/cluster_screen.dart#L245) | callback | `_ClusterOverview.build.callback` | `lib/ui/screens/cluster_screen.dart` |
+| [GF-00710](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/cluster_screen.dart#L247) | callback | `_ClusterOverview.build.callback` | `lib/ui/screens/cluster_screen.dart` |
+| [GF-00711](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/cluster_screen.dart#L251) | callback | `_ClusterOverview.build.callback.callback` | `lib/ui/screens/cluster_screen.dart` |
+| [GF-00712](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/cluster_screen.dart#L254) | callback | `_ClusterOverview.build.callback` | `lib/ui/screens/cluster_screen.dart` |
+| [GF-00713](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/cluster_screen.dart#L282) | callback | `_ClusterOverview.build.callback.callback` | `lib/ui/screens/cluster_screen.dart` |
+| [GF-00714](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/cluster_screen.dart#L347) | method | `_ClusterOverview._roleOrDash` | `lib/ui/screens/cluster_screen.dart` |
+| [GF-00715](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/cluster_screen.dart#L360) | constructor | `_ClaimChip` | `lib/ui/screens/cluster_screen.dart` |
+| [GF-00716](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/cluster_screen.dart#L371) | method | `_ClaimChip.build` | `lib/ui/screens/cluster_screen.dart` |
 | [GF-00717](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L13) | constructor | `DeviceDetailScreen` | `lib/ui/screens/device_detail_screen.dart` |
 | [GF-00718](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L25) | method | `DeviceDetailScreen.createState` | `lib/ui/screens/device_detail_screen.dart` |
 | [GF-00719](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L34) | getter | `_DeviceDetailScreenState._refKey` | `lib/ui/screens/device_detail_screen.dart` |
 | [GF-00720](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L38) | method | `_DeviceDetailScreenState.build` | `lib/ui/screens/device_detail_screen.dart` |
-| [GF-00721](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L118) | callback | `_DeviceDetailScreenState.build.callback` | `lib/ui/screens/device_detail_screen.dart` |
-| [GF-00722](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L120) | callback | `_DeviceDetailScreenState.build.callback` | `lib/ui/screens/device_detail_screen.dart` |
-| [GF-00723](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L122) | callback | `_DeviceDetailScreenState.build.callback` | `lib/ui/screens/device_detail_screen.dart` |
-| [GF-00724](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L204) | callback | `_DeviceDetailScreenState.build.callback` | `lib/ui/screens/device_detail_screen.dart` |
-| [GF-00725](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L213) | callback | `_DeviceDetailScreenState.build.callback` | `lib/ui/screens/device_detail_screen.dart` |
-| [GF-00726](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L215) | callback | `_DeviceDetailScreenState.build.callback` | `lib/ui/screens/device_detail_screen.dart` |
-| [GF-00727](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L219) | callback | `_DeviceDetailScreenState.build.callback.callback` | `lib/ui/screens/device_detail_screen.dart` |
-| [GF-00728](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L226) | callback | `_DeviceDetailScreenState.build.callback` | `lib/ui/screens/device_detail_screen.dart` |
-| [GF-00729](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L300) | method | `_DeviceDetailScreenState._refresh` | `lib/ui/screens/device_detail_screen.dart` |
-| [GF-00730](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L312) | method | `_DeviceDetailScreenState._verifyPossession` | `lib/ui/screens/device_detail_screen.dart` |
-| [GF-00731](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L316) | callback | `_DeviceDetailScreenState._verifyPossession.callback` | `lib/ui/screens/device_detail_screen.dart` |
-| [GF-00732](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L339) | callback | `_DeviceDetailScreenState._verifyPossession.callback` | `lib/ui/screens/device_detail_screen.dart` |
-| [GF-00733](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L346) | callback | `_DeviceDetailScreenState._verifyPossession.callback` | `lib/ui/screens/device_detail_screen.dart` |
-| [GF-00734](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L352) | method | `_DeviceDetailScreenState._revokeDevice` | `lib/ui/screens/device_detail_screen.dart` |
-| [GF-00735](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L357) | callback | `_DeviceDetailScreenState._revokeDevice.callback` | `lib/ui/screens/device_detail_screen.dart` |
-| [GF-00736](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L366) | callback | `_DeviceDetailScreenState._revokeDevice.callback.callback` | `lib/ui/screens/device_detail_screen.dart` |
-| [GF-00737](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L371) | callback | `_DeviceDetailScreenState._revokeDevice.callback.callback` | `lib/ui/screens/device_detail_screen.dart` |
-| [GF-00738](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L384) | callback | `_DeviceDetailScreenState._revokeDevice.callback` | `lib/ui/screens/device_detail_screen.dart` |
-| [GF-00739](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L404) | callback | `_DeviceDetailScreenState._revokeDevice.callback` | `lib/ui/screens/device_detail_screen.dart` |
-| [GF-00740](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L411) | callback | `_DeviceDetailScreenState._revokeDevice.callback` | `lib/ui/screens/device_detail_screen.dart` |
+| [GF-00724](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L179) | callback | `_DeviceDetailScreenState.build.callback` | `lib/ui/screens/device_detail_screen.dart` |
+| [GF-00725](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L188) | callback | `_DeviceDetailScreenState.build.callback` | `lib/ui/screens/device_detail_screen.dart` |
+| [GF-00726](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L190) | callback | `_DeviceDetailScreenState.build.callback` | `lib/ui/screens/device_detail_screen.dart` |
+| [GF-00727](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L194) | callback | `_DeviceDetailScreenState.build.callback.callback` | `lib/ui/screens/device_detail_screen.dart` |
+| [GF-00728](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L201) | callback | `_DeviceDetailScreenState.build.callback` | `lib/ui/screens/device_detail_screen.dart` |
+| [GF-00729](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L275) | method | `_DeviceDetailScreenState._refresh` | `lib/ui/screens/device_detail_screen.dart` |
+| [GF-00730](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L287) | method | `_DeviceDetailScreenState._verifyPossession` | `lib/ui/screens/device_detail_screen.dart` |
+| [GF-00731](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L291) | callback | `_DeviceDetailScreenState._verifyPossession.callback` | `lib/ui/screens/device_detail_screen.dart` |
+| [GF-00732](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L314) | callback | `_DeviceDetailScreenState._verifyPossession.callback` | `lib/ui/screens/device_detail_screen.dart` |
+| [GF-00733](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L322) | callback | `_DeviceDetailScreenState._verifyPossession.callback` | `lib/ui/screens/device_detail_screen.dart` |
+| [GF-00734](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L329) | method | `_DeviceDetailScreenState._revokeDevice` | `lib/ui/screens/device_detail_screen.dart` |
+| [GF-00735](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L334) | callback | `_DeviceDetailScreenState._revokeDevice.callback` | `lib/ui/screens/device_detail_screen.dart` |
+| [GF-00736](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L340) | callback | `_DeviceDetailScreenState._revokeDevice.callback.callback` | `lib/ui/screens/device_detail_screen.dart` |
+| [GF-00737](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L345) | callback | `_DeviceDetailScreenState._revokeDevice.callback.callback` | `lib/ui/screens/device_detail_screen.dart` |
+| [GF-00738](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L358) | callback | `_DeviceDetailScreenState._revokeDevice.callback` | `lib/ui/screens/device_detail_screen.dart` |
+| [GF-00739](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L378) | callback | `_DeviceDetailScreenState._revokeDevice.callback` | `lib/ui/screens/device_detail_screen.dart` |
+| [GF-00740](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L386) | callback | `_DeviceDetailScreenState._revokeDevice.callback` | `lib/ui/screens/device_detail_screen.dart` |
 | [GF-00741](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/devices_screen.dart#L14) | constructor | `DevicesScreen` | `lib/ui/screens/devices_screen.dart` |
 | [GF-00742](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/devices_screen.dart#L24) | method | `DevicesScreen.build` | `lib/ui/screens/devices_screen.dart` |
-| [GF-00743](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/devices_screen.dart#L31) | callback | `DevicesScreen.build.callback` | `lib/ui/screens/devices_screen.dart` |
-| [GF-00744](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/devices_screen.dart#L57) | callback | `DevicesScreen.build.callback` | `lib/ui/screens/devices_screen.dart` |
-| [GF-00745](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/devices_screen.dart#L98) | callback | `DevicesScreen.build.callback` | `lib/ui/screens/devices_screen.dart` |
-| [GF-00746](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/devices_screen.dart#L128) | callback | `DevicesScreen.build.callback` | `lib/ui/screens/devices_screen.dart` |
-| [GF-00747](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/devices_screen.dart#L130) | callback | `DevicesScreen.build.callback` | `lib/ui/screens/devices_screen.dart` |
-| [GF-00748](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/devices_screen.dart#L147) | constructor | `_DeviceTile` | `lib/ui/screens/devices_screen.dart` |
-| [GF-00749](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/devices_screen.dart#L153) | method | `_DeviceTile.build` | `lib/ui/screens/devices_screen.dart` |
-| [GF-00750](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/devices_screen.dart#L199) | callback | `_DeviceTile.build.callback` | `lib/ui/screens/devices_screen.dart` |
-| [GF-00751](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/devices_screen.dart#L202) | callback | `_DeviceTile.build.callback.callback` | `lib/ui/screens/devices_screen.dart` |
-| [GF-00752](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/devices_screen.dart#L215) | method | `_DeviceTile._platformIcon` | `lib/ui/screens/devices_screen.dart` |
+| [GF-00743](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/devices_screen.dart#L33) | callback | `DevicesScreen.build.callback` | `lib/ui/screens/devices_screen.dart` |
+| [GF-00744](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/devices_screen.dart#L59) | callback | `DevicesScreen.build.callback` | `lib/ui/screens/devices_screen.dart` |
+| [GF-00745](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/devices_screen.dart#L112) | callback | `DevicesScreen.build.callback` | `lib/ui/screens/devices_screen.dart` |
+| [GF-00746](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/devices_screen.dart#L142) | callback | `DevicesScreen.build.callback` | `lib/ui/screens/devices_screen.dart` |
+| [GF-00747](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/devices_screen.dart#L144) | callback | `DevicesScreen.build.callback` | `lib/ui/screens/devices_screen.dart` |
+| [GF-00748](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/devices_screen.dart#L161) | constructor | `_DeviceTile` | `lib/ui/screens/devices_screen.dart` |
+| [GF-00749](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/devices_screen.dart#L167) | method | `_DeviceTile.build` | `lib/ui/screens/devices_screen.dart` |
+| [GF-00750](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/devices_screen.dart#L213) | callback | `_DeviceTile.build.callback` | `lib/ui/screens/devices_screen.dart` |
+| [GF-00751](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/devices_screen.dart#L216) | callback | `_DeviceTile.build.callback.callback` | `lib/ui/screens/devices_screen.dart` |
+| [GF-00752](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/devices_screen.dart#L229) | method | `_DeviceTile._platformIcon` | `lib/ui/screens/devices_screen.dart` |
 | [GF-00753](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L21) | constructor | `GroupScopeScreen` | `lib/ui/screens/group_detail_screen.dart` |
 | [GF-00754](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L31) | method | `GroupScopeScreen.build` | `lib/ui/screens/group_detail_screen.dart` |
 | [GF-00755](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L54) | constructor | `GroupAdminScreen` | `lib/ui/screens/group_detail_screen.dart` |
@@ -674,33 +671,33 @@
 | [GF-00771](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L270) | callback | `_GroupScopeViewState.build.callback` | `lib/ui/screens/group_detail_screen.dart` |
 | [GF-00772](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L274) | callback | `_GroupScopeViewState.build.callback.callback` | `lib/ui/screens/group_detail_screen.dart` |
 | [GF-00773](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L277) | callback | `_GroupScopeViewState.build.callback` | `lib/ui/screens/group_detail_screen.dart` |
-| [GF-00774](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L303) | callback | `_GroupScopeViewState.build.callback.callback` | `lib/ui/screens/group_detail_screen.dart` |
-| [GF-00775](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L363) | method | `_GroupScopeViewState._editGroup` | `lib/ui/screens/group_detail_screen.dart` |
-| [GF-00776](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L369) | callback | `_GroupScopeViewState._editGroup.callback` | `lib/ui/screens/group_detail_screen.dart` |
-| [GF-00777](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L384) | callback | `_GroupScopeViewState._editGroup.callback` | `lib/ui/screens/group_detail_screen.dart` |
-| [GF-00778](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L393) | callback | `_GroupScopeViewState._editGroup.callback` | `lib/ui/screens/group_detail_screen.dart` |
-| [GF-00779](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L399) | method | `_GroupScopeViewState._deleteGroup` | `lib/ui/screens/group_detail_screen.dart` |
-| [GF-00780](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L404) | callback | `_GroupScopeViewState._deleteGroup.callback` | `lib/ui/screens/group_detail_screen.dart` |
-| [GF-00781](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L410) | callback | `_GroupScopeViewState._deleteGroup.callback.callback` | `lib/ui/screens/group_detail_screen.dart` |
-| [GF-00782](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L415) | callback | `_GroupScopeViewState._deleteGroup.callback.callback` | `lib/ui/screens/group_detail_screen.dart` |
-| [GF-00783](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L427) | callback | `_GroupScopeViewState._deleteGroup.callback` | `lib/ui/screens/group_detail_screen.dart` |
-| [GF-00784](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L443) | callback | `_GroupScopeViewState._deleteGroup.callback` | `lib/ui/screens/group_detail_screen.dart` |
-| [GF-00785](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L449) | method | `_GroupScopeViewState._bindDevice` | `lib/ui/screens/group_detail_screen.dart` |
-| [GF-00786](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L456) | callback | `_GroupScopeViewState._bindDevice.callback` | `lib/ui/screens/group_detail_screen.dart` |
-| [GF-00787](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L463) | callback | `_GroupScopeViewState._bindDevice.callback` | `lib/ui/screens/group_detail_screen.dart` |
-| [GF-00788](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L476) | callback | `_GroupScopeViewState._bindDevice.callback` | `lib/ui/screens/group_detail_screen.dart` |
-| [GF-00789](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L490) | callback | `_GroupScopeViewState._bindDevice.callback` | `lib/ui/screens/group_detail_screen.dart` |
-| [GF-00790](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L496) | method | `_GroupScopeViewState._unbindDevice` | `lib/ui/screens/group_detail_screen.dart` |
-| [GF-00791](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L500) | callback | `_GroupScopeViewState._unbindDevice.callback` | `lib/ui/screens/group_detail_screen.dart` |
-| [GF-00792](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L514) | callback | `_GroupScopeViewState._unbindDevice.callback` | `lib/ui/screens/group_detail_screen.dart` |
-| [GF-00793](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L520) | method | `_GroupScopeViewState._assignGroupRole` | `lib/ui/screens/group_detail_screen.dart` |
-| [GF-00794](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L526) | callback | `_GroupScopeViewState._assignGroupRole.callback` | `lib/ui/screens/group_detail_screen.dart` |
-| [GF-00795](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L547) | callback | `_GroupScopeViewState._assignGroupRole.callback` | `lib/ui/screens/group_detail_screen.dart` |
-| [GF-00796](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L553) | method | `_GroupScopeViewState._deleteGroupRole` | `lib/ui/screens/group_detail_screen.dart` |
-| [GF-00797](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L557) | callback | `_GroupScopeViewState._deleteGroupRole.callback` | `lib/ui/screens/group_detail_screen.dart` |
-| [GF-00798](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L571) | callback | `_GroupScopeViewState._deleteGroupRole.callback` | `lib/ui/screens/group_detail_screen.dart` |
-| [GF-00799](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L577) | method | `_GroupScopeViewState._showMessage` | `lib/ui/screens/group_detail_screen.dart` |
-| [GF-00800](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L584) | method | `_GroupScopeViewState._showError` | `lib/ui/screens/group_detail_screen.dart` |
+| [GF-00774](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L301) | callback | `_GroupScopeViewState.build.callback.callback` | `lib/ui/screens/group_detail_screen.dart` |
+| [GF-00775](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L359) | method | `_GroupScopeViewState._editGroup` | `lib/ui/screens/group_detail_screen.dart` |
+| [GF-00776](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L365) | callback | `_GroupScopeViewState._editGroup.callback` | `lib/ui/screens/group_detail_screen.dart` |
+| [GF-00777](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L380) | callback | `_GroupScopeViewState._editGroup.callback` | `lib/ui/screens/group_detail_screen.dart` |
+| [GF-00778](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L389) | callback | `_GroupScopeViewState._editGroup.callback` | `lib/ui/screens/group_detail_screen.dart` |
+| [GF-00779](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L395) | method | `_GroupScopeViewState._deleteGroup` | `lib/ui/screens/group_detail_screen.dart` |
+| [GF-00780](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L400) | callback | `_GroupScopeViewState._deleteGroup.callback` | `lib/ui/screens/group_detail_screen.dart` |
+| [GF-00781](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L406) | callback | `_GroupScopeViewState._deleteGroup.callback.callback` | `lib/ui/screens/group_detail_screen.dart` |
+| [GF-00782](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L411) | callback | `_GroupScopeViewState._deleteGroup.callback.callback` | `lib/ui/screens/group_detail_screen.dart` |
+| [GF-00783](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L423) | callback | `_GroupScopeViewState._deleteGroup.callback` | `lib/ui/screens/group_detail_screen.dart` |
+| [GF-00784](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L439) | callback | `_GroupScopeViewState._deleteGroup.callback` | `lib/ui/screens/group_detail_screen.dart` |
+| [GF-00785](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L445) | method | `_GroupScopeViewState._bindDevice` | `lib/ui/screens/group_detail_screen.dart` |
+| [GF-00786](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L452) | callback | `_GroupScopeViewState._bindDevice.callback` | `lib/ui/screens/group_detail_screen.dart` |
+| [GF-00787](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L459) | callback | `_GroupScopeViewState._bindDevice.callback` | `lib/ui/screens/group_detail_screen.dart` |
+| [GF-00788](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L472) | callback | `_GroupScopeViewState._bindDevice.callback` | `lib/ui/screens/group_detail_screen.dart` |
+| [GF-00789](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L486) | callback | `_GroupScopeViewState._bindDevice.callback` | `lib/ui/screens/group_detail_screen.dart` |
+| [GF-00790](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L492) | method | `_GroupScopeViewState._unbindDevice` | `lib/ui/screens/group_detail_screen.dart` |
+| [GF-00791](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L496) | callback | `_GroupScopeViewState._unbindDevice.callback` | `lib/ui/screens/group_detail_screen.dart` |
+| [GF-00792](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L510) | callback | `_GroupScopeViewState._unbindDevice.callback` | `lib/ui/screens/group_detail_screen.dart` |
+| [GF-00793](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L516) | method | `_GroupScopeViewState._assignGroupRole` | `lib/ui/screens/group_detail_screen.dart` |
+| [GF-00794](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L522) | callback | `_GroupScopeViewState._assignGroupRole.callback` | `lib/ui/screens/group_detail_screen.dart` |
+| [GF-00795](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L543) | callback | `_GroupScopeViewState._assignGroupRole.callback` | `lib/ui/screens/group_detail_screen.dart` |
+| [GF-00796](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L549) | method | `_GroupScopeViewState._deleteGroupRole` | `lib/ui/screens/group_detail_screen.dart` |
+| [GF-00797](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L553) | callback | `_GroupScopeViewState._deleteGroupRole.callback` | `lib/ui/screens/group_detail_screen.dart` |
+| [GF-00798](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L567) | callback | `_GroupScopeViewState._deleteGroupRole.callback` | `lib/ui/screens/group_detail_screen.dart` |
+| [GF-00799](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L573) | method | `_GroupScopeViewState._showMessage` | `lib/ui/screens/group_detail_screen.dart` |
+| [GF-00800](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L580) | method | `_GroupScopeViewState._showError` | `lib/ui/screens/group_detail_screen.dart` |
 | [GF-00801](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L597) | constructor | `_GroupRoleList` | `lib/ui/screens/group_detail_screen.dart` |
 | [GF-00802](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L603) | method | `_GroupRoleList.build` | `lib/ui/screens/group_detail_screen.dart` |
 | [GF-00803](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L608) | callback | `_GroupRoleList.build.callback` | `lib/ui/screens/group_detail_screen.dart` |
@@ -716,22 +713,22 @@
 | [GF-00813](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_management_screen.dart#L76) | callback | `_GroupManagementScreenState.build.callback` | `lib/ui/screens/group_management_screen.dart` |
 | [GF-00814](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_management_screen.dart#L79) | callback | `_GroupManagementScreenState.build.callback.callback` | `lib/ui/screens/group_management_screen.dart` |
 | [GF-00815](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_management_screen.dart#L84) | callback | `_GroupManagementScreenState.build.callback` | `lib/ui/screens/group_management_screen.dart` |
-| [GF-00816](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_management_screen.dart#L128) | method | `_GroupManagementScreenState._createGroup` | `lib/ui/screens/group_management_screen.dart` |
-| [GF-00817](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_management_screen.dart#L134) | callback | `_GroupManagementScreenState._createGroup.callback` | `lib/ui/screens/group_management_screen.dart` |
+| [GF-00816](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_management_screen.dart#L126) | method | `_GroupManagementScreenState._createGroup` | `lib/ui/screens/group_management_screen.dart` |
+| [GF-00817](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_management_screen.dart#L132) | callback | `_GroupManagementScreenState._createGroup.callback` | `lib/ui/screens/group_management_screen.dart` |
 | [GF-00818](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_management_screen.dart#L152) | callback | `_GroupManagementScreenState._createGroup.callback` | `lib/ui/screens/group_management_screen.dart` |
-| [GF-00819](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_management_screen.dart#L168) | callback | `_GroupManagementScreenState._createGroup.callback` | `lib/ui/screens/group_management_screen.dart` |
-| [GF-00820](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_management_screen.dart#L176) | constructor | `_GroupListTile` | `lib/ui/screens/group_management_screen.dart` |
-| [GF-00821](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_management_screen.dart#L187) | method | `_GroupListTile.build` | `lib/ui/screens/group_management_screen.dart` |
-| [GF-00822](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_management_screen.dart#L213) | callback | `_GroupListTile.build.callback` | `lib/ui/screens/group_management_screen.dart` |
-| [GF-00823](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_management_screen.dart#L216) | callback | `_GroupListTile.build.callback.callback` | `lib/ui/screens/group_management_screen.dart` |
+| [GF-00819](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_management_screen.dart#L172) | callback | `_GroupManagementScreenState._createGroup.callback` | `lib/ui/screens/group_management_screen.dart` |
+| [GF-00820](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_management_screen.dart#L180) | constructor | `_GroupListTile` | `lib/ui/screens/group_management_screen.dart` |
+| [GF-00821](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_management_screen.dart#L191) | method | `_GroupListTile.build` | `lib/ui/screens/group_management_screen.dart` |
+| [GF-00822](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_management_screen.dart#L217) | callback | `_GroupListTile.build.callback` | `lib/ui/screens/group_management_screen.dart` |
+| [GF-00823](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_management_screen.dart#L220) | callback | `_GroupListTile.build.callback.callback` | `lib/ui/screens/group_management_screen.dart` |
 | [GF-00824](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/login_screen.dart#L11) | constructor | `LoginScreen` | `lib/ui/screens/login_screen.dart` |
-| [GF-00825](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/login_screen.dart#L45) | method | `LoginScreen._showRegistrationDialog` | `lib/ui/screens/login_screen.dart` |
-| [GF-00826](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/login_screen.dart#L49) | callback | `LoginScreen._showRegistrationDialog.callback` | `lib/ui/screens/login_screen.dart` |
-| [GF-00827](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/login_screen.dart#L63) | callback | `LoginScreen._showRegistrationDialog.callback.callback` | `lib/ui/screens/login_screen.dart` |
-| [GF-00828](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/login_screen.dart#L72) | method | `LoginScreen.build` | `lib/ui/screens/login_screen.dart` |
-| [GF-00829](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/login_screen.dart#L164) | callback | `LoginScreen.build.callback` | `lib/ui/screens/login_screen.dart` |
-| [GF-00830](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/login_screen.dart#L307) | constructor | `_SupportLine` | `lib/ui/screens/login_screen.dart` |
-| [GF-00831](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/login_screen.dart#L313) | method | `_SupportLine.build` | `lib/ui/screens/login_screen.dart` |
+| [GF-00825](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/login_screen.dart#L49) | method | `LoginScreen._showRegistrationDialog` | `lib/ui/screens/login_screen.dart` |
+| [GF-00826](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/login_screen.dart#L53) | callback | `LoginScreen._showRegistrationDialog.callback` | `lib/ui/screens/login_screen.dart` |
+| [GF-00827](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/login_screen.dart#L67) | callback | `LoginScreen._showRegistrationDialog.callback.callback` | `lib/ui/screens/login_screen.dart` |
+| [GF-00828](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/login_screen.dart#L76) | method | `LoginScreen.build` | `lib/ui/screens/login_screen.dart` |
+| [GF-00829](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/login_screen.dart#L200) | callback | `LoginScreen.build.callback` | `lib/ui/screens/login_screen.dart` |
+| [GF-00830](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/login_screen.dart#L337) | constructor | `_SupportLine` | `lib/ui/screens/login_screen.dart` |
+| [GF-00831](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/login_screen.dart#L343) | method | `_SupportLine.build` | `lib/ui/screens/login_screen.dart` |
 | [GF-00832](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/management_screen.dart#L20) | constructor | `ManagementScreen` | `lib/ui/screens/management_screen.dart` |
 | [GF-00833](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/management_screen.dart#L25) | method | `ManagementScreen.createState` | `lib/ui/screens/management_screen.dart` |
 | [GF-00834](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/management_screen.dart#L33) | method | `_ManagementScreenState.initState` | `lib/ui/screens/management_screen.dart` |
@@ -746,15 +743,14 @@
 | [GF-00843](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/management_screen.dart#L118) | callback | `_ManagementScreenState._openProject.callback` | `lib/ui/screens/management_screen.dart` |
 | [GF-00844](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/policy_screen.dart#L14) | constructor | `PolicyScreen` | `lib/ui/screens/policy_screen.dart` |
 | [GF-00845](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/policy_screen.dart#L17) | method | `PolicyScreen.build` | `lib/ui/screens/policy_screen.dart` |
-| [GF-00846](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/policy_screen.dart#L76) | callback | `PolicyScreen.build.callback` | `lib/ui/screens/policy_screen.dart` |
-| [GF-00847](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/policy_screen.dart#L78) | callback | `PolicyScreen.build.callback` | `lib/ui/screens/policy_screen.dart` |
-| [GF-00848](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/policy_screen.dart#L80) | callback | `PolicyScreen.build.callback` | `lib/ui/screens/policy_screen.dart` |
-| [GF-00849](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/policy_screen.dart#L89) | constructor | `_PolicyForm` | `lib/ui/screens/policy_screen.dart` |
-| [GF-00850](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/policy_screen.dart#L94) | method | `_PolicyForm.build` | `lib/ui/screens/policy_screen.dart` |
-| [GF-00851](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/policy_screen.dart#L100) | function | `_PolicyForm.build.update` | `lib/ui/screens/policy_screen.dart` |
-| [GF-00852](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/policy_screen.dart#L132) | callback | `_PolicyForm.build.callback` | `lib/ui/screens/policy_screen.dart` |
-| [GF-00853](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/policy_screen.dart#L145) | callback | `_PolicyForm.build.callback` | `lib/ui/screens/policy_screen.dart` |
-| [GF-00854](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/policy_screen.dart#L161) | callback | `_PolicyForm.build.callback` | `lib/ui/screens/policy_screen.dart` |
+| [GF-00846](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/policy_screen.dart#L73) | callback | `PolicyScreen.build.callback` | `lib/ui/screens/policy_screen.dart` |
+| [GF-00847](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/policy_screen.dart#L75) | callback | `PolicyScreen.build.callback` | `lib/ui/screens/policy_screen.dart` |
+| [GF-00848](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/policy_screen.dart#L77) | callback | `PolicyScreen.build.callback` | `lib/ui/screens/policy_screen.dart` |
+| [GF-00849](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/policy_screen.dart#L86) | constructor | `_PolicyForm` | `lib/ui/screens/policy_screen.dart` |
+| [GF-00850](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/policy_screen.dart#L91) | method | `_PolicyForm.build` | `lib/ui/screens/policy_screen.dart` |
+| [GF-00851](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/policy_screen.dart#L96) | function | `_PolicyForm.build.update` | `lib/ui/screens/policy_screen.dart` |
+| [GF-00852](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/policy_screen.dart#L127) | callback | `_PolicyForm.build.callback` | `lib/ui/screens/policy_screen.dart` |
+| [GF-00853](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/policy_screen.dart#L137) | callback | `_PolicyForm.build.callback` | `lib/ui/screens/policy_screen.dart` |
 | [GF-00855](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L21) | constructor | `ProjectScopeScreen` | `lib/ui/screens/project_management_screen.dart` |
 | [GF-00856](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L31) | method | `ProjectScopeScreen.build` | `lib/ui/screens/project_management_screen.dart` |
 | [GF-00857](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L57) | constructor | `ProjectAdminScreen` | `lib/ui/screens/project_management_screen.dart` |
@@ -776,62 +772,54 @@
 | [GF-00873](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L278) | callback | `_ProjectScopeViewState.build.callback.callback` | `lib/ui/screens/project_management_screen.dart` |
 | [GF-00874](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L283) | callback | `_ProjectScopeViewState.build.callback` | `lib/ui/screens/project_management_screen.dart` |
 | [GF-00875](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L304) | callback | `_ProjectScopeViewState.build.callback.callback` | `lib/ui/screens/project_management_screen.dart` |
-| [GF-00876](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L354) | method | `_ProjectScopeViewState._createGroup` | `lib/ui/screens/project_management_screen.dart` |
-| [GF-00877](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L360) | callback | `_ProjectScopeViewState._createGroup.callback` | `lib/ui/screens/project_management_screen.dart` |
-| [GF-00878](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L379) | callback | `_ProjectScopeViewState._createGroup.callback` | `lib/ui/screens/project_management_screen.dart` |
-| [GF-00879](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L385) | method | `_ProjectScopeViewState._assignProjectRole` | `lib/ui/screens/project_management_screen.dart` |
-| [GF-00880](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L391) | callback | `_ProjectScopeViewState._assignProjectRole.callback` | `lib/ui/screens/project_management_screen.dart` |
-| [GF-00881](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L411) | callback | `_ProjectScopeViewState._assignProjectRole.callback` | `lib/ui/screens/project_management_screen.dart` |
-| [GF-00882](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L417) | method | `_ProjectScopeViewState._deleteProjectRole` | `lib/ui/screens/project_management_screen.dart` |
-| [GF-00883](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L421) | callback | `_ProjectScopeViewState._deleteProjectRole.callback` | `lib/ui/screens/project_management_screen.dart` |
-| [GF-00884](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L435) | callback | `_ProjectScopeViewState._deleteProjectRole.callback` | `lib/ui/screens/project_management_screen.dart` |
-| [GF-00885](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L441) | method | `_ProjectScopeViewState._revokeDevice` | `lib/ui/screens/project_management_screen.dart` |
-| [GF-00886](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L446) | callback | `_ProjectScopeViewState._revokeDevice.callback` | `lib/ui/screens/project_management_screen.dart` |
-| [GF-00887](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L452) | callback | `_ProjectScopeViewState._revokeDevice.callback.callback` | `lib/ui/screens/project_management_screen.dart` |
-| [GF-00888](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L457) | callback | `_ProjectScopeViewState._revokeDevice.callback.callback` | `lib/ui/screens/project_management_screen.dart` |
-| [GF-00889](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L469) | callback | `_ProjectScopeViewState._revokeDevice.callback` | `lib/ui/screens/project_management_screen.dart` |
-| [GF-00890](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L483) | callback | `_ProjectScopeViewState._revokeDevice.callback` | `lib/ui/screens/project_management_screen.dart` |
-| [GF-00891](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L489) | method | `_ProjectScopeViewState._showMessage` | `lib/ui/screens/project_management_screen.dart` |
-| [GF-00892](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L496) | method | `_ProjectScopeViewState._showError` | `lib/ui/screens/project_management_screen.dart` |
-| [GF-00893](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L509) | constructor | `_GroupList` | `lib/ui/screens/project_management_screen.dart` |
-| [GF-00894](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L520) | method | `_GroupList.build` | `lib/ui/screens/project_management_screen.dart` |
-| [GF-00895](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L545) | constructor | `_GroupTile` | `lib/ui/screens/project_management_screen.dart` |
-| [GF-00896](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L551) | method | `_GroupTile.build` | `lib/ui/screens/project_management_screen.dart` |
-| [GF-00897](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L566) | callback | `_GroupTile.build.callback` | `lib/ui/screens/project_management_screen.dart` |
-| [GF-00898](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L569) | callback | `_GroupTile.build.callback.callback` | `lib/ui/screens/project_management_screen.dart` |
-| [GF-00899](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L578) | constructor | `_ProjectRoleList` | `lib/ui/screens/project_management_screen.dart` |
-| [GF-00900](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L584) | method | `_ProjectRoleList.build` | `lib/ui/screens/project_management_screen.dart` |
-| [GF-00901](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L589) | callback | `_ProjectRoleList.build.callback` | `lib/ui/screens/project_management_screen.dart` |
-| [GF-00902](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L591) | callback | `_ProjectRoleList.build.callback` | `lib/ui/screens/project_management_screen.dart` |
-| [GF-00903](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L595) | callback | `_ProjectRoleList.build.callback.callback` | `lib/ui/screens/project_management_screen.dart` |
-| [GF-00904](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L598) | callback | `_ProjectRoleList.build.callback` | `lib/ui/screens/project_management_screen.dart` |
-| [GF-00905](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L622) | callback | `_ProjectRoleList.build.callback.callback` | `lib/ui/screens/project_management_screen.dart` |
-| [GF-00906](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L13) | constructor | `RegisterDeviceScreen` | `lib/ui/screens/register_device_screen.dart` |
-| [GF-00907](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L25) | method | `RegisterDeviceScreen.createState` | `lib/ui/screens/register_device_screen.dart` |
-| [GF-00908](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L36) | method | `_RegisterDeviceScreenState.initState` | `lib/ui/screens/register_device_screen.dart` |
-| [GF-00909](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L43) | method | `_RegisterDeviceScreenState.dispose` | `lib/ui/screens/register_device_screen.dart` |
-| [GF-00910](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L50) | method | `_RegisterDeviceScreenState.build` | `lib/ui/screens/register_device_screen.dart` |
-| [GF-00911](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L102) | callback | `_RegisterDeviceScreenState.build.callback` | `lib/ui/screens/register_device_screen.dart` |
-| [GF-00912](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L104) | callback | `_RegisterDeviceScreenState.build.callback` | `lib/ui/screens/register_device_screen.dart` |
-| [GF-00913](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L106) | callback | `_RegisterDeviceScreenState.build.callback` | `lib/ui/screens/register_device_screen.dart` |
-| [GF-00914](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L146) | callback | `_RegisterDeviceScreenState.build.callback` | `lib/ui/screens/register_device_screen.dart` |
-| [GF-00915](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L153) | callback | `_RegisterDeviceScreenState.build.callback` | `lib/ui/screens/register_device_screen.dart` |
-| [GF-00916](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L155) | callback | `_RegisterDeviceScreenState.build.callback` | `lib/ui/screens/register_device_screen.dart` |
-| [GF-00917](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L159) | callback | `_RegisterDeviceScreenState.build.callback.callback` | `lib/ui/screens/register_device_screen.dart` |
-| [GF-00918](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L164) | callback | `_RegisterDeviceScreenState.build.callback` | `lib/ui/screens/register_device_screen.dart` |
-| [GF-00919](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L216) | callback | `_RegisterDeviceScreenState.build.callback` | `lib/ui/screens/register_device_screen.dart` |
-| [GF-00920](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L218) | callback | `_RegisterDeviceScreenState.build.callback.callback` | `lib/ui/screens/register_device_screen.dart` |
-| [GF-00921](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L309) | method | `_RegisterDeviceScreenState._register` | `lib/ui/screens/register_device_screen.dart` |
-| [GF-00922](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L313) | callback | `_RegisterDeviceScreenState._register.callback` | `lib/ui/screens/register_device_screen.dart` |
-| [GF-00923](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L330) | callback | `_RegisterDeviceScreenState._register.callback` | `lib/ui/screens/register_device_screen.dart` |
-| [GF-00924](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L350) | callback | `_RegisterDeviceScreenState._register.callback.callback` | `lib/ui/screens/register_device_screen.dart` |
-| [GF-00925](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L355) | callback | `_RegisterDeviceScreenState._register.callback.callback` | `lib/ui/screens/register_device_screen.dart` |
-| [GF-00926](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L372) | callback | `_RegisterDeviceScreenState._register.callback` | `lib/ui/screens/register_device_screen.dart` |
-| [GF-00927](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L379) | callback | `_RegisterDeviceScreenState._register.callback` | `lib/ui/screens/register_device_screen.dart` |
-| [GF-00928](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L387) | constructor | `_CheckLine` | `lib/ui/screens/register_device_screen.dart` |
-| [GF-00929](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L398) | method | `_CheckLine.build` | `lib/ui/screens/register_device_screen.dart` |
-| [GF-00930](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L428) | constructor | `_FlowStep` | `lib/ui/screens/register_device_screen.dart` |
-| [GF-00931](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L434) | method | `_FlowStep.build` | `lib/ui/screens/register_device_screen.dart` |
+| [GF-00876](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L353) | method | `_ProjectScopeViewState._createGroup` | `lib/ui/screens/project_management_screen.dart` |
+| [GF-00877](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L359) | callback | `_ProjectScopeViewState._createGroup.callback` | `lib/ui/screens/project_management_screen.dart` |
+| [GF-00878](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L378) | callback | `_ProjectScopeViewState._createGroup.callback` | `lib/ui/screens/project_management_screen.dart` |
+| [GF-00879](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L384) | method | `_ProjectScopeViewState._assignProjectRole` | `lib/ui/screens/project_management_screen.dart` |
+| [GF-00880](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L390) | callback | `_ProjectScopeViewState._assignProjectRole.callback` | `lib/ui/screens/project_management_screen.dart` |
+| [GF-00881](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L410) | callback | `_ProjectScopeViewState._assignProjectRole.callback` | `lib/ui/screens/project_management_screen.dart` |
+| [GF-00882](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L416) | method | `_ProjectScopeViewState._deleteProjectRole` | `lib/ui/screens/project_management_screen.dart` |
+| [GF-00883](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L420) | callback | `_ProjectScopeViewState._deleteProjectRole.callback` | `lib/ui/screens/project_management_screen.dart` |
+| [GF-00884](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L434) | callback | `_ProjectScopeViewState._deleteProjectRole.callback` | `lib/ui/screens/project_management_screen.dart` |
+| [GF-00885](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L440) | method | `_ProjectScopeViewState._revokeDevice` | `lib/ui/screens/project_management_screen.dart` |
+| [GF-00886](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L445) | callback | `_ProjectScopeViewState._revokeDevice.callback` | `lib/ui/screens/project_management_screen.dart` |
+| [GF-00887](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L451) | callback | `_ProjectScopeViewState._revokeDevice.callback.callback` | `lib/ui/screens/project_management_screen.dart` |
+| [GF-00888](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L456) | callback | `_ProjectScopeViewState._revokeDevice.callback.callback` | `lib/ui/screens/project_management_screen.dart` |
+| [GF-00889](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L468) | callback | `_ProjectScopeViewState._revokeDevice.callback` | `lib/ui/screens/project_management_screen.dart` |
+| [GF-00890](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L482) | callback | `_ProjectScopeViewState._revokeDevice.callback` | `lib/ui/screens/project_management_screen.dart` |
+| [GF-00891](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L488) | method | `_ProjectScopeViewState._showMessage` | `lib/ui/screens/project_management_screen.dart` |
+| [GF-00892](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L495) | method | `_ProjectScopeViewState._showError` | `lib/ui/screens/project_management_screen.dart` |
+| [GF-00893](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L512) | constructor | `_GroupList` | `lib/ui/screens/project_management_screen.dart` |
+| [GF-00894](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L523) | method | `_GroupList.build` | `lib/ui/screens/project_management_screen.dart` |
+| [GF-00895](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L551) | constructor | `_GroupTile` | `lib/ui/screens/project_management_screen.dart` |
+| [GF-00896](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L557) | method | `_GroupTile.build` | `lib/ui/screens/project_management_screen.dart` |
+| [GF-00897](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L572) | callback | `_GroupTile.build.callback` | `lib/ui/screens/project_management_screen.dart` |
+| [GF-00898](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L575) | callback | `_GroupTile.build.callback.callback` | `lib/ui/screens/project_management_screen.dart` |
+| [GF-00899](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L584) | constructor | `_ProjectRoleList` | `lib/ui/screens/project_management_screen.dart` |
+| [GF-00900](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L590) | method | `_ProjectRoleList.build` | `lib/ui/screens/project_management_screen.dart` |
+| [GF-00901](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L595) | callback | `_ProjectRoleList.build.callback` | `lib/ui/screens/project_management_screen.dart` |
+| [GF-00902](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L597) | callback | `_ProjectRoleList.build.callback` | `lib/ui/screens/project_management_screen.dart` |
+| [GF-00903](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L601) | callback | `_ProjectRoleList.build.callback.callback` | `lib/ui/screens/project_management_screen.dart` |
+| [GF-00904](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L604) | callback | `_ProjectRoleList.build.callback` | `lib/ui/screens/project_management_screen.dart` |
+| [GF-00905](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/project_management_screen.dart#L628) | callback | `_ProjectRoleList.build.callback.callback` | `lib/ui/screens/project_management_screen.dart` |
+| [GF-00906](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L12) | constructor | `RegisterDeviceScreen` | `lib/ui/screens/register_device_screen.dart` |
+| [GF-00907](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L24) | method | `RegisterDeviceScreen.createState` | `lib/ui/screens/register_device_screen.dart` |
+| [GF-00908](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L35) | method | `_RegisterDeviceScreenState.initState` | `lib/ui/screens/register_device_screen.dart` |
+| [GF-00909](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L42) | method | `_RegisterDeviceScreenState.dispose` | `lib/ui/screens/register_device_screen.dart` |
+| [GF-00910](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L49) | method | `_RegisterDeviceScreenState.build` | `lib/ui/screens/register_device_screen.dart` |
+| [GF-00919](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L141) | callback | `_RegisterDeviceScreenState.build.callback` | `lib/ui/screens/register_device_screen.dart` |
+| [GF-00920](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L143) | callback | `_RegisterDeviceScreenState.build.callback.callback` | `lib/ui/screens/register_device_screen.dart` |
+| [GF-00921](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L214) | method | `_RegisterDeviceScreenState._register` | `lib/ui/screens/register_device_screen.dart` |
+| [GF-00922](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L218) | callback | `_RegisterDeviceScreenState._register.callback` | `lib/ui/screens/register_device_screen.dart` |
+| [GF-00923](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L235) | callback | `_RegisterDeviceScreenState._register.callback` | `lib/ui/screens/register_device_screen.dart` |
+| [GF-00924](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L254) | callback | `_RegisterDeviceScreenState._register.callback.callback` | `lib/ui/screens/register_device_screen.dart` |
+| [GF-00925](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L259) | callback | `_RegisterDeviceScreenState._register.callback.callback` | `lib/ui/screens/register_device_screen.dart` |
+| [GF-00926](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L276) | callback | `_RegisterDeviceScreenState._register.callback` | `lib/ui/screens/register_device_screen.dart` |
+| [GF-00927](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L284) | callback | `_RegisterDeviceScreenState._register.callback` | `lib/ui/screens/register_device_screen.dart` |
+| [GF-00928](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L293) | constructor | `_CheckLine` | `lib/ui/screens/register_device_screen.dart` |
+| [GF-00929](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L304) | method | `_CheckLine.build` | `lib/ui/screens/register_device_screen.dart` |
+| [GF-00930](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L334) | constructor | `_FlowStep` | `lib/ui/screens/register_device_screen.dart` |
+| [GF-00931](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L340) | method | `_FlowStep.build` | `lib/ui/screens/register_device_screen.dart` |
 | [GF-00932](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L17) | constructor | `SettingsScreen` | `lib/ui/screens/settings_screen.dart` |
 | [GF-00933](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L27) | method | `SettingsScreen.build` | `lib/ui/screens/settings_screen.dart` |
 | [GF-00934](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L32) | callback | `SettingsScreen.build.callback` | `lib/ui/screens/settings_screen.dart` |
@@ -844,40 +832,40 @@
 | [GF-00941](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L89) | method | `_SettingsFormState.dispose` | `lib/ui/screens/settings_screen.dart` |
 | [GF-00942](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L99) | getter | `_SettingsFormState._edited` | `lib/ui/screens/settings_screen.dart` |
 | [GF-00943](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L107) | method | `_SettingsFormState.build` | `lib/ui/screens/settings_screen.dart` |
-| [GF-00944](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L129) | callback | `_SettingsFormState.build.callback` | `lib/ui/screens/settings_screen.dart` |
-| [GF-00945](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L133) | callback | `_SettingsFormState.build.callback.callback` | `lib/ui/screens/settings_screen.dart` |
-| [GF-00946](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L138) | callback | `_SettingsFormState.build.callback.callback.callback` | `lib/ui/screens/settings_screen.dart` |
-| [GF-00947](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L255) | callback | `_SettingsFormState.build.callback` | `lib/ui/screens/settings_screen.dart` |
-| [GF-00948](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L359) | method | `_SettingsFormState._redirectAllowList` | `lib/ui/screens/settings_screen.dart` |
-| [GF-00949](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L363) | callback | `_SettingsFormState._redirectAllowList.callback` | `lib/ui/screens/settings_screen.dart` |
-| [GF-00950](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L370) | method | `_SettingsFormState._copyRedirectUris` | `lib/ui/screens/settings_screen.dart` |
-| [GF-00951](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L384) | method | `_SettingsFormState._save` | `lib/ui/screens/settings_screen.dart` |
-| [GF-00952](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L388) | callback | `_SettingsFormState._save.callback` | `lib/ui/screens/settings_screen.dart` |
-| [GF-00953](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L406) | callback | `_SettingsFormState._save.callback` | `lib/ui/screens/settings_screen.dart` |
-| [GF-00954](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L413) | callback | `_SettingsFormState._save.callback` | `lib/ui/screens/settings_screen.dart` |
-| [GF-00955](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L419) | method | `_SettingsFormState._reset` | `lib/ui/screens/settings_screen.dart` |
-| [GF-00956](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L423) | callback | `_SettingsFormState._reset.callback` | `lib/ui/screens/settings_screen.dart` |
-| [GF-00957](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L449) | callback | `_SettingsFormState._reset.callback` | `lib/ui/screens/settings_screen.dart` |
-| [GF-00958](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L456) | callback | `_SettingsFormState._reset.callback` | `lib/ui/screens/settings_screen.dart` |
-| [GF-00959](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L462) | method | `_SettingsFormState._checkHealth` | `lib/ui/screens/settings_screen.dart` |
-| [GF-00960](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L466) | callback | `_SettingsFormState._checkHealth.callback` | `lib/ui/screens/settings_screen.dart` |
-| [GF-00961](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L478) | callback | `_SettingsFormState._checkHealth.callback` | `lib/ui/screens/settings_screen.dart` |
-| [GF-00962](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L488) | callback | `_SettingsFormState._checkHealth.callback` | `lib/ui/screens/settings_screen.dart` |
-| [GF-00963](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L495) | callback | `_SettingsFormState._checkHealth.callback` | `lib/ui/screens/settings_screen.dart` |
-| [GF-00964](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L501) | method | `_SettingsFormState._signOut` | `lib/ui/screens/settings_screen.dart` |
+| [GF-00944](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L135) | callback | `_SettingsFormState.build.callback` | `lib/ui/screens/settings_screen.dart` |
+| [GF-00945](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L139) | callback | `_SettingsFormState.build.callback.callback` | `lib/ui/screens/settings_screen.dart` |
+| [GF-00946](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L144) | callback | `_SettingsFormState.build.callback.callback.callback` | `lib/ui/screens/settings_screen.dart` |
+| [GF-00947](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L256) | callback | `_SettingsFormState.build.callback` | `lib/ui/screens/settings_screen.dart` |
+| [GF-00948](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L352) | method | `_SettingsFormState._redirectAllowList` | `lib/ui/screens/settings_screen.dart` |
+| [GF-00949](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L362) | callback | `_SettingsFormState._redirectAllowList.callback` | `lib/ui/screens/settings_screen.dart` |
+| [GF-00950](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L369) | method | `_SettingsFormState._copyRedirectUris` | `lib/ui/screens/settings_screen.dart` |
+| [GF-00951](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L383) | method | `_SettingsFormState._save` | `lib/ui/screens/settings_screen.dart` |
+| [GF-00952](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L387) | callback | `_SettingsFormState._save.callback` | `lib/ui/screens/settings_screen.dart` |
+| [GF-00953](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L405) | callback | `_SettingsFormState._save.callback` | `lib/ui/screens/settings_screen.dart` |
+| [GF-00954](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L412) | callback | `_SettingsFormState._save.callback` | `lib/ui/screens/settings_screen.dart` |
+| [GF-00955](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L418) | method | `_SettingsFormState._reset` | `lib/ui/screens/settings_screen.dart` |
+| [GF-00956](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L422) | callback | `_SettingsFormState._reset.callback` | `lib/ui/screens/settings_screen.dart` |
+| [GF-00957](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L448) | callback | `_SettingsFormState._reset.callback` | `lib/ui/screens/settings_screen.dart` |
+| [GF-00958](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L455) | callback | `_SettingsFormState._reset.callback` | `lib/ui/screens/settings_screen.dart` |
+| [GF-00959](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L461) | method | `_SettingsFormState._checkHealth` | `lib/ui/screens/settings_screen.dart` |
+| [GF-00960](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L465) | callback | `_SettingsFormState._checkHealth.callback` | `lib/ui/screens/settings_screen.dart` |
+| [GF-00961](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L477) | callback | `_SettingsFormState._checkHealth.callback` | `lib/ui/screens/settings_screen.dart` |
+| [GF-00962](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L487) | callback | `_SettingsFormState._checkHealth.callback` | `lib/ui/screens/settings_screen.dart` |
+| [GF-00963](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L494) | callback | `_SettingsFormState._checkHealth.callback` | `lib/ui/screens/settings_screen.dart` |
+| [GF-00964](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L500) | method | `_SettingsFormState._signOut` | `lib/ui/screens/settings_screen.dart` |
 | [GF-00965](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/support_screen.dart#L18) | constructor | `SupportScreen` | `lib/ui/screens/support_screen.dart` |
 | [GF-00966](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/support_screen.dart#L23) | method | `SupportScreen.build` | `lib/ui/screens/support_screen.dart` |
 | [GF-00967](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/support_screen.dart#L41) | callback | `SupportScreen.build.callback` | `lib/ui/screens/support_screen.dart` |
 | [GF-00968](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/support_screen.dart#L57) | callback | `SupportScreen.build.callback` | `lib/ui/screens/support_screen.dart` |
-| [GF-00969](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/support_screen.dart#L73) | callback | `SupportScreen.build.callback` | `lib/ui/screens/support_screen.dart` |
-| [GF-00970](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/support_screen.dart#L75) | callback | `SupportScreen.build.callback` | `lib/ui/screens/support_screen.dart` |
-| [GF-00971](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/support_screen.dart#L78) | callback | `SupportScreen.build.callback.callback` | `lib/ui/screens/support_screen.dart` |
-| [GF-00972](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/support_screen.dart#L83) | callback | `SupportScreen.build.callback` | `lib/ui/screens/support_screen.dart` |
-| [GF-00973](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/support_screen.dart#L162) | constructor | `_SupportTable` | `lib/ui/screens/support_screen.dart` |
-| [GF-00974](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/support_screen.dart#L173) | method | `_SupportTable.build` | `lib/ui/screens/support_screen.dart` |
-| [GF-00975](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/support_screen.dart#L196) | method | `_SupportTable._row` | `lib/ui/screens/support_screen.dart` |
-| [GF-00976](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/support_screen.dart#L223) | method | `_SupportTable._mark` | `lib/ui/screens/support_screen.dart` |
-| [GF-00977](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/support_screen.dart#L232) | method | `_SupportTable.platformName` | `lib/ui/screens/support_screen.dart` |
+| [GF-00969](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/support_screen.dart#L72) | callback | `SupportScreen.build.callback` | `lib/ui/screens/support_screen.dart` |
+| [GF-00970](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/support_screen.dart#L74) | callback | `SupportScreen.build.callback` | `lib/ui/screens/support_screen.dart` |
+| [GF-00971](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/support_screen.dart#L77) | callback | `SupportScreen.build.callback.callback` | `lib/ui/screens/support_screen.dart` |
+| [GF-00972](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/support_screen.dart#L82) | callback | `SupportScreen.build.callback` | `lib/ui/screens/support_screen.dart` |
+| [GF-00973](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/support_screen.dart#L142) | constructor | `_SupportTable` | `lib/ui/screens/support_screen.dart` |
+| [GF-00974](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/support_screen.dart#L153) | method | `_SupportTable.build` | `lib/ui/screens/support_screen.dart` |
+| [GF-00975](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/support_screen.dart#L177) | method | `_SupportTable._row` | `lib/ui/screens/support_screen.dart` |
+| [GF-00976](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/support_screen.dart#L205) | method | `_SupportTable._mark` | `lib/ui/screens/support_screen.dart` |
+| [GF-00977](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/support_screen.dart#L214) | method | `_SupportTable.platformName` | `lib/ui/screens/support_screen.dart` |
 | [GF-00978](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/common.dart#L8) | constructor | `ErrorCard` | `lib/ui/widgets/common.dart` |
 | [GF-00979](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/common.dart#L20) | method | `ErrorCard.build` | `lib/ui/widgets/common.dart` |
 | [GF-00980](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/common.dart#L86) | constructor | `EmptyState` | `lib/ui/widgets/common.dart` |
@@ -902,12 +890,12 @@
 | [GF-00999](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/role_badge.dart#L34) | method | `RoleBadge.build` | `lib/ui/widgets/role_badge.dart` |
 | [GF-01000](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/role_badge.dart#L69) | constructor | `RoleCapabilityCard` | `lib/ui/widgets/role_badge.dart` |
 | [GF-01001](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/role_badge.dart#L81) | method | `RoleCapabilityCard.build` | `lib/ui/widgets/role_badge.dart` |
-| [GF-01002](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/role_badge.dart#L140) | constructor | `RoleNotice` | `lib/ui/widgets/role_badge.dart` |
-| [GF-01003](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/role_badge.dart#L152) | method | `RoleNotice.build` | `lib/ui/widgets/role_badge.dart` |
-| [GF-01004](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/role_badge.dart#L205) | constructor | `RoleNoneScreen` | `lib/ui/widgets/role_badge.dart` |
-| [GF-01005](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/role_badge.dart#L217) | method | `RoleNoneScreen.build` | `lib/ui/widgets/role_badge.dart` |
-| [GF-01006](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/role_badge.dart#L257) | constructor | `_Capability` | `lib/ui/widgets/role_badge.dart` |
-| [GF-01007](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/role_badge.dart#L268) | method | `_Capability.build` | `lib/ui/widgets/role_badge.dart` |
+| [GF-01002](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/role_badge.dart#L150) | constructor | `RoleNotice` | `lib/ui/widgets/role_badge.dart` |
+| [GF-01003](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/role_badge.dart#L162) | method | `RoleNotice.build` | `lib/ui/widgets/role_badge.dart` |
+| [GF-01004](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/role_badge.dart#L215) | constructor | `RoleNoneScreen` | `lib/ui/widgets/role_badge.dart` |
+| [GF-01005](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/role_badge.dart#L227) | method | `RoleNoneScreen.build` | `lib/ui/widgets/role_badge.dart` |
+| [GF-01006](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/role_badge.dart#L269) | constructor | `_Capability` | `lib/ui/widgets/role_badge.dart` |
+| [GF-01007](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/role_badge.dart#L280) | method | `_Capability.build` | `lib/ui/widgets/role_badge.dart` |
 | [GF-01008](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/role_dialogs.dart#L10) | constructor | `GroupFormResult` | `lib/ui/widgets/role_dialogs.dart` |
 | [GF-01009](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/role_dialogs.dart#L22) | function | `top level.showGroupFormDialog` | `lib/ui/widgets/role_dialogs.dart` |
 | [GF-01010](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/role_dialogs.dart#L29) | callback | `top level.showGroupFormDialog.callback` | `lib/ui/widgets/role_dialogs.dart` |
@@ -917,28 +905,28 @@
 | [GF-01014](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/role_dialogs.dart#L54) | method | `_GroupFormDialogState.initState` | `lib/ui/widgets/role_dialogs.dart` |
 | [GF-01015](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/role_dialogs.dart#L63) | method | `_GroupFormDialogState.dispose` | `lib/ui/widgets/role_dialogs.dart` |
 | [GF-01016](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/role_dialogs.dart#L71) | method | `_GroupFormDialogState.build` | `lib/ui/widgets/role_dialogs.dart` |
-| [GF-01017](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/role_dialogs.dart#L115) | callback | `_GroupFormDialogState.build.callback` | `lib/ui/widgets/role_dialogs.dart` |
-| [GF-01018](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/role_dialogs.dart#L117) | callback | `_GroupFormDialogState.build.callback.callback` | `lib/ui/widgets/role_dialogs.dart` |
-| [GF-01019](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/role_dialogs.dart#L134) | callback | `_GroupFormDialogState.build.callback` | `lib/ui/widgets/role_dialogs.dart` |
-| [GF-01020](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/role_dialogs.dart#L146) | method | `_GroupFormDialogState._submit` | `lib/ui/widgets/role_dialogs.dart` |
-| [GF-01021](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/role_dialogs.dart#L152) | callback | `_GroupFormDialogState._submit.callback` | `lib/ui/widgets/role_dialogs.dart` |
-| [GF-01022](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/role_dialogs.dart#L159) | callback | `_GroupFormDialogState._submit.callback` | `lib/ui/widgets/role_dialogs.dart` |
-| [GF-01023](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/role_dialogs.dart#L171) | constructor | `RoleBindingInput` | `lib/ui/widgets/role_dialogs.dart` |
-| [GF-01024](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/role_dialogs.dart#L178) | function | `top level.showRoleBindingDialog` | `lib/ui/widgets/role_dialogs.dart` |
-| [GF-01025](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/role_dialogs.dart#L185) | callback | `top level.showRoleBindingDialog.callback` | `lib/ui/widgets/role_dialogs.dart` |
-| [GF-01026](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/role_dialogs.dart#L191) | constructor | `_RoleBindingDialog` | `lib/ui/widgets/role_dialogs.dart` |
-| [GF-01027](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/role_dialogs.dart#L196) | method | `_RoleBindingDialog.createState` | `lib/ui/widgets/role_dialogs.dart` |
-| [GF-01028](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/role_dialogs.dart#L206) | method | `_RoleBindingDialogState.dispose` | `lib/ui/widgets/role_dialogs.dart` |
-| [GF-01029](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/role_dialogs.dart#L213) | method | `_RoleBindingDialogState.build` | `lib/ui/widgets/role_dialogs.dart` |
-| [GF-01030](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/role_dialogs.dart#L248) | callback | `_RoleBindingDialogState.build.callback` | `lib/ui/widgets/role_dialogs.dart` |
-| [GF-01031](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/role_dialogs.dart#L250) | callback | `_RoleBindingDialogState.build.callback.callback` | `lib/ui/widgets/role_dialogs.dart` |
-| [GF-01032](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/role_dialogs.dart#L271) | callback | `_RoleBindingDialogState.build.callback` | `lib/ui/widgets/role_dialogs.dart` |
-| [GF-01033](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/role_dialogs.dart#L276) | callback | `_RoleBindingDialogState.build.callback` | `lib/ui/widgets/role_dialogs.dart` |
-| [GF-01034](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/role_dialogs.dart#L281) | callback | `_RoleBindingDialogState.build.callback.callback` | `lib/ui/widgets/role_dialogs.dart` |
-| [GF-01035](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/role_dialogs.dart#L297) | function | `top level.showGroupDevicePicker` | `lib/ui/widgets/role_dialogs.dart` |
-| [GF-01036](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/role_dialogs.dart#L304) | callback | `top level.showGroupDevicePicker.callback` | `lib/ui/widgets/role_dialogs.dart` |
-| [GF-01037](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/role_dialogs.dart#L323) | callback | `top level.showGroupDevicePicker.callback.callback` | `lib/ui/widgets/role_dialogs.dart` |
-| [GF-01038](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/role_dialogs.dart#L332) | callback | `top level.showGroupDevicePicker.callback.callback` | `lib/ui/widgets/role_dialogs.dart` |
+| [GF-01017](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/role_dialogs.dart#L118) | callback | `_GroupFormDialogState.build.callback` | `lib/ui/widgets/role_dialogs.dart` |
+| [GF-01018](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/role_dialogs.dart#L120) | callback | `_GroupFormDialogState.build.callback.callback` | `lib/ui/widgets/role_dialogs.dart` |
+| [GF-01019](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/role_dialogs.dart#L137) | callback | `_GroupFormDialogState.build.callback` | `lib/ui/widgets/role_dialogs.dart` |
+| [GF-01020](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/role_dialogs.dart#L149) | method | `_GroupFormDialogState._submit` | `lib/ui/widgets/role_dialogs.dart` |
+| [GF-01021](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/role_dialogs.dart#L155) | callback | `_GroupFormDialogState._submit.callback` | `lib/ui/widgets/role_dialogs.dart` |
+| [GF-01022](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/role_dialogs.dart#L162) | callback | `_GroupFormDialogState._submit.callback` | `lib/ui/widgets/role_dialogs.dart` |
+| [GF-01023](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/role_dialogs.dart#L174) | constructor | `RoleBindingInput` | `lib/ui/widgets/role_dialogs.dart` |
+| [GF-01024](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/role_dialogs.dart#L181) | function | `top level.showRoleBindingDialog` | `lib/ui/widgets/role_dialogs.dart` |
+| [GF-01025](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/role_dialogs.dart#L188) | callback | `top level.showRoleBindingDialog.callback` | `lib/ui/widgets/role_dialogs.dart` |
+| [GF-01026](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/role_dialogs.dart#L194) | constructor | `_RoleBindingDialog` | `lib/ui/widgets/role_dialogs.dart` |
+| [GF-01027](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/role_dialogs.dart#L199) | method | `_RoleBindingDialog.createState` | `lib/ui/widgets/role_dialogs.dart` |
+| [GF-01028](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/role_dialogs.dart#L209) | method | `_RoleBindingDialogState.dispose` | `lib/ui/widgets/role_dialogs.dart` |
+| [GF-01029](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/role_dialogs.dart#L216) | method | `_RoleBindingDialogState.build` | `lib/ui/widgets/role_dialogs.dart` |
+| [GF-01030](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/role_dialogs.dart#L251) | callback | `_RoleBindingDialogState.build.callback` | `lib/ui/widgets/role_dialogs.dart` |
+| [GF-01031](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/role_dialogs.dart#L253) | callback | `_RoleBindingDialogState.build.callback.callback` | `lib/ui/widgets/role_dialogs.dart` |
+| [GF-01032](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/role_dialogs.dart#L274) | callback | `_RoleBindingDialogState.build.callback` | `lib/ui/widgets/role_dialogs.dart` |
+| [GF-01033](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/role_dialogs.dart#L279) | callback | `_RoleBindingDialogState.build.callback` | `lib/ui/widgets/role_dialogs.dart` |
+| [GF-01034](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/role_dialogs.dart#L284) | callback | `_RoleBindingDialogState.build.callback.callback` | `lib/ui/widgets/role_dialogs.dart` |
+| [GF-01035](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/role_dialogs.dart#L300) | function | `top level.showGroupDevicePicker` | `lib/ui/widgets/role_dialogs.dart` |
+| [GF-01036](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/role_dialogs.dart#L307) | callback | `top level.showGroupDevicePicker.callback` | `lib/ui/widgets/role_dialogs.dart` |
+| [GF-01037](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/role_dialogs.dart#L326) | callback | `top level.showGroupDevicePicker.callback.callback` | `lib/ui/widgets/role_dialogs.dart` |
+| [GF-01038](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/widgets/role_dialogs.dart#L335) | callback | `top level.showGroupDevicePicker.callback.callback` | `lib/ui/widgets/role_dialogs.dart` |
 | [GF-01039](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/attestation.dart#L6) | method | `AttestationUsecase.capabilities` | `lib/back/usecase/attestation.dart` |
 | [GF-01040](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/attestation.dart#L9) | method | `AttestationUsecase.list` | `lib/back/usecase/attestation.dart` |
 | [GF-01041](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/attestation.dart#L14) | constructor | `AttestationUsecaseImpl` | `lib/back/usecase/attestation.dart` |
@@ -949,30 +937,30 @@
 | [GF-01046](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/auth.dart#L11) | getter | `AuthUsecase.unsupportedReason` | `lib/back/usecase/auth.dart` |
 | [GF-01047](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/auth.dart#L14) | method | `AuthUsecase.restore` | `lib/back/usecase/auth.dart` |
 | [GF-01048](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/auth.dart#L17) | method | `AuthUsecase.signIn` | `lib/back/usecase/auth.dart` |
-| [GF-01049](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/auth.dart#L20) | method | `AuthUsecase.refresh` | `lib/back/usecase/auth.dart` |
-| [GF-01050](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/auth.dart#L23) | method | `AuthUsecase.signOut` | `lib/back/usecase/auth.dart` |
-| [GF-01051](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/auth.dart#L26) | method | `AuthUsecase.clearLocalSession` | `lib/back/usecase/auth.dart` |
-| [GF-01052](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/auth.dart#L31) | constructor | `AuthUsecaseImpl` | `lib/back/usecase/auth.dart` |
-| [GF-01053](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/auth.dart#L37) | getter | `AuthUsecaseImpl.isSupported` | `lib/back/usecase/auth.dart` |
-| [GF-01054](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/auth.dart#L41) | getter | `AuthUsecaseImpl.unsupportedReason` | `lib/back/usecase/auth.dart` |
-| [GF-01055](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/auth.dart#L45) | method | `AuthUsecaseImpl.restore` | `lib/back/usecase/auth.dart` |
-| [GF-01056](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/auth.dart#L76) | method | `AuthUsecaseImpl.signIn` | `lib/back/usecase/auth.dart` |
-| [GF-01057](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/auth.dart#L92) | method | `AuthUsecaseImpl.refresh` | `lib/back/usecase/auth.dart` |
-| [GF-01058](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/auth.dart#L107) | method | `AuthUsecaseImpl.signOut` | `lib/back/usecase/auth.dart` |
-| [GF-01059](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/auth.dart#L118) | method | `AuthUsecaseImpl.clearLocalSession` | `lib/back/usecase/auth.dart` |
-| [GF-01060](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/auth.dart#L123) | function | `top level.newAuthUsecase` | `lib/back/usecase/auth.dart` |
+| [GF-01049](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/auth.dart#L25) | method | `AuthUsecase.refresh` | `lib/back/usecase/auth.dart` |
+| [GF-01050](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/auth.dart#L28) | method | `AuthUsecase.signOut` | `lib/back/usecase/auth.dart` |
+| [GF-01051](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/auth.dart#L31) | method | `AuthUsecase.clearLocalSession` | `lib/back/usecase/auth.dart` |
+| [GF-01052](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/auth.dart#L36) | constructor | `AuthUsecaseImpl` | `lib/back/usecase/auth.dart` |
+| [GF-01053](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/auth.dart#L42) | getter | `AuthUsecaseImpl.isSupported` | `lib/back/usecase/auth.dart` |
+| [GF-01054](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/auth.dart#L46) | getter | `AuthUsecaseImpl.unsupportedReason` | `lib/back/usecase/auth.dart` |
+| [GF-01055](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/auth.dart#L50) | method | `AuthUsecaseImpl.restore` | `lib/back/usecase/auth.dart` |
+| [GF-01056](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/auth.dart#L81) | method | `AuthUsecaseImpl.signIn` | `lib/back/usecase/auth.dart` |
+| [GF-01057](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/auth.dart#L120) | method | `AuthUsecaseImpl.refresh` | `lib/back/usecase/auth.dart` |
+| [GF-01058](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/auth.dart#L135) | method | `AuthUsecaseImpl.signOut` | `lib/back/usecase/auth.dart` |
+| [GF-01059](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/auth.dart#L154) | method | `AuthUsecaseImpl.clearLocalSession` | `lib/back/usecase/auth.dart` |
+| [GF-01060](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/auth.dart#L159) | function | `top level.newAuthUsecase` | `lib/back/usecase/auth.dart` |
 | [GF-01061](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/connection.dart#L9) | method | `ConnectionUsecase.load` | `lib/back/usecase/connection.dart` |
 | [GF-01062](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/connection.dart#L12) | method | `ConnectionUsecase.save` | `lib/back/usecase/connection.dart` |
 | [GF-01063](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/connection.dart#L15) | method | `ConnectionUsecase.reset` | `lib/back/usecase/connection.dart` |
 | [GF-01064](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/connection.dart#L20) | constructor | `ConnectionUsecaseImpl` | `lib/back/usecase/connection.dart` |
 | [GF-01065](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/connection.dart#L26) | method | `ConnectionUsecaseImpl.load` | `lib/back/usecase/connection.dart` |
-| [GF-01066](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/connection.dart#L43) | method | `ConnectionUsecaseImpl.save` | `lib/back/usecase/connection.dart` |
-| [GF-01067](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/connection.dart#L58) | method | `ConnectionUsecaseImpl.reset` | `lib/back/usecase/connection.dart` |
-| [GF-01068](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/connection.dart#L67) | function | `top level.newConnectionUsecase` | `lib/back/usecase/connection.dart` |
-| [GF-01069](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/connection.dart#L74) | method | `ConnectionHealthUsecase.check` | `lib/back/usecase/connection.dart` |
-| [GF-01070](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/connection.dart#L79) | constructor | `ConnectionHealthUsecaseImpl` | `lib/back/usecase/connection.dart` |
-| [GF-01071](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/connection.dart#L83) | method | `ConnectionHealthUsecaseImpl.check` | `lib/back/usecase/connection.dart` |
-| [GF-01072](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/connection.dart#L88) | function | `top level.newConnectionHealthUsecase` | `lib/back/usecase/connection.dart` |
+| [GF-01066](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/connection.dart#L58) | method | `ConnectionUsecaseImpl.save` | `lib/back/usecase/connection.dart` |
+| [GF-01067](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/connection.dart#L73) | method | `ConnectionUsecaseImpl.reset` | `lib/back/usecase/connection.dart` |
+| [GF-01068](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/connection.dart#L82) | function | `top level.newConnectionUsecase` | `lib/back/usecase/connection.dart` |
+| [GF-01069](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/connection.dart#L89) | method | `ConnectionHealthUsecase.check` | `lib/back/usecase/connection.dart` |
+| [GF-01070](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/connection.dart#L94) | constructor | `ConnectionHealthUsecaseImpl` | `lib/back/usecase/connection.dart` |
+| [GF-01071](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/connection.dart#L98) | method | `ConnectionHealthUsecaseImpl.check` | `lib/back/usecase/connection.dart` |
+| [GF-01072](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/connection.dart#L103) | function | `top level.newConnectionHealthUsecase` | `lib/back/usecase/connection.dart` |
 | [GF-01073](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L17) | getter | `DeviceUsecase.platform` | `lib/back/usecase/device.dart` |
 | [GF-01074](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L20) | method | `DeviceUsecase.list` | `lib/back/usecase/device.dart` |
 | [GF-01075](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L23) | method | `DeviceUsecase.get` | `lib/back/usecase/device.dart` |
