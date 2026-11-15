@@ -128,6 +128,10 @@ certificate with both `delegate_permission/common.get_login_creds` and
 Google Password Manager was verified on Pixel 6 using the debug APK. The API
 endpoint remains `https://localhost:8443`; it is separate
 from the RP domain and its local CA is not used for Digital Asset Links.
+Backend implementation references: [GF-10010](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/repository/webauthn.go#L72)–[GF-10011](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/repository/webauthn.go#L401) validate the RP
+identity, while [GF-10016](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/usecase/passkey_device.go#L64)–[GF-10017](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/usecase/passkey_device.go#L121) issue and verify the registration.
+The [complete backend source ID index](https://github.com/Gorapeflutter/gorape/blob/main/docs/book/src/source-index.md)
+is maintained with the Gorape documentation.
 
 For another debug signing key, add its SHA-256 certificate fingerprint to the
 Pages `assetlinks.json` and its `android:apk-key-hash:` value to

@@ -5,6 +5,7 @@
 - [GF-00001](https://github.com/GorapeFlutter/gf-app/blob/main/lib/app.dart#L39)〜[GF-00013](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/language.dart#L12): エンドツーエンドの処理フロー
 - [GF-00100](https://github.com/GorapeFlutter/gf-app/blob/main/lib/app.dart#L14)〜: 手書きのDart関数・メソッド・getter/setter・constructor・callback
 - [GF-02000](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/auth.dart#L53)〜: 複数段階の関数内にある論理的な処理ステップ
+- [GF-10001](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/base.go#L13)〜[GF-10026](https://github.com/Gorapeflutter/gorape/blob/main/migrations/000003_webauthn.up.sql#L1): Gorape backend handler、usecase、WebAuthn RP、migration
 - Kotlinネイティブ関数も関数ID一覧に含みます。テスト・生成コードは対象外です。
 
 関数IDの全件は [`FUNCTION_INDEX.md`](FUNCTION_INDEX.md)、関数内ステップIDは [`PROCESS_INDEX.md`](PROCESS_INDEX.md) を参照してください。
@@ -96,6 +97,28 @@ flowchart LR
 | `gf-app` | Public OIDC clientです。Gorape WebAuthn ceremonyを調整し、credential response全体を転送します。 |
 | Gorape API | OAuth resource server兼WebAuthn RPです。RP ID、origin、challenge、credential、attestation policy、所有assertionを検証します。 |
 
+### Gorape backendのrequest path
+
+```mermaid
+flowchart LR
+    Client[gf-app]
+    Router[HTTP/TLS router GF-10001–GF-10002]
+    Auth[Bearer token authentication GF-10003]
+    Project[Project / permission resolution GF-10005–GF-10007]
+    Gate[passkey AMR gate GF-10008]
+    Passkey[WebAuthn usecase GF-10016–GF-10022]
+    Challenge[(Redis one-time challenge GF-10009)]
+    RP[WebAuthn RP / verifier GF-10010–GF-10015]
+    DB[(PostgreSQL credential state)]
+
+    Client --> Router --> Auth --> Project --> Gate --> Passkey
+    Passkey --> Challenge
+    Passkey --> RP --> DB
+```
+
+Backend IDは[GF-10001](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/base.go#L13)〜[GF-10026](https://github.com/Gorapeflutter/gorape/blob/main/migrations/000003_webauthn.up.sql#L1)で、gf-appのDart/Android IDとは別rangeです。実装へのGitHub linkはこのアーキテクチャ図とendpoint tableから参照できます。
+全backend IDの一覧は[Gorapeのsource index](https://github.com/Gorapeflutter/gorape/blob/main/docs/book/src/source-index.md)にあります。
+
 ## 処理ID一覧
 
 | ID | 処理 | 主な実装 |
@@ -103,10 +126,10 @@ flowchart LR
 | [GF-00001](https://github.com/GorapeFlutter/gf-app/blob/main/lib/app.dart#L39) | 起動、接続設定の読み込み、保存済みセッションの復元、画面分岐 | `lib/app.dart`, `lib/back/controller/auth.dart`, `lib/back/usecase/auth.dart` |
 | [GF-00002](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L74) | Keycloakへのサインイン/サインアウトとローカルセッション管理 | `lib/back/controller/auth.dart`, `lib/back/usecase/auth.dart`, `lib/back/repository/auth.dart` |
 | [GF-00003](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L612) | Gorape API呼び出し、Bearer token付与、401時の一度だけの更新・再試行 | `lib/back/repository/gorape.dart` |
-| [GF-00004](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/attestation.dart#L14) | プロジェクト、端末、グループ、Attestationデータの読み込み | `lib/back/controller/project.dart`, `lib/back/controller/device.dart`, `lib/back/controller/group.dart`, `lib/back/controller/attestation.dart` |
-| [GF-00005](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/device.dart#L103) | Android端末登録とKey Attestation検証 | `lib/back/usecase/device.dart`, `lib/back/repository/device_key.dart`, `android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt` |
-| [GF-00006](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/device.dart#L141) | 登録済み端末の秘密鍵による所有証明 | `lib/back/usecase/device.dart`, `lib/back/repository/device_key.dart`, `MainActivity.kt` |
-| [GF-00007](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/device.dart#L172) | 端末のサーバー側失効とローカル鍵情報の後片付け | `lib/back/usecase/device.dart` |
+| [GF-00004](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/project.dart#L12) | プロジェクト、端末、グループ、Attestationデータの読み込み | `lib/back/controller/project.dart`, `lib/back/controller/device.dart`, `lib/back/controller/group.dart`, `lib/back/controller/attestation.dart` |
+| [GF-00005](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L89) | Android端末登録とKey Attestation検証 | `lib/back/usecase/device.dart`, `lib/back/repository/device_key.dart`, `android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt` |
+| [GF-00006](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L190) | 登録済み端末の秘密鍵による所有証明 | `lib/back/usecase/device.dart`, `lib/back/repository/device_key.dart`, `MainActivity.kt` |
+| [GF-00007](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L244) | 端末のサーバー側失効とローカル鍵情報の後片付け | `lib/back/usecase/device.dart` |
 | [GF-00008](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/group.dart#L71) | グループの作成/更新/削除と端末の割り当て | `lib/back/controller/group.dart`, `lib/back/usecase/group.dart`, `lib/back/repository/group.dart` |
 | [GF-00009](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/role.dart#L11) | Keycloak token claimsからのUI向けロール解決 | `lib/back/controller/role.dart`, `lib/entity/model/role.dart` |
 | [GF-00010](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/role.dart#L118) | Gorapeのプロジェクト/グループrole bindingの管理 | `lib/back/controller/role.dart`, `lib/back/usecase/role.dart`, `lib/back/repository/role.dart` |
@@ -222,7 +245,7 @@ sequenceDiagram
     UC-->>UI: 登録結果 GF-02098–GF-02101
 ```
 
-所有証明（[GF-00006](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/device.dart#L141)）では、新しいchallengeを取得し、ローカルKeystoreの秘密鍵で生バイト列に署名します。署名はASN.1/DER形式を維持してサーバーで検証します。失効（[GF-00007](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/device.dart#L172)）はサーバー側の成功後にKeystore鍵とSecure Storage上の記録を削除します。
+所有証明（[GF-00006](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L190)）では、新しいchallengeを取得し、ローカルKeystoreの秘密鍵で生バイト列に署名します。署名はASN.1/DER形式を維持してサーバーで検証します。失効（[GF-00007](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L244)）はサーバー側の成功後にKeystore鍵とSecure Storage上の記録を削除します。
 
 ```mermaid
 sequenceDiagram
@@ -269,7 +292,7 @@ sequenceDiagram
 
 | フロー | attestation対象の鍵 | evidence形式 | このrepositoryの対応 |
 | --- | --- | --- | --- |
-| 旧Android鍵登録（[GF-00005](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/device.dart#L103)） | アプリが生成するEC P-256 device key | Android KeystoreのX.509 chain。challengeを`setAttestationChallenge`にbind | 互換性のため維持。passkey attestationとは別 |
+| 旧Android鍵登録（[GF-00005](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L89)） | アプリが生成するEC P-256 device key | Android KeystoreのX.509 chain。challengeを`setAttestationChallenge`にbind | 互換性のため維持。passkey attestationとは別 |
 | WebAuthn `fmt: "none"` | credential providerのpasskey | statementなしのWebAuthn response | appは転送する。Gorapeは既定で拒否、`allow_none: true`時のみ許可 |
 | WebAuthn `fmt: "tpm"` | TPM public areaのcredential key | TPM structure、AIK chainを含むCBOR statement | Gorapeはgo-webauthn v0.14.0でformatを検証し、設定済み`tpm` trust anchorを要求 |
 | WebAuthn Android Key（`fmt: "android-key"`） | Android WebAuthn credential | WebAuthn Android Key Attestation statement | GorapeがstatementとAndroid trust anchorを検証。旧PEM経路とは別 |
@@ -319,7 +342,7 @@ WebAuthn CBOR objectの該当部分は次の形です。
 
 ### Flutter pluginとdeploy要件
 
-- [GF-00005](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/device.dart#L103)をパスキーattestationと呼ばないでください。これはAndroid Key Attestation extensionを使い、アプリが生成したAndroid Keystore keyのpropertiesを検証します。
+- [GF-00005](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L89)をパスキーattestationと呼ばないでください。これはAndroid Key Attestation extensionを使い、アプリが生成したAndroid Keystore keyのpropertiesを検証します。
 - `passkeys` 2.23.2はAndroid/iOS/macOS/Windows/Webでresponse全体を返します。Linuxはgf-appのWeb ceremony pageをChrome/Firefoxで使います。Gorape本体は画面を持ちません。
 - Android Credential ManagerやWindows/browser providerは`direct`を要求しても`none`を返し得ます。Apple platform credentialではpluginがattestation preferenceを指定できません。要求値やplatform文字列ではなく、実際の`fmt`を検証します。
 - Android RP domainには`delegate_permission/common.get_login_creds`と`delegate_permission/common.handle_all_urls`を含むDigital Asset Links、およびアプリ署名証明書が必要です。現在は`gorapeflutter.github.io`のGitHub Pagesで公開しています。Pixel 6のGoogle Password Managerでdebug APKの登録成功を確認しました。iOS/macOSにはAASA `webcredentials` entryとAssociated Domains entitlementが必要です。Webではsecure originを使い、RP IDをpage hostまたはそのparent domainにします。
@@ -332,7 +355,7 @@ WebAuthn CBOR objectの該当部分は次の形です。
 
 ## 管理データとローカル設定
 
-- [GF-00004](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/attestation.dart#L14): 各一覧/詳細ProviderがControllerを通じてUsecaseを呼び出し、RepositoryからGorape APIのデータを取得します。画面操作でデータを変更した後は、Controllerが関連Providerをinvalidateします。
+- [GF-00004](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/project.dart#L12): 各一覧/詳細ProviderがControllerを通じてUsecaseを呼び出し、RepositoryからGorape APIのデータを取得します。画面操作でデータを変更した後は、Controllerが関連Providerをinvalidateします。
 - [GF-00008](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/group.dart#L71): グループ管理と端末割り当てはGorape APIへ反映されます。
 - [GF-00009](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/role.dart#L11): token claimsから解決したroleは表示や操作ボタンの制御に使われます。最終的な認可はGorapeバックエンドが行います。
 - [GF-00010](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/role.dart#L118): Gorapeに保存されたrole bindingの一覧/変更を扱います。[GF-00009](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/role.dart#L11)のUI向けclaimsとは別のデータです。
