@@ -28,8 +28,8 @@ abstract interface class AuthRepository {
     bool requirePasskey = false,
   });
 
-  /// Starts Keycloak's WebAuthn Register Passwordless required action using
-  /// OIDC Application-Initiated Actions. `true` means Keycloak reported success.
+  /// GF-01200 — Runs Keycloak's passwordless WebAuthn registration action.
+  /// `true` means Keycloak reported that registration completed.
   Future<bool> registerPasskey();
 
   /// GF-00414 — Handles refresh in AuthRepository.
@@ -138,6 +138,7 @@ final class AppAuthRepository implements AuthRepository {
     }
   }
 
+  /// GF-01201 — Registers a Keycloak passkey through native AppAuth AIA.
   @override
   Future<bool> registerPasskey() async {
     try {
@@ -439,6 +440,7 @@ final class BrowserAuthRepository implements AuthRepository {
     }
   }
 
+  /// GF-01202 — Registers a Keycloak passkey through browser OIDC AIA.
   @override
   Future<bool> registerPasskey() async {
     try {

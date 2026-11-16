@@ -36,6 +36,7 @@ import org.json.JSONObject
 
 /** Android Credential Provider POC; private keys are generated and retained in Keystore. */
 class GorapeCredentialProviderActivity : Activity() {
+    // GF-01207 — Dispatches Credential Manager create/get callbacks.
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
@@ -49,6 +50,7 @@ class GorapeCredentialProviderActivity : Activity() {
         }
     }
 
+    // GF-01208 — Creates a Gorape RP credential and its Android Key attestation.
     private fun createPasskey() {
         val provider = PendingIntentHandler.retrieveProviderCreateCredentialRequest(intent)
         val request = provider?.callingRequest as? CreatePublicKeyCredentialRequest
@@ -151,6 +153,7 @@ class GorapeCredentialProviderActivity : Activity() {
         }
     }
 
+    // GF-01209 — Signs a Gorape RP assertion with the Keystore private key.
     private fun getPasskey() {
         val provider = PendingIntentHandler.retrieveProviderGetCredentialRequest(intent)
         val option = provider?.credentialOptions?.filterIsInstance<GetPublicKeyCredentialOption>()?.firstOrNull()
@@ -237,6 +240,7 @@ class GorapeCredentialProviderActivity : Activity() {
 
     private data class AttestedKey(val keyPair: KeyPair, val chain: List<java.security.cert.Certificate>)
 
+    // GF-01210 — Requires biometric user verification before hardware signing.
     private fun authenticateAndSign(signature: Signature, title: String, complete: (Signature) -> Unit) {
         val prompt = BiometricPrompt.Builder(this)
             .setTitle(title)
@@ -266,6 +270,7 @@ class GorapeCredentialProviderActivity : Activity() {
         )
     }
 
+    // GF-01211 — Prefers StrongBox and falls back to hardware TEE.
     private fun generateAttestedKey(alias: String, challenge: ByteArray): AttestedKey {
         val keyStore = KeyStore.getInstance(ANDROID_KEYSTORE).apply { load(null) }
         val hasStrongBox = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P &&
@@ -282,6 +287,7 @@ class GorapeCredentialProviderActivity : Activity() {
         return validateGeneratedKey(keyStore, alias, teePair)
     }
 
+    // GF-01212 — Generates an attested P-256 signing key in Android Keystore.
     private fun generateKeyPair(alias: String, challenge: ByteArray, strongBox: Boolean): KeyPair {
         val spec = KeyGenParameterSpec.Builder(
             alias,
@@ -298,6 +304,7 @@ class GorapeCredentialProviderActivity : Activity() {
             .generateKeyPair()
     }
 
+    // GF-01213 — Rejects software keys or missing Android attestation chains.
     private fun validateGeneratedKey(store: KeyStore, alias: String, pair: KeyPair): AttestedKey {
         val entry = store.getEntry(alias, null) as? KeyStore.PrivateKeyEntry
             ?: throw IllegalStateException("Android Keystore did not retain the private key.")
@@ -315,16 +322,19 @@ class GorapeCredentialProviderActivity : Activity() {
         return AttestedKey(pair, chain)
     }
 
+    // GF-01214 — Loads the non-exportable private key by Keystore alias.
     private fun loadPrivateKey(alias: String): java.security.PrivateKey {
         val store = KeyStore.getInstance(ANDROID_KEYSTORE).apply { load(null) }
         return (store.getEntry(alias, null) as? KeyStore.PrivateKeyEntry)?.privateKey
             ?: throw IllegalStateException("Android Keystore private key is unavailable.")
     }
 
+    // GF-01215 — Deletes a failed or revoked local Keystore key.
     private fun deleteKey(alias: String) {
         runCatching { KeyStore.getInstance(ANDROID_KEYSTORE).apply { load(null) }.deleteEntry(alias) }
     }
 
+    // GF-01216 — Serializes WebAuthn client data for the calling RP origin.
     private fun makeClientData(type: String, challenge: String, origin: String, packageName: String): ByteArray {
         val data = JSONObject()
             .put("type", type)
@@ -335,12 +345,14 @@ class GorapeCredentialProviderActivity : Activity() {
         return data.toString().toByteArray(Charsets.UTF_8)
     }
 
+    // GF-01217 — Checks that Credential Manager supplied the matching client-data hash.
     private fun checkedClientDataHash(clientData: ByteArray, supplied: ByteArray?): ByteArray? {
         val computed = MessageDigest.getInstance("SHA-256").digest(clientData)
         if (supplied != null && !MessageDigest.isEqual(supplied, computed)) return null
         return supplied ?: computed
     }
 
+    // GF-01218 — Resolves the verified Android application or web origin.
     private fun resolveOrigin(info: CallingAppInfo): String? {
         if (info.packageName == packageName) {
             val signingInfo = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
@@ -353,6 +365,7 @@ class GorapeCredentialProviderActivity : Activity() {
         return runCatching { info.getOrigin(PRIVILEGED_CALLERS) }.getOrNull()
     }
 
+    // GF-01219 — Restricts requests to the configured Gorape RP origins.
     private fun originAllowed(origin: String): Boolean {
         if (origin.startsWith("android:apk-key-hash:")) return true
         val uri = runCatching { android.net.Uri.parse(origin) }.getOrNull() ?: return false
@@ -360,6 +373,7 @@ class GorapeCredentialProviderActivity : Activity() {
         return uri.scheme == "https" && (host == GorapePasskeyProvider.RP_ID || host.endsWith(".${GorapePasskeyProvider.RP_ID}"))
     }
 
+    // GF-01220 — Confirms that the RP offered the supported ES256 algorithm.
     private fun supportsEs256(params: JSONArray?): Boolean {
         if (params == null) return false
         return (0 until params.length()).any { index ->
@@ -368,6 +382,7 @@ class GorapeCredentialProviderActivity : Activity() {
         }
     }
 
+    // GF-01221 — Encodes RP hash, UV flags, counter, and attested credential data.
     private fun buildAuthenticatorData(
         rpId: String,
         flags: Int,
@@ -392,6 +407,7 @@ class GorapeCredentialProviderActivity : Activity() {
         return output.toByteArray()
     }
 
+    // GF-01222 — Encodes the P-256 credential public key as COSE EC2.
     private fun encodeCoseEc2(key: ECPublicKey): ByteArray = WebAuthnCbor.encode(
         linkedMapOf<Any, Any>(
             1 to 2,
@@ -402,6 +418,7 @@ class GorapeCredentialProviderActivity : Activity() {
         ),
     )
 
+    // GF-01223 — Builds an android-key attestation object with the x5c chain.
     private fun makeAttestationObject(
         authData: ByteArray,
         signature: ByteArray,
@@ -418,12 +435,14 @@ class GorapeCredentialProviderActivity : Activity() {
         ),
     )
 
+    // GF-01224 — Serializes an EC coordinate to its fixed-width representation.
     private fun BigInteger.toFixedBytes(length: Int): ByteArray {
         val raw = toByteArray().let { if (it.size > length && it[0] == 0.toByte()) it.copyOfRange(1, it.size) else it }
         require(raw.size <= length)
         return ByteArray(length - raw.size) + raw
     }
 
+    // GF-01225 — Returns the completed create response to Credential Manager.
     private fun finishCreateResponse(response: CreatePublicKeyCredentialResponse) {
         val data = Intent()
         PendingIntentHandler.setCreateCredentialResponse(data, response)
@@ -431,6 +450,7 @@ class GorapeCredentialProviderActivity : Activity() {
         finish()
     }
 
+    // GF-01226 — Returns the completed assertion response to Credential Manager.
     private fun finishGetResponse(response: GetCredentialResponse) {
         val data = Intent()
         PendingIntentHandler.setGetCredentialResponse(data, response)
@@ -438,9 +458,13 @@ class GorapeCredentialProviderActivity : Activity() {
         finish()
     }
 
+    // GF-01227 — Returns a create-ceremony error to Credential Manager.
     private fun finishCreateError(message: String) = finishWithError(message, ACTION_CREATE)
+
+    // GF-01228 — Returns a get-ceremony error to Credential Manager.
     private fun finishGetError(message: String) = finishWithError(message, ACTION_GET)
 
+    // GF-01229 — Serializes a typed Credential Manager exception response.
     private fun finishWithError(message: String, action: String = intent.action ?: ACTION_GET) {
         val data = Intent()
         if (action == ACTION_CREATE) {

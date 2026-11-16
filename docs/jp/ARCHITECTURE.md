@@ -91,7 +91,7 @@ flowchart LR
     API --> WebAuthnRP
 ```
 
-**ローカルユーザー検証（UV）の境界:** Keycloak用とGorape用のパスキーは、それぞれ独立して認証器/platformにUVを要求します。`gf-app`が受け取るのはWebAuthn responseであり、生体情報は受け取りません。Gorapeの既定は`userVerification: required`です。従来のAndroid device keyは[GF-01143](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L176)で`setUserAuthenticationRequired(false)`です。
+**ローカルユーザー検証（UV）の境界:** Keycloak用とGorape用のパスキーは、それぞれ独立して認証器/platformにUVを要求します。`gf-app`が受け取るのはWebAuthn responseであり、生体情報は受け取りません。Gorapeの既定は`userVerification: required`です。従来のAndroid device keyは[GF-01143](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L234)で`setUserAuthenticationRequired(false)`です。
 
 | 用語 | この構成での役割 |
 | --- | --- |

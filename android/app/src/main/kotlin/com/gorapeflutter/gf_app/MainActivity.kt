@@ -88,6 +88,7 @@ class MainActivity : FlutterActivity() {
         }
     }
 
+    // GF-01195 — Reports OS support and GF Credential Provider registration.
     private fun credentialProviderStatus(): Map<String, Any> {
         val supported = Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE
         val serviceRegistered = if (supported) {
@@ -108,6 +109,7 @@ class MainActivity : FlutterActivity() {
         )
     }
 
+    // GF-01196 — Launches Android's Passwords and Passkeys settings.
     private fun openCredentialProviderSettings(): Boolean {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE) return false
         val settingsIntent = Intent(Settings.ACTION_CREDENTIAL_PROVIDER).apply {

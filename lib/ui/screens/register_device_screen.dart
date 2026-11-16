@@ -45,6 +45,7 @@ class _RegisterDeviceScreenState extends ConsumerState<RegisterDeviceScreen>
     _refreshCredentialProviderStatus();
   }
 
+  /// GF-01197 — Refreshes Credential Provider status after returning to the app.
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
@@ -244,6 +245,7 @@ class _RegisterDeviceScreenState extends ConsumerState<RegisterDeviceScreen>
     );
   }
 
+  /// GF-01198 — Loads native Credential Provider status for the registration UI.
   Future<void> _refreshCredentialProviderStatus() async {
     try {
       final status = await ref
@@ -256,6 +258,7 @@ class _RegisterDeviceScreenState extends ConsumerState<RegisterDeviceScreen>
     }
   }
 
+  /// GF-01199 — Opens Android provider settings from the Flutter registration UI.
   Future<void> _openCredentialProviderSettings() async {
     try {
       await ref.read(credentialProviderRepositoryProvider).openSettings();

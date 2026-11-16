@@ -140,7 +140,8 @@ RP credential registered with HTTP 201. The persisted attestation record showed
 `BE=false`, `BS=false`, and `assurance_level=hardware_attested`. A subsequent
 passkey assertion was verified with HTTP 200. MDS was disabled in this test;
 the configured Google Android Key Attestation root was used for certificate
-chain validation.
+chain validation. Typed-nil MDS provider handling for this mode is fixed under
+[GF-10045](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/repository/webauthn.go#L291).
 
 The persisted `security_level=android_key_attested` does not distinguish TEE
 from StrongBox. The provider prefers StrongBox and falls back to TEE, but this

@@ -4,8 +4,10 @@ import java.io.ByteArrayOutputStream
 
 /** Minimal deterministic CBOR encoder for WebAuthn authenticator structures. */
 internal object WebAuthnCbor {
+    // GF-01238 — Encodes a supported WebAuthn value as deterministic CBOR.
     fun encode(value: Any?): ByteArray = ByteArrayOutputStream().apply { writeValue(value) }.toByteArray()
 
+    // GF-01239 — Encodes primitive, byte, list, and map values recursively.
     private fun ByteArrayOutputStream.writeValue(value: Any?) {
         when (value) {
             null -> write(0xf6)
@@ -38,6 +40,7 @@ internal object WebAuthnCbor {
         }
     }
 
+    // GF-01240 — Encodes a CBOR major-type header and its length/value.
     private fun ByteArrayOutputStream.writeHead(major: Int, value: Long) {
         require(value >= 0)
         when {

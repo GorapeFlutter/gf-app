@@ -139,7 +139,7 @@ signing certificate with both
 `delegate_permission/common.handle_all_urls`. The API endpoint
 `https://api.gorapeflutter.site:8443` is separate from the RP domain and its
 local CA is not used for Digital Asset Links.
-Backend implementation references: [GF-10010](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/repository/webauthn.go#L99)–[GF-10011](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/repository/webauthn.go#L816) validate the RP
+Backend implementation references: [GF-10010](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/repository/webauthn.go#L100)–[GF-10011](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/repository/webauthn.go#L836) validate the RP
 identity, while [GF-10016](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/usecase/passkey_device.go#L92)–[GF-10017](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/usecase/passkey_device.go#L152) issue and verify the registration.
 The [complete backend source ID index](https://github.com/Gorapeflutter/gorape/blob/main/docs/book/src/source-index.md)
 is maintained with the Gorape documentation.

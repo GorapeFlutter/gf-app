@@ -6,7 +6,7 @@ This document defines the basic design, domain architecture, network topology, a
 
 ## 1. Domain Design (`gorapeflutter.site`)
 
-`gorapeflutter.site` is adopted as the official development and verification domain while preserving full configurability for arbitrary custom domains in production via configuration files, environment variables, `--dart-define`, and the in-app Settings screen ([GF-00114](https://github.com/GorapeFlutter/gf-app/blob/main/lib/config/connection.dart#L16), [GF-00115](https://github.com/GorapeFlutter/gf-app/blob/main/lib/config/connection.dart#L44), [GF-02186](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/connection.dart#L39), [GF-10010](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/repository/webauthn.go#L99), [GF-10011](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/repository/webauthn.go#L816), [GF-10037](https://github.com/Gorapeflutter/gorape/blob/main/pkg/config/base.go#L194)).
+`gorapeflutter.site` is adopted as the official development and verification domain while preserving full configurability for arbitrary custom domains in production via configuration files, environment variables, `--dart-define`, and the in-app Settings screen ([GF-00114](https://github.com/GorapeFlutter/gf-app/blob/main/lib/config/connection.dart#L16), [GF-00115](https://github.com/GorapeFlutter/gf-app/blob/main/lib/config/connection.dart#L43), [GF-02186](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/connection.dart#L39), [GF-10010](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/repository/webauthn.go#L100), [GF-10011](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/repository/webauthn.go#L836), [GF-10037](https://github.com/Gorapeflutter/gorape/blob/main/pkg/config/base.go#L194)).
 
 | FQDN | Purpose | Adoption & Design Decision |
 |---|---|---|
@@ -117,7 +117,7 @@ sequenceDiagram
     API-->>App: Authorized response
 ```
 
-### 4.2 Device Registration Sequence ([GF-02174](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/passkey_device.dart#L56) / [GF-10012](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/repository/webauthn.go#L311) / [GF-10013](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/repository/webauthn.go#L350) / [GF-10016](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/usecase/passkey_device.go#L92) / [GF-10017](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/usecase/passkey_device.go#L152))
+### 4.2 Device Registration Sequence ([GF-02174](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/passkey_device.dart#L56) / [GF-10012](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/repository/webauthn.go#L331) / [GF-10013](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/repository/webauthn.go#L370) / [GF-10016](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/usecase/passkey_device.go#L92) / [GF-10017](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/usecase/passkey_device.go#L152))
 
 ```mermaid
 sequenceDiagram
@@ -148,7 +148,7 @@ sequenceDiagram
 
 ### 4.3 Device Authentication (Possession Proof & External Service Approval) Sequences
 
-#### (a) In-App Device Possession Proof ([GF-02175](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/passkey_device.dart#L156) / [GF-10014](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/repository/webauthn.go#L475) / [GF-10015](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/repository/webauthn.go#L489) / [GF-10018](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/usecase/passkey_device.go#L313) / [GF-10019](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/usecase/passkey_device.go#L379))
+#### (a) In-App Device Possession Proof ([GF-02175](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/passkey_device.dart#L156) / [GF-10014](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/repository/webauthn.go#L495) / [GF-10015](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/repository/webauthn.go#L509) / [GF-10018](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/usecase/passkey_device.go#L313) / [GF-10019](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/usecase/passkey_device.go#L379))
 
 ```mermaid
 sequenceDiagram
@@ -299,7 +299,7 @@ Windows CNG/TPM) are never substituted for a FIDO credential assertion.
 
 WebAuthn credentials are cryptographically bound to their RP ID (`authenticatorData.rpIdHash = SHA-256(rpId)`). When migrating from an earlier RP ID (such as `gorapeflutter.github.io` or `localhost`) to `gorapeflutter.site` (or a custom production domain), credentials registered under the old RP ID cannot be used for assertions under the new RP ID.
 
-1. **Update Server Configuration**: Update `webauthn.rp_id`, `rp_origins`, `portal_origin`, `browser_api_origin`, and `web_origins` in `gorape/etc/server.yaml` (or `etc/server.yaml.docker`) ([GF-10010](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/repository/webauthn.go#L99), [GF-10011](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/repository/webauthn.go#L816)).
+1. **Update Server Configuration**: Update `webauthn.rp_id`, `rp_origins`, `portal_origin`, `browser_api_origin`, and `web_origins` in `gorape/etc/server.yaml` (or `etc/server.yaml.docker`) ([GF-10010](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/repository/webauthn.go#L100), [GF-10011](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/repository/webauthn.go#L836)).
 2. **Publish Association Files**: Host `https://<new-rp-id>/.well-known/assetlinks.json` and `https://<new-rp-id>/.well-known/apple-app-site-association` on a publicly reachable HTTPS server.
 3. **Update Client Association Config**: Update Android `strings.xml` (`asset_statements`) and iOS/macOS Entitlements (`webcredentials:<new-rp-id>`) and rebuild the app.
 4. **Revoke Old Devices and Re-Enroll**:

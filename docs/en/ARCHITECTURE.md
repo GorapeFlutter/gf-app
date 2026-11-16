@@ -106,7 +106,7 @@ their own user-verification ceremony in the authenticator/platform. The app
 receives only WebAuthn responses and never biometric data. Gorape requests
 `userVerification: required` by default. The separate, legacy Android
 device-registration key sets
-`setUserAuthenticationRequired(false)` in [GF-01143](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L176), so that device-key
+`setUserAuthenticationRequired(false)` in [GF-01143](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L234), so that device-key
 registration/proof path does not require local UV. Do not interpret the passkey
 UV step as a property of the current [GF-00005](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L89) key.
 

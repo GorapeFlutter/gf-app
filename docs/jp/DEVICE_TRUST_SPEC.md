@@ -6,7 +6,7 @@
 
 ## 1. ドメイン設計（`gorapeflutter.site`）
 
-公式開発・検証用ドメインとして `gorapeflutter.site` を採用しつつ、設定ファイル・環境変数・`--dart-define`・UI設定画面から任意の独自ドメインへ変更可能な構成を維持します（[GF-00114](https://github.com/GorapeFlutter/gf-app/blob/main/lib/config/connection.dart#L16), [GF-00115](https://github.com/GorapeFlutter/gf-app/blob/main/lib/config/connection.dart#L44), [GF-02186](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/connection.dart#L39), [GF-10010](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/repository/webauthn.go#L99), [GF-10011](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/repository/webauthn.go#L816), [GF-10037](https://github.com/Gorapeflutter/gorape/blob/main/pkg/config/base.go#L194)）。
+公式開発・検証用ドメインとして `gorapeflutter.site` を採用しつつ、設定ファイル・環境変数・`--dart-define`・UI設定画面から任意の独自ドメインへ変更可能な構成を維持します（[GF-00114](https://github.com/GorapeFlutter/gf-app/blob/main/lib/config/connection.dart#L16), [GF-00115](https://github.com/GorapeFlutter/gf-app/blob/main/lib/config/connection.dart#L43), [GF-02186](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/connection.dart#L39), [GF-10010](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/repository/webauthn.go#L100), [GF-10011](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/repository/webauthn.go#L836), [GF-10037](https://github.com/Gorapeflutter/gorape/blob/main/pkg/config/base.go#L194)）。
 
 | FQDN | 用途 | 採否・設計判断 |
 |---|---|---|
@@ -117,7 +117,7 @@ sequenceDiagram
     API-->>App: 認可レスポンス
 ```
 
-### 4.2 デバイス登録シーケンス（[GF-02174](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/passkey_device.dart#L56) / [GF-10012](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/repository/webauthn.go#L311) / [GF-10013](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/repository/webauthn.go#L350) / [GF-10016](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/usecase/passkey_device.go#L92) / [GF-10017](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/usecase/passkey_device.go#L152)）
+### 4.2 デバイス登録シーケンス（[GF-02174](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/passkey_device.dart#L56) / [GF-10012](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/repository/webauthn.go#L331) / [GF-10013](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/repository/webauthn.go#L370) / [GF-10016](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/usecase/passkey_device.go#L92) / [GF-10017](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/usecase/passkey_device.go#L152)）
 
 ```mermaid
 sequenceDiagram
@@ -148,7 +148,7 @@ sequenceDiagram
 
 ### 4.3 デバイス認証（所有証明・外部サービス操作承認）シーケンス
 
-#### (a) GF App 内の所有証明シーケンス（[GF-02175](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/passkey_device.dart#L156) / [GF-10014](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/repository/webauthn.go#L475) / [GF-10015](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/repository/webauthn.go#L489) / [GF-10018](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/usecase/passkey_device.go#L313) / [GF-10019](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/usecase/passkey_device.go#L379)）
+#### (a) GF App 内の所有証明シーケンス（[GF-02175](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/passkey_device.dart#L156) / [GF-10014](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/repository/webauthn.go#L495) / [GF-10015](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/repository/webauthn.go#L509) / [GF-10018](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/usecase/passkey_device.go#L313) / [GF-10019](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/usecase/passkey_device.go#L379)）
 
 ```mermaid
 sequenceDiagram
@@ -279,7 +279,7 @@ CDA（`hybrid`）は認証器のcapabilityであり、RPのpolicyではありま
 
 WebAuthn Credential は登録時の `rp_id`（`authenticatorData.rpIdHash = SHA-256(rpId)`）に暗号学的に束縛されます。そのため、旧 RP ID（`gorapeflutter.github.io` や `localhost`）から `gorapeflutter.site`（または本番の独自ドメイン）へ変更した場合、旧 RP ID で登録されたパスキーは新 RP ID の認証要求に対して使用できません。
 
-1. **サーバー設定の更新**: `gorape/etc/server.yaml`（または `etc/server.yaml.docker`）の `webauthn.rp_id`、`rp_origins`、`portal_origin`、`browser_api_origin`、`web_origins` を新しいドメインへ更新します（[GF-10010](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/repository/webauthn.go#L99), [GF-10011](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/repository/webauthn.go#L816)）。
+1. **サーバー設定の更新**: `gorape/etc/server.yaml`（または `etc/server.yaml.docker`）の `webauthn.rp_id`、`rp_origins`、`portal_origin`、`browser_api_origin`、`web_origins` を新しいドメインへ更新します（[GF-10010](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/repository/webauthn.go#L100), [GF-10011](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/repository/webauthn.go#L836)）。
 2. **公開関連付けファイルの配置**: `https://<new-rp-id>/.well-known/assetlinks.json` および `https://<new-rp-id>/.well-known/apple-app-site-association` を公開HTTPSサーバーに配置します。
 3. **クライアント設定の更新**: Android の `strings.xml`（`asset_statements`）および iOS/macOS の Entitlements（`webcredentials:<new-rp-id>`）を新しい RP ID に合わせてビルドします。
 4. **旧デバイスの失効と再登録**:

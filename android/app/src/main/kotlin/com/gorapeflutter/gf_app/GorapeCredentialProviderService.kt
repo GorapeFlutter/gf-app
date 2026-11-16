@@ -35,6 +35,7 @@ import androidx.credentials.provider.PublicKeyCredentialEntry
 class GorapeCredentialProviderService : CredentialProviderService() {
     private val tag = "GorapeCredProvider"
 
+    // GF-01203 — Offers the local provider for Gorape RP credential creation.
     override fun onBeginCreateCredentialRequest(
         request: BeginCreateCredentialRequest,
         cancellationSignal: CancellationSignal,
@@ -81,6 +82,7 @@ class GorapeCredentialProviderService : CredentialProviderService() {
         )
     }
 
+    // GF-01204 — Returns locally stored credentials matching Gorape get options.
     override fun onBeginGetCredentialRequest(
         request: BeginGetCredentialRequest,
         cancellationSignal: CancellationSignal,
@@ -123,6 +125,7 @@ class GorapeCredentialProviderService : CredentialProviderService() {
         callback.onResult(BeginGetCredentialResponse(entries))
     }
 
+    // GF-01205 — Clears chooser state without deleting stored credentials.
     override fun onClearCredentialStateRequest(
         request: androidx.credentials.provider.ProviderClearCredentialStateRequest,
         cancellationSignal: CancellationSignal,
@@ -132,6 +135,7 @@ class GorapeCredentialProviderService : CredentialProviderService() {
         callback.onResult(null)
     }
 
+    // GF-01206 — Parses credential IDs allowed by the relying party.
     private fun parseAllowedIds(array: org.json.JSONArray?): Set<String> {
         if (array == null) return emptySet()
         return buildSet {

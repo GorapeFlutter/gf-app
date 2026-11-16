@@ -98,7 +98,7 @@ curl -s -H "Authorization: Bearer $TOKEN" \
 
 ### Android実機PoCの検証結果
 
-Android 17 (API 37) の実機でGF Hardware Passkeysを有効にし、Gorape RP用credentialを登録しました。Gorapeはregistration verifyでHTTP 201を返し、DBのattestation recordは`android-key`、`verified`、`trust_anchor`、`hardware_protected=true`、`BE=false`、`BS=false`、`assurance_level=hardware_attested`でした。続くpasskey assertionもHTTP 200で検証されています。検証用設定ではMDSは無効で、Google Android Key Attestation trust anchorによるchain検証を使いました。
+Android 17 (API 37) の実機でGF Hardware Passkeysを有効にし、Gorape RP用credentialを登録しました。Gorapeはregistration verifyでHTTP 201を返し、DBのattestation recordは`android-key`、`verified`、`trust_anchor`、`hardware_protected=true`、`BE=false`、`BS=false`、`assurance_level=hardware_attested`でした。続くpasskey assertionもHTTP 200で検証されています。検証用設定ではMDSは無効で、Google Android Key Attestation trust anchorによるchain検証を使いました。MDS無効時のnil Provider処理は[GF-10045](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/repository/webauthn.go#L291)で修正しています。
 
 DBの`security_level=android_key_attested`はTEE/StrongBoxを区別しません。実装はStrongBoxを優先し、利用できない場合はTEEへfallbackしますが、この登録結果だけからどちらのlevelかは断定しません。Keycloakログイン用パスキーは別RP (`idp.gorapeflutter.site`) のGoogle Password Manager credentialであり、このGF Providerの検証対象ではありません。CDA/hybridは未検証で、現在のProviderは`internal`のみを返します。
 
