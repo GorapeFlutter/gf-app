@@ -89,22 +89,23 @@ the server with `./scripts/gorape-up.sh --android-attestation`.
 
 The device-registration screen uses a separate WebAuthn ceremony for Gorape.
 Keycloak credentials belong to Keycloak's RP ID and cannot be reused. Set one
-stable Gorape RP ID and exact app/browser origins in the backend config:
+stable Gorape RP ID and exact app/browser origins in the backend config. The
+default domain layout uses `gorapeflutter.site` as the RP ID:
 
 ```yaml
 Application:
   Server:
     webauthn:
-      rp_id: gorape.example.com
+      rp_id: gorapeflutter.site
       rp_display_name: Gorape
       rp_origins:
-        - https://app.gorape.example.com
+        - https://app.gorapeflutter.site:5174
         - android:apk-key-hash:BASE64URL_CERTIFICATE_HASH
-      portal_origin: https://app.gorape.example.com
-      browser_api_origin: https://api.gorape.example.com
+      portal_origin: https://app.gorapeflutter.site:5174
+      browser_api_origin: https://api.gorapeflutter.site:8443
       attestation_conveyance: direct
       user_verification: required
-    web_origins: [https://app.gorape.example.com]
+    web_origins: [https://app.gorapeflutter.site:5174]
     attestation:
       webauthn:
         allowed_formats: [android-key, tpm, apple]
@@ -114,48 +115,116 @@ Application:
           android-key: [/app/etc/android/android-attestation-roots.pem]
           tpm: [/app/etc/tpm/tpm-attestation-roots.pem]
           apple: [/app/etc/apple/apple-webauthn-roots.pem]
+        assurance:
+          required: standard_passkey
+          allow_synced_passkeys: true
+          hardware_formats: [android-key, apple, tpm, fido-u2f]
 ```
 
-The local Docker config uses RP ID `gorapeflutter.github.io`, distinct from
-Keycloak's `localhost`, and allows the current Android debug
-`android:apk-key-hash` origin. Attestation format `none` is enabled for local
-testing. The organization Pages repository
-`../gorapeflutter.github.io` publishes
-`https://gorapeflutter.github.io/.well-known/assetlinks.json`; its statement
-associates package `com.gorapeflutter.gf_app` with the current debug signing
-certificate with both `delegate_permission/common.get_login_creds` and
-`delegate_permission/common.handle_all_urls`. The API
-endpoint remains `https://localhost:8443`; it is separate
-from the RP domain and its local CA is not used for Digital Asset Links.
-Backend implementation references: [GF-10010](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/repository/webauthn.go#L88)–[GF-10011](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/repository/webauthn.go#L605) validate the RP
-identity, while [GF-10016](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/usecase/passkey_device.go#L91)–[GF-10017](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/usecase/passkey_device.go#L151) issue and verify the registration.
+Production may substitute any custom domain in `etc/server.yaml`; the local
+Docker config uses `gorapeflutter.site` and `*.gorapeflutter.site` resolves to
+`127.0.0.1`. The RP ID must be the eTLD+1 or a parent domain of every WebAuthn
+origin, and the app association files must be published on the RP domain.
+
+The local Docker config allows the current Android debug
+`android:apk-key-hash` origin, requests `direct` attestation, and rejects
+`none`. Direct conveyance is only a preference: if the Android credential
+provider returns no attestation, registration is rejected rather than promoted
+to hardware assurance. The apex domain publishes
+`https://gorapeflutter.site/.well-known/assetlinks.json` and
+`https://gorapeflutter.site/.well-known/apple-app-site-association`; the DAL
+statement associates package `com.gorapeflutter.gf_app` with the current debug
+signing certificate with both
+`delegate_permission/common.get_login_creds` and
+`delegate_permission/common.handle_all_urls`. The API endpoint
+`https://api.gorapeflutter.site:8443` is separate from the RP domain and its
+local CA is not used for Digital Asset Links.
+Backend implementation references: [GF-10010](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/repository/webauthn.go#L99)–[GF-10011](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/repository/webauthn.go#L816) validate the RP
+identity, while [GF-10016](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/usecase/passkey_device.go#L92)–[GF-10017](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/usecase/passkey_device.go#L152) issue and verify the registration.
 The [complete backend source ID index](https://github.com/Gorapeflutter/gorape/blob/main/docs/book/src/source-index.md)
 is maintained with the Gorape documentation.
 
 For another debug signing key, add its SHA-256 certificate fingerprint to the
-Pages `assetlinks.json` and its `android:apk-key-hash:` value to
-`../gorape/etc/server.yaml.docker`'s `webauthn.rp_origins`, then redeploy Pages
-and regenerate the server config.
+apex `assetlinks.json` and its `android:apk-key-hash:` value to
+`../gorape/etc/server.yaml.docker`'s `webauthn.rp_origins`, then redeploy the
+association files and regenerate the server config.
 
 For local API HTTPS (separate from the Android RP-domain requirement), run:
 
 ```bash
 ./scripts/generate-local-tls.sh [--host <local-dns-name>]
 ./scripts/gorape-up.sh --https --android-attestation
-curl --cacert config/generated/tls/ca.crt https://localhost:8443/health
+curl --cacert config/generated/tls/ca.crt https://api.gorapeflutter.site:8443/health
 ```
 
 This creates a local CA and certificate under the Git-ignored
-`config/generated/tls/`; the private keys are mode `0600`. The CA is for local
-API transport only and must not be used as a production trust anchor. Android's
-native passkey RP association is provided separately by the public Pages site.
+`config/generated/tls/`; the private keys are mode `0600`. The certificate
+covers `api.gorapeflutter.site`, `idp.gorapeflutter.site` and
+`app.gorapeflutter.site`. The CA is for local API transport only and must not be
+used as a production trust anchor. Android's native passkey RP association is
+provided separately by the apex `/.well-known/` files.
 `./scripts/run-android.sh` uses the generated CA for the debug Dart client and
-sets the API URL to `https://localhost:8443`.
+sets the API URL to `https://api.gorapeflutter.site:8443`.
 
 The default empty format allowlist, `allow_none: false`, and
 `allow_self_attestation: false` reject registrations. Mount each configured
 trust bundle into the backend container. `android-key` reuses
 `android_trust_anchors` when its WebAuthn-specific list is empty.
+
+### Assurance policy
+
+The assurance level is derived only from verified evidence. The client-supplied
+platform name is never used. Set the minimum accepted level and whether
+synchronizable passkeys are allowed:
+
+```yaml
+attestation:
+  webauthn:
+    assurance:
+      required: hardware_attested
+      allow_synced_passkeys: false
+      hardware_formats: [android-key, apple, tpm, fido-u2f]
+```
+
+`required: hardware_attested` requires `allow_synced_passkeys: false` and at
+least one hardware-capable attestation format or FIDO MDS; Gorape fails at
+startup otherwise. The same policy is applied at registration, authentication
+and external proof verification. A `BE=true` credential is always
+`standard_passkey` and cannot satisfy high assurance. `packed` and self
+attestation, or MDS verification alone, do not prove hardware protection.
+
+Cross-device authentication (CDA) is an authenticator capability. Gorape stores
+the transports reported during registration and passes them back unchanged; it
+does not inject `hybrid`. Local OS keys generated by gf-app are not substitutes
+for a FIDO credential assertion.
+
+### Test cross-device approval from the sample web app
+
+With the local HTTPS stack running, trust `config/generated/tls/ca.crt` in the
+desktop OS/browser trust store, then run `./scripts/open-sample-web.sh`. Sign in
+to the sample with the Keycloak passkey for the same account that owns the
+Gorape device (user01 in the local seed). Create an operation with
+`standard_passkey`, select cross-device preferred, and approve it. Chrome should
+offer the registered `hybrid` transport so the Pixel can scan/complete the
+cross-device assertion. The sample preserves the server-stored transport list
+and only sends a `hybrid` hint when that list advertises `hybrid`.
+
+The current Pixel credential has `BE=true`, so its assurance is
+`standard_passkey`; it cannot satisfy a `hardware_attested` request. This test
+uses the local app origin `https://app.gorapeflutter.site:5174`, the published
+apex DAL for the phone, and the locally trusted development CA for the app and
+Keycloak HTTPS endpoints. Do not bypass TLS certificate verification.
+
+### Metadata and revocation
+
+When `attestation.webauthn.mds.enabled` is true, Gorape verifies the signed FIDO
+MDS BLOB, validates the credential AAGUID and authenticator status, and
+re-evaluates stored credentials on later assertions. An MDS entry with
+`keyProtection` of `hardware`, `tee`, `secure_element`, or `smart_card` counts as
+hardware evidence. When `attestation.revocation.enabled` is true, the retained
+leaf attestation certificate is re-checked with CRL/OCSP subject to the cache
+TTL. Network failures and unknown status fail closed for high-assurance
+decisions.
 
 The client and RP domain must also be associated on each native platform:
 
@@ -163,12 +232,16 @@ The client and RP domain must also be associated on each native platform:
   `delegate_permission/common.get_login_creds` and
   `delegate_permission/common.handle_all_urls` for the app package and all
   signing certificate fingerprints at
-  `https://<rp-id>/.well-known/assetlinks.json`.
-- iOS/macOS: publish AASA `webcredentials` entries and add
-  `webcredentials:<rp-id>` to the app's Associated Domains entitlement.
+  `https://gorapeflutter.site/.well-known/assetlinks.json`.
+- iOS/macOS: publish AASA `webcredentials` entries at
+  `https://gorapeflutter.site/.well-known/apple-app-site-association` and add
+  `webcredentials:gorapeflutter.site` to the app's Associated Domains
+  entitlement. The Apple Team ID must match the production signing identity.
 - Web: serve from a secure origin; the RP ID must be the page host or a parent
   domain. Register the Web origin and Keycloak CORS origin.
-- Windows: uses the Windows WebAuthn API; TPM attestation is provider-dependent.
+- Windows: uses the Windows WebAuthn API; TPM attestation is
+  provider-dependent. gf-app also creates CNG/Platform Crypto Provider keys
+  (TPM-backed when available) for the local Device key flow.
 - Linux: use Chrome/Firefox; the gf-app web target supplies a browser ceremony
   page while Gorape remains an API-only backend.
 
@@ -181,7 +254,10 @@ must match the Gorape API URL configured in gf-app. The Linux ceremony page is
 hosted by gf-app; Gorape serves only APIs. Windows/Linux use the
 `http://127.0.0.1:8401/oauth2redirect` system-browser callback. For local Web
 development, run Flutter on port 5000 and register
-`http://localhost:5000/auth.html` plus `http://localhost:5000` as redirect/origin.
+`http://localhost:5000/auth.html` plus `http://localhost:5000` as
+redirect/origin, or serve the sample web app at
+`https://app.gorapeflutter.site:5174` and register
+`https://app.gorapeflutter.site:5174/auth.html`.
 Linux builds need GTK/WebKitGTK development packages from
 `desktop_webview_window`, while OIDC/passkey flows open the installed system
 browser.
@@ -199,15 +275,15 @@ attestation, so device registration uses the WebAuthn passkey ceremony
 ### Verify the verifier is active
 
 ```bash
-curl -s http://localhost:8000/health
+curl -s http://api.gorapeflutter.site:8000/health
 
 TOKEN=$(cat ../gorape/etc/.gorape/client/admin/access_token)
 PROJECT_ID=$(curl -s -H "Authorization: Bearer $TOKEN" \
-  http://localhost:8000/v1/projects | python3 -c \
+  http://api.gorapeflutter.site:8000/v1/projects | python3 -c \
   'import json,sys; print(json.load(sys.stdin)[0]["id"])')
 
 curl -s -H "Authorization: Bearer $TOKEN" \
-  "http://localhost:8000/v1/projects/$PROJECT_ID/attestation/capabilities"
+  "http://api.gorapeflutter.site:8000/v1/projects/$PROJECT_ID/attestation/capabilities"
 ```
 
 Expected:
@@ -234,7 +310,7 @@ Realm and client:
 
 | Item | Value |
 | --- | --- |
-| Issuer | `http://localhost:8080/realms/gorape` |
+| Issuer | `https://idp.gorapeflutter.site:9443/realms/gorape` |
 | Client | `gorape-client` (public) |
 | Flow | Authorization Code + PKCE S256 |
 | Scopes | `openid profile` |
@@ -242,7 +318,7 @@ Realm and client:
 | CLI redirect | `http://127.0.0.1:8400/callback` (preserved) |
 | Android/iOS/macOS redirect | `com.gorapeflutter.gfapp:/oauth2redirect` |
 | Windows/Linux redirect | `http://127.0.0.1:8401/oauth2redirect` |
-| Web redirect | Same-origin `/auth.html` (local development: `http://localhost:5000/auth.html`) |
+| Web redirect | Same-origin `/auth.html` (local development: `https://app.gorapeflutter.site:5174/auth.html` or `http://localhost:5000/auth.html`) |
 
 On a fresh local database, redirect URIs, passwordless WebAuthn, the passkey-only
 login flow, the `gorape-passkey-amr` mapper, and the registration required action
@@ -261,7 +337,8 @@ registered passkeys.
 
 For an already-existing realm, add Flutter redirect URIs/Web Origins through
 Keycloak Admin Console → realm `gorape` → Clients → `gorape-client`, preserving
-the CLI callback. Local Web runs at `http://localhost:5000/auth.html`.
+the CLI callback. Local Web runs at `https://app.gorapeflutter.site:5174/auth.html`
+or `http://localhost:5000/auth.html`.
 
 If you remove the Keycloak/Postgres data, the realm and demo fixture are
 re-imported from these files. Test passwords are documented in
@@ -290,12 +367,18 @@ Ports used by the development environment:
 
 | Service | URL |
 | --- | --- |
-| Gorape API | http://localhost:8000 |
-| Health | http://localhost:8000/health |
-| Keycloak | http://localhost:8080 |
-| Keycloak admin | http://localhost:8080/admin |
+| Gorape API | http://api.gorapeflutter.site:8000 |
+| Health | http://api.gorapeflutter.site:8000/health |
+| Gorape API (HTTPS) | https://api.gorapeflutter.site:8443 |
+| Keycloak | http://idp.gorapeflutter.site:8080 |
+| Keycloak admin | http://idp.gorapeflutter.site:8080/admin |
 | pgAdmin | http://localhost:3001 |
 | Swagger UI (optional) | http://localhost:3002 |
+
+`*.gorapeflutter.site` resolves to `127.0.0.1` for local development. The
+`localhost` names remain usable when a tool cannot resolve the development
+domain, but the OIDC issuer must then also use the matching `localhost` host so
+the token `iss` stays identical.
 
 Development credentials come from the backend repository:
 

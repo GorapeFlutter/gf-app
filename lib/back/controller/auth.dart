@@ -19,11 +19,7 @@ final authRepositoryProvider = Provider<AuthRepository>(
         ref.watch(connectionConfigProvider).defaultsFromEnvironment(platform);
     final client = newDefaultHttpClient();
     ref.onDispose(client.close);
-    return newAuthRepository(
-      settings,
-      platform,
-      httpClient: client,
-    );
+    return newAuthRepository(settings, platform, httpClient: client);
   },
 );
 

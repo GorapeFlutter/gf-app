@@ -12,13 +12,13 @@ import 'package:gf_app/back/usecase/passkey_device.dart';
 
 const _creationOptions = <String, dynamic>{
   'challenge': 'Y2hhbGxlbmdl',
-  'rp': {'id': 'gorape.example', 'name': 'Gorape'},
+  'rp': {'id': 'gorapeflutter.site', 'name': 'Gorape'},
   'user': {'id': 'dXNlci0x', 'name': 'user', 'displayName': 'User'},
   'attestation': 'direct',
 };
 const _requestOptions = <String, dynamic>{
   'challenge': 'Y2hhbGxlbmdl',
-  'rpId': 'gorape.example',
+  'rpId': 'gorapeflutter.site',
   'userVerification': 'required',
 };
 
@@ -171,8 +171,11 @@ class _BrowserPasskeys extends _Passkeys implements BrowserPasskeyRepository {
     required String challengeId,
   }) async {
     browserRegistrationCalls++;
-    expect(browserUrl, 'https://app.gorape.example/passkey-ceremony.html');
-    expect(browserApiOrigin, 'https://api.gorape.example');
+    expect(
+      browserUrl,
+      'https://app.gorapeflutter.site:5174/passkey-ceremony.html',
+    );
+    expect(browserApiOrigin, 'https://api.gorapeflutter.site:8443');
     expect(challengeId, 'registration-1');
     return const {'device_id': 'device-linux'};
   }
@@ -184,8 +187,11 @@ class _BrowserPasskeys extends _Passkeys implements BrowserPasskeyRepository {
     required String challengeId,
   }) async {
     browserAuthenticationCalls++;
-    expect(browserUrl, 'https://app.gorape.example/passkey-ceremony.html');
-    expect(browserApiOrigin, 'https://api.gorape.example');
+    expect(
+      browserUrl,
+      'https://app.gorapeflutter.site:5174/passkey-ceremony.html',
+    );
+    expect(browserApiOrigin, 'https://api.gorapeflutter.site:8443');
     expect(challengeId, 'proof-1');
   }
 }
@@ -252,8 +258,8 @@ void main() {
     test('uses the Gorape browser ceremony on Linux', () async {
       final devices = _Devices(
         platform: 'linux',
-        browserUrl: 'https://app.gorape.example/passkey-ceremony.html',
-        browserApiOrigin: 'https://api.gorape.example',
+        browserUrl: 'https://app.gorapeflutter.site:5174/passkey-ceremony.html',
+        browserApiOrigin: 'https://api.gorapeflutter.site:8443',
       );
       final passkeys = _BrowserPasskeys();
       final usecase = PasskeyDeviceUsecaseImpl(

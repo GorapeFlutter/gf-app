@@ -139,7 +139,9 @@ if [[ "$use_https" == "1" ]]; then
   export GORAPE_TLS_CERT="$tls_dir/server.crt"
   export GORAPE_TLS_KEY="$tls_dir/server.key"
   extra_files+=("$APP_ROOT/docker/server.tls.yaml")
-  info "HTTPS: enabled (self-signed local development CA)"
+  extra_files+=("$APP_ROOT/docker/sample.local.yaml")
+  extra_files+=("$APP_ROOT/docker/keycloak.tls.yaml")
+  info "HTTPS: enabled (self-signed local development CA, Keycloak included)"
 fi
 
 if [[ ${#extra_files[@]} -gt 0 ]]; then
@@ -173,36 +175,38 @@ fi
 compose "${up_args[@]}"
 
 if [[ "$do_wait" == "1" ]]; then
-  wait_for_http "Gorape API" "http://localhost:8000/health" 120
+  wait_for_http "Gorape API" "${GORAPE_HTTP_URL:-http://api.gorapeflutter.site:8000}/health" 120
   if [[ "$use_https" == "1" ]]; then
-    wait_for_https "Gorape HTTPS API" "https://localhost:8443/health" \
+    wait_for_https "Gorape HTTPS API" "${GORAPE_HTTPS_URL:-https://api.gorapeflutter.site:8443}/health" \
       "$APP_ROOT/config/generated/tls/ca.crt" 120
   fi
   if [[ "$server_only" != "1" ]]; then
     wait_for_http "Keycloak realm" \
-      "http://localhost:8080/realms/gorape/.well-known/openid-configuration" 180
+      "${GORAPE_KEYCLOAK_URL:-http://idp.gorapeflutter.site:8080}/realms/gorape/.well-known/openid-configuration" 180
   fi
 fi
 
 cat <<EOF
 
 ${C_BOLD}Gorape is running${C_RESET}
-  API             http://localhost:8000
-  Health          http://localhost:8000/health
+  API             http://api.gorapeflutter.site:8000
+  Health          http://api.gorapeflutter.site:8000/health
 EOF
 if [[ "$use_https" == "1" ]]; then
   cat <<'EOF'
-  HTTPS API       https://localhost:8443
-  HTTPS health    https://localhost:8443/health (trust config/generated/tls/ca.crt)
+  HTTPS API       https://api.gorapeflutter.site:8443
+  HTTPS health    https://api.gorapeflutter.site:8443/health (trust config/generated/tls/ca.crt)
+  OIDC issuer     https://idp.gorapeflutter.site:9443/realms/gorape (same local CA)
 EOF
 fi
 cat <<'EOF'
-  Keycloak        http://localhost:8080/realms/gorape
-  Admin console   http://localhost:8080/admin (admin / admin)
+  Keycloak HTTP   http://idp.gorapeflutter.site:8080 (management/internal endpoint)
+  Admin console   http://idp.gorapeflutter.site:8080/admin (admin / admin)
 
 Next:
   # Keycloak realm, redirects, passkey flow, users, and demo project are
   # imported from ../gorape/etc and the Postgres init SQL on a fresh database.
   ./scripts/run-android.sh                # build/run on a connected device
+  ./scripts/open-sample-web.sh            # open the HTTPS WebAuthn sample in Chrome
 
 EOF

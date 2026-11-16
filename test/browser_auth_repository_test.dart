@@ -117,7 +117,7 @@ void main() {
         );
         expect(
           capturedAuthorizationUrl.queryParameters['kc_action'],
-          'webauthn-register-passwordless:skip_if_exists',
+          'webauthn-register-passwordless',
         );
         expect(
           capturedAuthorizationUrl.queryParameters['code_challenge_method'],

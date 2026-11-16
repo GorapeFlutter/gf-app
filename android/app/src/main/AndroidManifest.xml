@@ -62,6 +62,27 @@
                     android:path="/oauth2redirect"/>
             </intent-filter>
         </activity>
+        <!-- Optional Android 14+ custom passkey provider. Users must enable
+             GF Passkeys in Android Passwords/Passkeys settings. -->
+        <service
+            android:name=".GorapeCredentialProviderService"
+            android:enabled="true"
+            android:exported="true"
+            android:label="GF Hardware Passkeys"
+            android:permission="android.permission.BIND_CREDENTIAL_PROVIDER_SERVICE"
+            tools:targetApi="upsidedowncake">
+            <intent-filter>
+                <action android:name="android.service.credentials.CredentialProviderService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.credentials.provider"
+                android:resource="@xml/credential_provider" />
+        </service>
+        <activity
+            android:name=".GorapeCredentialProviderActivity"
+            android:exported="false"
+            android:excludeFromRecents="true"
+            android:theme="@android:style/Theme.Material.Light.NoActionBar" />
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data

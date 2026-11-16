@@ -17,11 +17,11 @@ final class ConnectionConfigImpl implements ConnectionConfig {
   @override
   ConnectionSettings defaultsFor(RuntimePlatform platform) {
     return ConnectionSettings(
-      // The Android run script uses adb reverse for this local HTTPS endpoint.
-      // The issuer remains HTTP and must match Keycloak's `iss` claim exactly.
-      apiBaseUrl: 'https://localhost:8443',
-      issuer: 'http://localhost:8080/realms/gorape',
-      clientId: 'gorape-client',
+      // The local Keycloak HTTPS endpoint is the public OIDC issuer. Its
+      // discovery document and token `iss` use this exact URL.
+      apiBaseUrl: ConnectionSettings.defaultApiBaseUrl,
+      issuer: ConnectionSettings.defaultOidcIssuer,
+      clientId: ConnectionSettings.defaultClientId,
       redirectUri: switch (platform) {
         RuntimePlatform.windows ||
         RuntimePlatform.linux => ConnectionSettings.desktopRedirectUri,
@@ -37,7 +37,7 @@ final class ConnectionConfigImpl implements ConnectionConfig {
         base.host.isNotEmpty) {
       return base.resolve(ConnectionSettings.webRedirectPath).toString();
     }
-    return 'http://localhost:8080/${ConnectionSettings.webRedirectPath}';
+    return '${ConnectionSettings.defaultWebOrigin}/${ConnectionSettings.webRedirectPath}';
   }
 
   /// GF-00115 — Handles defaults from environment in ConnectionConfigImpl.

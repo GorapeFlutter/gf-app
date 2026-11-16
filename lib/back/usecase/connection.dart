@@ -36,16 +36,28 @@ final class ConnectionUsecaseImpl implements ConnectionUsecase {
       // GF-02068 — Reject saved settings that omit the required OIDC scope.
       if (!stored.scopes.contains('openid')) return defaults;
 
-      // Migrate only the known local HTTP defaults. Preserve user-configured
-      // endpoints while moving existing development installs to HTTPS.
+      // GF-02186 — Migrate legacy local API and issuer defaults to the gorapeflutter.site domain.
       final storedApiBaseUrl = stored.apiBaseUrl.replaceFirst(
         RegExp(r'/+$'),
         '',
       );
-      if (defaults.apiBaseUrl == 'https://localhost:8443' &&
+      final storedIssuer = stored.issuer.replaceFirst(RegExp(r'/+$'), '');
+      final migrateApi =
+          defaults.apiBaseUrl == ConnectionSettings.defaultApiBaseUrl &&
           (storedApiBaseUrl == 'http://localhost:8000' ||
-              storedApiBaseUrl == 'http://10.0.2.2:8000')) {
-        final migrated = stored.copyWith(apiBaseUrl: defaults.apiBaseUrl);
+              storedApiBaseUrl == 'http://10.0.2.2:8000' ||
+              storedApiBaseUrl == 'https://localhost:8443' ||
+              storedApiBaseUrl == 'http://api.gorapeflutter.site:8000');
+      final migrateIssuer =
+          defaults.issuer == ConnectionSettings.defaultOidcIssuer &&
+          (storedIssuer == 'http://localhost:8080/realms/gorape' ||
+              storedIssuer ==
+                  'http://idp.gorapeflutter.site:8080/realms/gorape');
+      if (migrateApi || migrateIssuer) {
+        final migrated = stored.copyWith(
+          apiBaseUrl: migrateApi ? defaults.apiBaseUrl : null,
+          issuer: migrateIssuer ? defaults.issuer : null,
+        );
         await _store.write(storageKey, migrated.encode());
         return migrated;
       }

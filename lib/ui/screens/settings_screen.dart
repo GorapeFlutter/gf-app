@@ -172,9 +172,9 @@ class _SettingsFormState extends ConsumerState<_SettingsForm> {
                 controller: _apiController,
                 enabled: !_saving,
                 keyboardType: TextInputType.url,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'API Base URL',
-                  hintText: 'https://localhost:8443',
+                  hintText: ConnectionSettings.defaultApiBaseUrl,
                   prefixIcon: Icon(Icons.extension, size: 22),
                 ),
               ),
@@ -219,7 +219,7 @@ class _SettingsFormState extends ConsumerState<_SettingsForm> {
                 keyboardType: TextInputType.url,
                 decoration: const InputDecoration(
                   labelText: 'OIDC Issuer',
-                  hintText: 'http://localhost:8080/realms/gorape',
+                  hintText: ConnectionSettings.defaultOidcIssuer,
                   prefixIcon: Icon(Icons.public),
                 ),
               ),
@@ -355,6 +355,7 @@ class _SettingsFormState extends ConsumerState<_SettingsForm> {
           'http://127.0.0.1:8400/callback',
           ConnectionSettings.flutterRedirectUri,
           ConnectionSettings.desktopRedirectUri,
+          '${ConnectionSettings.defaultWebOrigin}/${ConnectionSettings.webRedirectPath}',
           'http://localhost:5000/auth.html',
           settings.redirectUri,
         }

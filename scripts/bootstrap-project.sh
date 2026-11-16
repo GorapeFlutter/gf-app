@@ -6,7 +6,7 @@
 #
 # Usage:
 #   ./scripts/bootstrap-project.sh --slug demo --name "Demo Project" \
-#     --admin-subject <keycloak-user-id> [--issuer http://localhost:8080/realms/gorape] [--realm gorape]
+#     --admin-subject <keycloak-user-id> [--issuer https://idp.gorapeflutter.site:9443/realms/gorape] [--realm gorape]
 
 set -euo pipefail
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/lib.sh"
@@ -19,7 +19,7 @@ Options:
   --slug SLUG              Project slug (required)
   --name NAME              Project display name (required)
   --admin-subject SUBJECT  Keycloak user id (sub) of the initial admin (required)
-  --issuer ISSUER          OIDC issuer (default: http://localhost:8080/realms/gorape)
+  --issuer ISSUER          OIDC issuer (default: https://idp.gorapeflutter.site:9443/realms/gorape)
   --realm REALM            Keycloak realm (default: gorape)
   -h, --help               Show this help
 EOF
@@ -28,7 +28,7 @@ EOF
 slug=""
 name=""
 subject=""
-issuer="http://localhost:8080/realms/gorape"
+issuer="https://idp.gorapeflutter.site:9443/realms/gorape"
 realm="gorape"
 
 while [[ $# -gt 0 ]]; do

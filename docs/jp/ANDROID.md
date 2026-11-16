@@ -1,8 +1,8 @@
 # Android登録とattestation
 
-実際の端末登録を行うplatformはAndroidのみです。backend verifierもAndroidのみ実装されています。
+Androidの主要な端末登録経路はGorape RPのWebAuthnパスキーceremonyです。この章は互換性のためbackend verifierが維持しているlegacy Android Key Attestationフローを説明します。
 
-これはアプリ専用device keyに対するAndroid Key Attestationであり、WebAuthnパスキーattestationではありません。TPMとパスキーattestationの違いは[アーキテクチャ](ARCHITECTURE.md)を参照してください。
+legacy Android Key Attestationはアプリ専用device keyに対するattestationであり、WebAuthnパスキーattestationではありません。TPMとパスキーattestationの違いは[アーキテクチャ](ARCHITECTURE.md)を参照してください。パスキーの保証レベル（`hardware_attested`、`device_bound_unattested`、`standard_passkey`、`rejected`）は、platform名ではなく検証済みattestation証拠とBE/BSフラグからGorapeが導出します。
 
 ## 設定
 
@@ -42,10 +42,11 @@ Gorapeは`ecdsa.VerifyASN1`で検証します。signatureをraw `r || s`へ変�
 
 Android開発環境の既定値:
 
-- API: `https://localhost:8443`（local server。debug runnerが開発CAを設定）
-- OIDC issuer: `http://localhost:8080/realms/gorape`
+- API: `https://api.gorapeflutter.site:8443`（local server。debug runnerが開発CAを設定）
+- OIDC issuer: `https://idp.gorapeflutter.site:9443/realms/gorape`
+- WebAuthn RP ID: `gorapeflutter.site`（association fileはapexの`/.well-known/`）
 
-IssuerはKeycloakがtokenに設定する`iss`と完全一致する必要があります。emulatorと実機の両方で利用する場合、APIとissuerの両方をlocalhostにして`adb reverse`を使う方法が簡単です。
+IssuerはKeycloakがtokenに設定する`iss`と完全一致する必要があります。ローカル開発では`*.gorapeflutter.site`が`127.0.0.1`に解決され、`adb reverse`が端末から開発hostへportを転送します。
 
 ```bash
 ./scripts/run-android.sh
@@ -55,23 +56,25 @@ IssuerはKeycloakがtokenに設定する`iss`と完全一致する必要があ�
 
 ```bash
 adb reverse tcp:8080 tcp:8080
+adb reverse tcp:8000 tcp:8000
 adb reverse tcp:8443 tcp:8443
+adb reverse tcp:9443 tcp:9443
 flutter run -d <device> --debug \
-  --dart-define=GORAPE_API_BASE_URL=https://localhost:8443 \
-  --dart-define=GORAPE_OIDC_ISSUER=http://localhost:8080/realms/gorape
+  --dart-define=GORAPE_API_BASE_URL=https://api.gorapeflutter.site:8443 \
+  --dart-define=GORAPE_OIDC_ISSUER=https://idp.gorapeflutter.site:9443/realms/gorape
 ```
 
-ローカルHTTPSでは`./scripts/run-android.sh`を使ってください。生成CAのPEMをdebug Dart clientへ渡します。手動で`flutter run`する場合は`GORAPE_TLS_CA_CERT_BASE64`を追加するか、OSが信頼する証明書を使います。
+ローカルHTTPSでは`./scripts/run-android.sh`を使ってください。生成CAのPEMをdebug Dart clientへ渡します。AndroidのAppAuthとChrome Custom TabでもKeycloakへ接続するため、生成CAを端末のユーザー証明書として一度インストールしてください。IssuerはKeycloak discoveryの`issuer`と完全一致する必要があります。
 
 便利なoption:
 
 ```bash
 ./scripts/run-android.sh --device emulator-5554
-./scripts/run-android.sh --api-url https://localhost:8443 --tls-ca config/generated/tls/ca.crt
+./scripts/run-android.sh --api-url https://api.gorapeflutter.site:8443 --tls-ca config/generated/tls/ca.crt
 ./scripts/run-android.sh -- --verbose                      # flutter runへ追加引数を渡す
 ```
 
-生成CAを信頼するのはdebug Dart HTTP clientだけです。release buildでは開発CAを使わず、公的に信頼されたserver certificateを使用してください。
+生成CAはローカル開発端末でのみ信頼してください。release buildでは開発CAを使わず、公的に信頼されたserver certificateを使用してください。開発domainは`--dart-define`で任意の独自domainへ変更できますが、本番でTLS証明書検証を無効化してはいけません。
 
 実機で`adb reverse`を使わない場合、APIにはhostのLAN IPを指定し、Keycloakも一致するhostname/issuerで設定します。Keycloakが別hostの`iss`を発行しない限り、App側のissuerだけを変更しないでください。
 
@@ -82,16 +85,22 @@ TOKEN=$(cat ../gorape/etc/.gorape/client/admin/access_token)
 PROJECT_ID=805c5265-7315-420b-8aa7-3aea715ed88a
 
 curl -s -H "Authorization: Bearer $TOKEN" \
-  "http://localhost:8000/v1/projects/$PROJECT_ID/attestation/capabilities"
+  "http://api.gorapeflutter.site:8000/v1/projects/$PROJECT_ID/attestation/capabilities"
 
 curl -s -H "Authorization: Bearer $TOKEN" \
-  "http://localhost:8000/v1/projects/$PROJECT_ID/devices"
+  "http://api.gorapeflutter.site:8000/v1/projects/$PROJECT_ID/devices"
 
 curl -s -H "Authorization: Bearer $TOKEN" \
-  "http://localhost:8000/v1/projects/$PROJECT_ID/devices/<deviceId>/attestation"
+  "http://api.gorapeflutter.site:8000/v1/projects/$PROJECT_ID/devices/<deviceId>/attestation"
 ```
 
-登録成功時はHTTP 201と`platform: "android"`のdeviceが返ります。attestation recordにはverifier type、security level、statusが含まれます。
+登録成功時はHTTP 201と`platform: "android"`のdeviceが返ります。attestation recordにはverifier type、security level、status、導出された保証レベルが含まれます。legacy Android Key Attestationはハードウェア鍵の常在を証明するため、`BE=false`のcredentialは`hardware_attested`になり得ます。WebAuthnパスキーは独自の検証済みレベルを返します。
+
+### Pixel実機PoCの検証結果
+
+Pixel 6 / Android 17 (API 37) でGF Hardware Passkeysを有効にし、Gorape RP用credentialを登録しました。Gorapeはregistration verifyでHTTP 201を返し、DBのattestation recordは`android-key`、`verified`、`trust_anchor`、`hardware_protected=true`、`BE=false`、`BS=false`、`assurance_level=hardware_attested`でした。続くpasskey assertionもHTTP 200で検証されています。検証用設定ではMDSは無効で、Google Android Key Attestation trust anchorによるchain検証を使いました。
+
+DBの`security_level=android_key_attested`はTEE/StrongBoxを区別しません。実装はStrongBoxを優先し、利用できない場合はTEEへfallbackしますが、この登録結果だけからどちらのlevelかは断定しません。Keycloakログイン用パスキーは別RP (`idp.gorapeflutter.site`) のGoogle Password Manager credentialであり、このGF Providerの検証対象ではありません。CDA/hybridは未検証で、現在のProviderは`internal`のみを返します。
 
 ## Troubleshooting
 
@@ -103,14 +112,17 @@ curl -s -H "Authorization: Bearer $TOKEN" \
 | 422 `attestation challenge` mismatch | decodeしたchallengeが`setAttestationChallenge`へ渡したbytesと異なるか、古いchallengeを再利用しています。 |
 | `Android Key Attestation did not return a certificate chain` | Keystoreがattestationに対応していない可能性があります（emulatorや一部ROMなど）。hardware-backed Keystore搭載端末を使います。 |
 | Login後に`invalid_redirect_uri` | Flutter redirectがallow listにありません。新規ローカルrealmは`../gorape/etc/keycloak/gorape-realm.json`からimportされます。既存realmでは`gorape-client`へ手動追加します。 |
-| Login成功後にAPIが401 | token issuer/audienceが`http://localhost:8080/realms/gorape`と`gorape-api`に一致する必要があります。接続設定を確認します。 |
+| ブラウザー起動前にログインが進まない | 接続設定のIssuerをKeycloak discoveryの`issuer`に合わせ、ローカルHTTPSでは生成CAをAndroidのユーザー証明書としてインストールします。 |
+| Login成功後にAPIが401 | token issuer/audienceが`https://idp.gorapeflutter.site:9443/realms/gorape`と`gorape-api`に一致する必要があります。接続設定とGorape project issuerを確認します。 |
 | `Cleartext HTTP traffic not permitted` | `network_security_config.xml`で許可されたlocal開発host以外を使っています。HTTPSにするか開発hostを追加します。 |
 | 鍵はあるがproofに失敗 | 画面lock変更やrestoreなどでKeystore鍵が無効化された可能性があります。deviceを失効して再登録します。 |
+| パスキー登録が`fmt=none`を返す | `direct`を要求してもAndroid Credential Managerがattestation statementを返さない場合があります。ローカルのstrict test設定では拒否します。platform名からハードウェア保護を推定してはいけません。 |
 
 Emulatorはsoftwareまたはtest rootのattestationを返す場合があります。Key Attestationを通過するには、Google公開rootへchainするTEE/StrongBox実装を持つ実機が必要になることがあります。
 
 ## 制限
 
-- backendにiOS/macOS/Windows verifierがないため、各platformはKeycloak loginまでで、unsupported状態を表示します。
-- Play Integrityは使いません。Gorape contractはAndroid Key Attestationです。
+- legacy Android Key Attestation verifierはAndroid専用です。iOS、macOS、Windows、LinuxはGorape WebAuthnパスキーceremonyを使い、保証レベルは検証済みattestation証拠（Apple、TPM、Android Key、FIDO MDS）から導出します。
+- Play Integrityは使いません。Gorape contractはAndroid Key AttestationとWebAuthn attestationです。
+- Credential Managerの`fmt=none`、Google root更新、release署名証明書の実機検証はこの環境では**未検証**です。DALは現状debug fingerprintのみを含みます。
 - 現在のclient/OpenAPI surfaceにはdevice group管理とpolicy enforcementは含まれていません。

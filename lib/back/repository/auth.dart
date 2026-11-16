@@ -148,7 +148,9 @@ final class AppAuthRepository implements AuthRepository {
           issuer: _settings.issuer,
           scopes: _settings.scopes,
           additionalParameters: const {
-            'kc_action': 'webauthn-register-passwordless:skip_if_exists',
+            // Do not use :skip_if_exists: Keycloak reports success when that
+            // option skips registration, leaving no new usable credential.
+            'kc_action': 'webauthn-register-passwordless',
           },
           allowInsecureConnections: _allowInsecure,
         ),
@@ -315,12 +317,8 @@ AuthRepository newAuthRepository(
   http.Client? httpClient,
   BrowserAuthFlow? browserAuthFlow,
 }) => switch (platform) {
-  RuntimePlatform.android ||
-  RuntimePlatform.ios ||
-  RuntimePlatform.macos => AppAuthRepository(
-    settings: settings,
-    httpClient: httpClient,
-  ),
+  RuntimePlatform.android || RuntimePlatform.ios || RuntimePlatform.macos =>
+    AppAuthRepository(settings: settings, httpClient: httpClient),
   RuntimePlatform.windows ||
   RuntimePlatform.linux ||
   RuntimePlatform.web => BrowserAuthRepository(
@@ -452,7 +450,9 @@ final class BrowserAuthRepository implements AuthRepository {
         scopes: _settings.scopes,
         additionalParameters: {
           'nonce': nonce,
-          'kc_action': 'webauthn-register-passwordless:skip_if_exists',
+          // This button means "register another passkey", not "ensure one
+          // exists"; skip_if_exists would report success without creating it.
+          'kc_action': 'webauthn-register-passwordless',
         },
       )..redirectUri = redirect;
       final callback = await _browserAuthFlow(

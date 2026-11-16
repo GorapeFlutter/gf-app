@@ -11,7 +11,7 @@
 set -euo pipefail
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/lib.sh"
 
-KEYCLOAK_URL="${KEYCLOAK_URL:-http://localhost:8080}"
+KEYCLOAK_URL="${KEYCLOAK_URL:-http://idp.gorapeflutter.site:8080}"
 KEYCLOAK_REALM="${KEYCLOAK_REALM:-gorape}"
 KEYCLOAK_CLIENT_ID="${KEYCLOAK_CLIENT_ID:-gorape-client}"
 KEYCLOAK_ADMIN="${KEYCLOAK_ADMIN:-admin}"
@@ -19,9 +19,15 @@ KEYCLOAK_ADMIN_PASSWORD="${KEYCLOAK_ADMIN_PASSWORD:-admin}"
 DEFAULT_REDIRECT_URIS=(
   "com.gorapeflutter.gfapp:/oauth2redirect"
   "http://127.0.0.1:8401/oauth2redirect"
+  "https://app.gorapeflutter.site/auth.html"
+  "https://app.gorapeflutter.site:5000/auth.html"
   "http://localhost:5000/auth.html"
 )
-DEFAULT_WEB_ORIGINS=("http://localhost:5000")
+DEFAULT_WEB_ORIGINS=(
+  "https://app.gorapeflutter.site"
+  "https://app.gorapeflutter.site:5000"
+  "http://localhost:5000"
+)
 
 usage() {
   cat <<EOF

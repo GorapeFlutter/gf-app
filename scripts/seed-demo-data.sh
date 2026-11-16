@@ -12,9 +12,9 @@
 set -euo pipefail
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/lib.sh"
 
-KEYCLOAK_BASE="${KEYCLOAK_BASE:-http://localhost:8080}"
+KEYCLOAK_BASE="${KEYCLOAK_BASE:-http://idp.gorapeflutter.site:8080}"
 REALM="${KEYCLOAK_REALM:-gorape}"
-ISSUER="$KEYCLOAK_BASE/realms/$REALM"
+ISSUER="${KEYCLOAK_ISSUER:-https://idp.gorapeflutter.site:9443}/realms/$REALM"
 USER_COUNT="${SEED_USER_COUNT:-50}"
 PASSWORD="${SEED_PASSWORD:-Password123!}"
 

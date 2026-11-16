@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../repository/attestation.dart';
 import '../repository/connection.dart';
+import '../repository/credential_provider.dart';
 import '../repository/device.dart';
 import '../repository/device_key.dart';
 import '../repository/gorape.dart';
@@ -91,6 +92,11 @@ final passkeyRepositoryProvider = Provider<PasskeyRepository>(
   /* GF-00181 — Runs an inline callback in top level. */ (ref) =>
       newPasskeyRepository(ref.watch(runtimePlatformProvider)),
 );
+final credentialProviderRepositoryProvider =
+    Provider<CredentialProviderRepository>(
+      (ref) =>
+          newCredentialProviderRepository(ref.watch(runtimePlatformProvider)),
+    );
 final passkeyDeviceRepositoryProvider = Provider<PasskeyDeviceRepository>(
   /* GF-00183 — Runs an inline callback in top level. */ (ref) =>
       PasskeyDeviceRepositoryImpl(ref.watch(gorapeApiProvider)),

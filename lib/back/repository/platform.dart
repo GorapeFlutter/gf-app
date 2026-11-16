@@ -60,11 +60,12 @@ final class PlatformRepositoryImpl implements PlatformRepository {
     RuntimePlatform.windows => const PlatformSupport(
       platform: 'windows',
       oidcLogin: true,
-      localKeyGeneration: false,
+      localKeyGeneration: true,
       attestationFlow: false,
       passkeyCeremony: true,
       note:
-          'System browser + PKCE OIDCとWindows WebAuthnに対応します。TPM attestationはOS・authenticator・trust policyに依存します。',
+          'System browser + PKCE OIDC、Windows WebAuthn、CNG/TPMのnon-exportable Device鍵に対応します。'
+          'パスキーの保証レベルはOSが返すTPM/attestation statementをGorapeが検証して決定します。',
     ),
     RuntimePlatform.linux => const PlatformSupport(
       platform: 'linux',

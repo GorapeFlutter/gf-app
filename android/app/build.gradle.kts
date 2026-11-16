@@ -30,7 +30,10 @@ android {
         versionName = flutter.versionName
 
         // Used by flutter_appauth for the custom-scheme OIDC redirect.
-        manifestPlaceholders["appAuthRedirectScheme"] = "com.gorapeflutter.gfapp"
+        manifestPlaceholders["appAuthRedirectScheme"] =
+            providers.gradleProperty("gorapeRedirectScheme")
+                .orElse(providers.environmentVariable("GORAPE_REDIRECT_SCHEME"))
+                .getOrElse("com.gorapeflutter.gfapp")
     }
 
     buildTypes {
@@ -40,6 +43,12 @@ android {
             signingConfig = signingConfigs.getByName("debug")
         }
     }
+}
+
+dependencies {
+    // Credential Provider API is already used by the passkeys plugin; keep an
+    // explicit dependency because gf-app also exposes its own provider service.
+    implementation("androidx.credentials:credentials:1.6.0")
 }
 
 flutter {

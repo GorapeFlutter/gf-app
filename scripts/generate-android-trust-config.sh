@@ -163,6 +163,7 @@ info "Generating $server_config from $template"
 python3 - "$template" "$server_config" <<'PY'
 import base64
 import hashlib
+import json
 import os
 import pathlib
 import re
@@ -225,6 +226,7 @@ if keystore.is_file():
         )
         digest = hashlib.sha256(der).digest()
         hex_digest = digest.hex()
+        colon_fp = ":".join(f"{b:02X}" for b in digest)
         apk_origin = "android:apk-key-hash:" + base64.urlsafe_b64encode(digest).decode("ascii").rstrip("=")
         text = re.sub(
             r"(?m)^(?P<indent>[ \t]*)applications:\s*\{\}\s*$",
@@ -237,6 +239,27 @@ if keystore.is_file():
                 f"\\g<indent>rp_origins:\n\\g<indent>  - {apk_origin}",
                 text,
             )
+        assetlinks_path = destination.parent / "assetlinks.json"
+        assetlinks_path.write_text(
+            json.dumps(
+                [
+                    {
+                        "relation": [
+                            "delegate_permission/common.get_login_creds",
+                            "delegate_permission/common.handle_all_urls",
+                        ],
+                        "target": {
+                            "namespace": "android_app",
+                            "package_name": "com.gorapeflutter.gf_app",
+                            "sha256_cert_fingerprints": [colon_fp],
+                        },
+                    }
+                ],
+                indent=2,
+            )
+            + "\n",
+            encoding="utf-8",
+        )
     except Exception:
         pass
 
@@ -258,7 +281,7 @@ Restart the backend with the generated configuration:
   ./scripts/gorape-up.sh --android-attestation
 
 Then confirm the verifier is active (requires a signed-in access token):
-  GET http://localhost:8000/v1/projects/{projectId}/attestation/capabilities
+  GET http://api.gorapeflutter.site:8000/v1/projects/{projectId}/attestation/capabilities
   {"verifiers":{"android":"implemented",...}}
 
 Note: /app/etc/android is the path inside the server container. The Compose

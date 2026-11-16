@@ -1,0 +1,15 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.get_login_creds",
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.gorapeflutter.gf_app",
+      "sha256_cert_fingerprints": [
+        "B0:1E:14:46:48:65:68:4E:1C:65:33:49:FF:19:CF:F3:97:0A:BD:CF:CE:FC:B1:5E:11:63:1B:EE:32:64:5D:6B"
+      ]
+    }
+  }
+]

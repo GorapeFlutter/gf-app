@@ -1,0 +1,14 @@
+# Optional HTTPS listener for Keycloak (local development).
+# WebAuthn requires a secure context; this exposes Keycloak over HTTPS using
+# the locally generated CA so passkey login can be tested on device.
+services:
+  keycloak:
+    ports:
+      - "${KEYCLOAK_HTTPS_PORT:-9443}:8443"
+    environment:
+      KC_HTTPS_PORT: "8443"
+      KC_HTTPS_CERTIFICATE_FILE: /opt/keycloak/conf/server.crt
+      KC_HTTPS_CERTIFICATE_KEY_FILE: /opt/keycloak/conf/server.key
+    volumes:
+      - ${GORAPE_TLS_CERT:?run scripts/generate-local-tls.sh first}:/opt/keycloak/conf/server.crt:ro
+      - ${GORAPE_TLS_KEY:?run scripts/generate-local-tls.sh first}:/opt/keycloak/conf/server.key:ro

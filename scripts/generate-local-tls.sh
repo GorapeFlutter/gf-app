@@ -11,7 +11,10 @@ Usage: ./scripts/generate-local-tls.sh [options]
 
 Options:
   --host HOST   Add a DNS name or IP address to the server certificate SAN.
-                May be repeated. localhost, 127.0.0.1 and ::1 are always added.
+                May be repeated. gorapeflutter.site, api.gorapeflutter.site,
+                idp.gorapeflutter.site, app.gorapeflutter.site,
+                local.gorapeflutter.site, localhost, 127.0.0.1 and ::1 are
+                always added.
   --force       Replace the generated local TLS files if they already exist.
   -h, --help    Show this help.
 
@@ -29,7 +32,16 @@ output_dir="$APP_ROOT/config/generated/tls"
   die "Refusing to write TLS keys through a symlink: $output_dir"
 git -C "$APP_ROOT" check-ignore -q "$output_dir/server.key" ||
   die "TLS output is not Git-ignored. Refusing to write private keys: $output_dir"
-hosts=(localhost 127.0.0.1 ::1)
+hosts=(
+  gorapeflutter.site
+  api.gorapeflutter.site
+  idp.gorapeflutter.site
+  app.gorapeflutter.site
+  local.gorapeflutter.site
+  localhost
+  127.0.0.1
+  ::1
+)
 force=0
 
 while [[ $# -gt 0 ]]; do
@@ -125,7 +137,7 @@ openssl req -x509 -new -sha256 -days 3650 \
 openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:2048 \
   -out "$output_dir/server.key" >/dev/null 2>&1
 openssl req -new -sha256 -key "$output_dir/server.key" \
-  -subj "/CN=localhost" -out "$work_dir/server.csr"
+  -subj "/CN=api.gorapeflutter.site" -out "$work_dir/server.csr"
 openssl x509 -req -sha256 -days 397 \
   -in "$work_dir/server.csr" \
   -CA "$output_dir/ca.crt" -CAkey "$output_dir/ca.key" \

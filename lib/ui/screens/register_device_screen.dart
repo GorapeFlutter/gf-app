@@ -3,6 +3,8 @@ import '../../config/langages/app_text.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../back/controller/providers.dart';
+import '../../entity/model/credential_provider_status.dart';
+import '../../entity/model/platform.dart';
 import '../../entity/model/platform_support.dart';
 import '../../entity/model/role.dart';
 import '../widgets/common.dart';
@@ -27,21 +29,33 @@ class RegisterDeviceScreen extends ConsumerStatefulWidget {
       _RegisterDeviceScreenState();
 }
 
-class _RegisterDeviceScreenState extends ConsumerState<RegisterDeviceScreen> {
+class _RegisterDeviceScreenState extends ConsumerState<RegisterDeviceScreen>
+    with WidgetsBindingObserver {
   final _nameController = TextEditingController();
   bool _busy = false;
   Object? _error;
+  CredentialProviderStatus? _credentialProviderStatus;
 
   /// GF-00908 — Initializes state for _RegisterDeviceScreenState.
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _nameController.text = '';
+    _refreshCredentialProviderStatus();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _refreshCredentialProviderStatus();
+    }
   }
 
   /// GF-00909 — Releases resources owned by _RegisterDeviceScreenState.
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _nameController.dispose();
     super.dispose();
   }
@@ -119,6 +133,35 @@ class _RegisterDeviceScreenState extends ConsumerState<RegisterDeviceScreen> {
           icon: Icons.cloud_outlined,
           child: const AppText('MCODE-00469'),
         ),
+        if (platform == RuntimePlatform.android)
+          SectionCard(
+            title: 'MCODE-00516',
+            icon: Icons.password_outlined,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                AppText(
+                  _credentialProviderStatus == null
+                      ? 'MCODE-00517'
+                      : !_credentialProviderStatus!.supported
+                      ? 'MCODE-00518'
+                      : !_credentialProviderStatus!.serviceRegistered
+                      ? 'MCODE-00519'
+                      : 'MCODE-00520',
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+                if (_credentialProviderStatus?.supported == true &&
+                    _credentialProviderStatus?.serviceRegistered == true) ...[
+                  const SizedBox(height: 8),
+                  OutlinedButton.icon(
+                    onPressed: _openCredentialProviderSettings,
+                    icon: const Icon(Icons.settings_outlined),
+                    label: const AppText('MCODE-00521'),
+                  ),
+                ],
+              ],
+            ),
+          ),
         SectionCard(
           title: 'MCODE-00102',
           icon: Icons.edit_outlined,
@@ -201,6 +244,26 @@ class _RegisterDeviceScreenState extends ConsumerState<RegisterDeviceScreen> {
     );
   }
 
+  Future<void> _refreshCredentialProviderStatus() async {
+    try {
+      final status = await ref
+          .read(credentialProviderRepositoryProvider)
+          .status();
+      if (mounted) setState(() => _credentialProviderStatus = status);
+    } on Object catch (_) {
+      // Credential provider settings are optional; do not block passkey use.
+      if (mounted) setState(() => _credentialProviderStatus = null);
+    }
+  }
+
+  Future<void> _openCredentialProviderSettings() async {
+    try {
+      await ref.read(credentialProviderRepositoryProvider).openSettings();
+    } on Object catch (error) {
+      if (mounted) setState(() => _error = error);
+    }
+  }
+
   /// GF-00921 — Handles register in _RegisterDeviceScreenState.
   Future<void> _register() async {
     // GF-02096 — Reset form errors and mark registration as in progress.
@@ -236,7 +299,9 @@ class _RegisterDeviceScreenState extends ConsumerState<RegisterDeviceScreen> {
                   KeyValueRow('Security Level', result.securityLevel),
                   KeyValueRow(
                     'Device-bound (BE=0)',
-                    result.backupEligible ? 'No (Syncable)' : 'Yes (Device-bound)',
+                    result.backupEligible
+                        ? 'No (Syncable)'
+                        : 'Yes (Device-bound)',
                   ),
                   KeyValueRow('Verifier', result.verifierVersion),
                   KeyValueRow('Device ID', result.device.id, monospace: true),

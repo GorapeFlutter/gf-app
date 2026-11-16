@@ -1,5 +1,8 @@
 package com.gorapeflutter.gf_app
 
+import android.content.ComponentName
+import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
@@ -7,6 +10,7 @@ import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyInfo
 import android.security.keystore.KeyProperties
 import android.util.Base64
+import android.provider.Settings
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodCall
@@ -33,6 +37,8 @@ import java.util.concurrent.Executors
  */
 class MainActivity : FlutterActivity() {
     private val channelName = "com.gorapeflutter.gf_app/device_key"
+    private val credentialProviderChannelName =
+        "com.gorapeflutter.gf_app/credential_provider"
     private val keyStoreName = "AndroidKeyStore"
     private val hardwareKeystoreFeature = "android.hardware.hardware_keystore"
     private val strongBoxKeystoreFeature = "android.hardware.strongbox_keystore"
@@ -60,6 +66,56 @@ class MainActivity : FlutterActivity() {
                     }
                 }
             }
+        MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            credentialProviderChannelName,
+        ).setMethodCallHandler { call, result ->
+            when (call.method) {
+                "status" -> result.success(credentialProviderStatus())
+                "openSettings" -> {
+                    try {
+                        result.success(openCredentialProviderSettings())
+                    } catch (error: Exception) {
+                        result.error(
+                            "credential_provider_settings_unavailable",
+                            error.message ?: "Could not open Android credential settings.",
+                            null,
+                        )
+                    }
+                }
+                else -> result.notImplemented()
+            }
+        }
+    }
+
+    private fun credentialProviderStatus(): Map<String, Any> {
+        val supported = Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE
+        val serviceRegistered = if (supported) {
+            runCatching {
+                packageManager.getServiceInfo(
+                    ComponentName(this, GorapeCredentialProviderService::class.java),
+                    0,
+                )
+                true
+            }.getOrDefault(false)
+        } else {
+            false
+        }
+        return mapOf(
+            "apiLevel" to Build.VERSION.SDK_INT,
+            "supported" to supported,
+            "serviceRegistered" to serviceRegistered,
+        )
+    }
+
+    private fun openCredentialProviderSettings(): Boolean {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE) return false
+        val settingsIntent = Intent(Settings.ACTION_CREDENTIAL_PROVIDER).apply {
+            data = Uri.parse("package:$packageName")
+        }
+        if (settingsIntent.resolveActivity(packageManager) == null) return false
+        startActivity(settingsIntent)
+        return true
     }
 
     // GF-01140 — Routes method-channel commands to the matching Keystore operation.

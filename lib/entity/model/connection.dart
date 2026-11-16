@@ -16,6 +16,11 @@ class ConnectionSettings {
     this.scopes = const ['openid', 'profile'],
   });
 
+  static const String defaultApiBaseUrl = 'https://api.gorapeflutter.site:8443';
+  static const String defaultOidcIssuer =
+      'https://idp.gorapeflutter.site:9443/realms/gorape';
+  static const String defaultClientId = 'gorape-client';
+  static const String defaultWebOrigin = 'https://app.gorapeflutter.site';
   static const String flutterRedirectUri =
       'com.gorapeflutter.gfapp:/oauth2redirect';
   static const String desktopRedirectUri =
@@ -50,6 +55,15 @@ class ConnectionSettings {
     final api = Uri.tryParse(apiBaseUrl);
     final idp = Uri.tryParse(issuer);
     return api?.scheme == 'http' || idp?.scheme == 'http';
+  }
+
+  /// GF-01184 — Computes ConnectionSettings.registrationUrl.
+  String get registrationUrl {
+    final base = _trimTrailingSlash(issuer);
+    return '$base/protocol/openid-connect/registrations'
+        '?client_id=${Uri.encodeQueryComponent(clientId)}'
+        '&redirect_uri=${Uri.encodeQueryComponent(redirectUri)}'
+        '&response_type=code&scope=openid';
   }
 
   /// GF-00271 — Handles validate in ConnectionSettings.
@@ -87,9 +101,9 @@ class ConnectionSettings {
   /// GF-00273 — Initializes ConnectionSettings.fromJson.
   factory ConnectionSettings.fromJson(Map<String, dynamic> json) {
     const defaults = ConnectionSettings(
-      apiBaseUrl: 'https://localhost:8443',
-      issuer: 'http://localhost:8080/realms/gorape',
-      clientId: 'gorape-client',
+      apiBaseUrl: defaultApiBaseUrl,
+      issuer: defaultOidcIssuer,
+      clientId: defaultClientId,
       redirectUri: flutterRedirectUri,
     );
     return ConnectionSettings(

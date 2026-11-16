@@ -54,7 +54,7 @@ void main() {
 
         final credential = await repository.register({
           'challenge': 'Y2hhbGxlbmdl',
-          'rp': {'id': 'gorape.example', 'name': 'Gorape'},
+          'rp': {'id': 'gorapeflutter.site', 'name': 'Gorape'},
           'user': {
             'id': 'dXNlci0x',
             'name': 'user@example.test',
@@ -64,6 +64,10 @@ void main() {
         });
 
         expect(authenticator.registrationRequest?.attestation, 'direct');
+        expect(
+          authenticator.registrationRequest?.relyingParty.id,
+          'gorapeflutter.site',
+        );
         expect(credential['id'], 'credential-id');
         expect(
           (credential['response'] as Map<String, dynamic>)['attestationObject'],
@@ -95,13 +99,13 @@ void main() {
 
         final credential = await repository.authenticate({
           'challenge': 'Y2hhbGxlbmdl',
-          'rpId': 'gorape.example',
+          'rpId': 'gorapeflutter.site',
           'userVerification': 'required',
         });
 
         expect(
           authenticator.authenticationRequest?.relyingPartyId,
-          'gorape.example',
+          'gorapeflutter.site',
         );
         expect(credential['id'], 'credential-id');
         expect(
@@ -136,15 +140,15 @@ void main() {
         );
 
         final result = await repository.registerInBrowser(
-          browserUrl: 'https://app.gorape.example/passkey-ceremony.html',
-          browserApiOrigin: 'https://api.gorape.example',
+          browserUrl: 'https://app.gorapeflutter.site/passkey-ceremony.html',
+          browserApiOrigin: 'https://api.gorapeflutter.site:8443',
           challengeId: 'challenge-1',
         );
 
         final fragment = Uri.splitQueryString(Uri.parse(openedUrl!).fragment);
         expect(result['device_id'], 'device-linux');
         expect(fragment['challenge_id'], 'challenge-1');
-        expect(fragment['api_origin'], 'https://api.gorape.example');
+        expect(fragment['api_origin'], 'https://api.gorapeflutter.site:8443');
         expect(fragment['ceremony'], 'registration');
         expect(fragment['state'], isNotEmpty);
       },

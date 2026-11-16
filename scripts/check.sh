@@ -52,7 +52,14 @@ fi
 
 if [[ "$build_apk" == "1" ]]; then
   info "Building debug APK"
-  flutter build apk --debug
+  local_ca="$APP_ROOT/config/generated/tls/ca.crt"
+  if [[ -s "$local_ca" ]]; then
+    ca_base64="$(base64 < "$local_ca" | tr -d '\r\n')"
+    flutter build apk --debug \
+      --dart-define="GORAPE_TLS_CA_CERT_BASE64=$ca_base64"
+  else
+    flutter build apk --debug
+  fi
 fi
 
 ok "All checks passed"

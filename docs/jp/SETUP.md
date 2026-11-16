@@ -74,15 +74,15 @@ config/generated/android-attestation-roots.pem    -> /app/etc/android/android-at
 ### Verifierの稼働確認
 
 ```bash
-curl -s http://localhost:8000/health
+curl -s http://api.gorapeflutter.site:8000/health
 
 TOKEN=$(cat ../gorape/etc/.gorape/client/admin/access_token)
 PROJECT_ID=$(curl -s -H "Authorization: Bearer $TOKEN" \
-  http://localhost:8000/v1/projects | python3 -c \
+  http://api.gorapeflutter.site:8000/v1/projects | python3 -c \
   'import json,sys; print(json.load(sys.stdin)[0]["id"])')
 
 curl -s -H "Authorization: Bearer $TOKEN" \
-  "http://localhost:8000/v1/projects/$PROJECT_ID/attestation/capabilities"
+  "http://api.gorapeflutter.site:8000/v1/projects/$PROJECT_ID/attestation/capabilities"
 ```
 
 期待されるresponse:
@@ -104,7 +104,7 @@ CLIは同じ`gorape-client`とredirect URI `http://127.0.0.1:8400/callback`を�
 
 ## Gorape RP用passkey/attestation
 
-端末登録画面はKeycloak passkeyとは別のGorape RP用WebAuthn ceremonyを実行します。Gorape RP IDはapp buildや認証器とのdomain associationに関わるため、環境間で安易に変更しないでください。
+端末登録画面はKeycloak passkeyとは別のGorape RP用WebAuthn ceremonyを実行します。Gorape RP IDはapp buildや認証器とのdomain associationに関わるため、環境間で安易に変更しないでください。既定のdomain構成ではRP IDに`gorapeflutter.site`を使います。
 
 Backend configの例:
 
@@ -112,16 +112,16 @@ Backend configの例:
 Application:
   Server:
     webauthn:
-      rp_id: gorape.example.com
+      rp_id: gorapeflutter.site
       rp_display_name: Gorape
       rp_origins:
-        - https://app.gorape.example.com
+        - https://app.gorapeflutter.site:5174
         - android:apk-key-hash:BASE64URL_CERTIFICATE_HASH
-      portal_origin: https://app.gorape.example.com
-      browser_api_origin: https://api.gorape.example.com
+      portal_origin: https://app.gorapeflutter.site:5174
+      browser_api_origin: https://api.gorapeflutter.site:8443
       attestation_conveyance: direct
       user_verification: required
-    web_origins: [https://app.gorape.example.com]
+    web_origins: [https://app.gorapeflutter.site:5174]
     attestation:
       webauthn:
         allowed_formats: [android-key, tpm, apple]
@@ -131,33 +131,66 @@ Application:
           android-key: [/app/etc/android/android-attestation-roots.pem]
           tpm: [/app/etc/tpm/tpm-attestation-roots.pem]
           apple: [/app/etc/apple/apple-webauthn-roots.pem]
+        assurance:
+          required: standard_passkey
+          allow_synced_passkeys: true
+          hardware_formats: [android-key, apple, tpm, fido-u2f]
 ```
 
-ローカルDockerのRP IDを設定し、Android debug signing key由来の`android:apk-key-hash` originを許可します。ローカル試験用にattestation `none`を許可します。Organization Pages repositoryが`/.well-known/assetlinks.json`を公開し、Android package `com.gorapeflutter.gf_app`とdebug signing certificateを`delegate_permission/common.get_login_creds`および`delegate_permission/common.handle_all_urls`で関連付けます。API接続先は引き続き`https://localhost:8443`で、RP domainとは別です。API用のローカルCAはDigital Asset Linksに使いません。
+本番では`etc/server.yaml`に任意の独自domainを設定できます。ローカルDockerは`gorapeflutter.site`を使い、`*.gorapeflutter.site`は`127.0.0.1`に解決されます。RP IDはすべてのWebAuthn originのeTLD+1または親domainである必要があり、app association fileはRP domain上で公開します。
 
-Backend実装では[GF-10010](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/repository/webauthn.go#L88)〜[GF-10011](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/repository/webauthn.go#L605)がRP identityを検証し、[GF-10016](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/usecase/passkey_device.go#L91)〜[GF-10017](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/usecase/passkey_device.go#L151)がregistration options発行とcredential検証を行います。
+ローカルDockerのRP IDを設定し、Android debug signing key由来の`android:apk-key-hash` originを許可します。attestationは`direct`を要求し、`none`は拒否します。`direct`はpreferenceに過ぎません。Android credential providerがattestationを返さない場合、hardware保証へ昇格せず登録を拒否します。apex domainが`https://gorapeflutter.site/.well-known/assetlinks.json`と`https://gorapeflutter.site/.well-known/apple-app-site-association`を公開し、Android package `com.gorapeflutter.gf_app`とdebug signing certificateを`delegate_permission/common.get_login_creds`および`delegate_permission/common.handle_all_urls`で関連付けます。API接続先は`https://api.gorapeflutter.site:8443`で、RP domainとは別です。API用のローカルCAはDigital Asset Linksに使いません。
+
+Backend実装では[GF-10010](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/repository/webauthn.go#L99)〜[GF-10011](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/repository/webauthn.go#L816)がRP identityを検証し、[GF-10016](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/usecase/passkey_device.go#L92)〜[GF-10017](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/usecase/passkey_device.go#L152)がregistration options発行とcredential検証を行います。
 Backend IDの一覧は[Gorape source index](https://github.com/Gorapeflutter/gorape/blob/main/docs/book/src/source-index.md)を参照してください。
 
-別のAndroid debug signing keyを使う場合は、Pagesの`assetlinks.json`へSHA-256 certificate fingerprintを追加し、`../gorape/etc/server.yaml.docker`の`webauthn.rp_origins`へ対応する`android:apk-key-hash:`を追加します。その後Pagesを再deployし、server configを再生成してください。
+別のAndroid debug signing keyを使う場合は、apexの`assetlinks.json`へSHA-256 certificate fingerprintを追加し、`../gorape/etc/server.yaml.docker`の`webauthn.rp_origins`へ対応する`android:apk-key-hash:`を追加します。その後association fileを再deployし、server configを再生成してください。
 
 ローカルAPIにもHTTPS listenerを追加する場合（Android RP domain検証とは別です）：
 
 ```bash
 ./scripts/generate-local-tls.sh [--host <ローカルDNS名>]
 ./scripts/gorape-up.sh --https --android-attestation
-curl --cacert config/generated/tls/ca.crt https://localhost:8443/health
+curl --cacert config/generated/tls/ca.crt https://api.gorapeflutter.site:8443/health
 ```
 
-ローカルCAと証明書はGit管理対象外の`config/generated/tls/`に生成され、秘密鍵はmode `0600`です。このCAを本番のtrust anchorとして使わないでください。`./scripts/run-android.sh`はdebug Dart clientにこのCAを渡し、API URLを`https://localhost:8443`にします。Android native passkeyのRP関連付けは、別途GitHub Pagesの公開DALで行います。
+ローカルCAと証明書はGit管理対象外の`config/generated/tls/`に生成され、秘密鍵はmode `0600`です。証明書は`api.gorapeflutter.site`、`idp.gorapeflutter.site`、`app.gorapeflutter.site`をカバーします。このCAを本番のtrust anchorとして使わないでください。`./scripts/run-android.sh`はdebug Dart clientにこのCAを渡し、API URLを`https://api.gorapeflutter.site:8443`にします。Android native passkeyのRP関連付けは、別途apexの`/.well-known/`公開DALで行います。
 
 既定は`allowed_formats: []`、`allow_none: false`、`allow_self_attestation: false`で、RPまたはpolicyの未設定時は登録を拒否します。独自trust anchorはserver containerへmountし、container内のpathをconfigへ指定してください。`android-key`のtrust anchorは、明示設定がなければlegacy `android_trust_anchors`を再利用します。
 
+### 保証レベルpolicy
+
+保証レベルは検証済みの証拠だけから導出し、clientが送るplatform名では昇格しません。最低保証レベルと同期可能passkeyの許可を設定します。
+
+```yaml
+attestation:
+  webauthn:
+    assurance:
+      required: hardware_attested
+      allow_synced_passkeys: false
+      hardware_formats: [android-key, apple, tpm, fido-u2f]
+```
+
+`required: hardware_attested`は`allow_synced_passkeys: false`と、ハードウェア対応attestation formatまたはFIDO MDSのいずれかを必須とし、満たさない場合はGorapeが起動時に失敗します。同じpolicyを登録時・認証時・外部向け所有証明で適用します。`BE=true`のcredentialは常に`standard_passkey`で、高保証を満たしません。`packed`やself attestation、MDS検証だけではハードウェア保護の証明になりません。
+
+Cross-device authentication (CDA)は認証器のcapabilityです。Gorapeは登録時に返されたtransportを保存し、そのまま返します。`hybrid`をRPが付与することはありません。gf-appがOS keystoreに生成するローカル鍵は、FIDO credentialのassertion代用にはなりません。
+
+### sample web appでクロスデバイス承認を試す
+
+ローカルHTTPS stackを起動し、`config/generated/tls/ca.crt`をPCのOS/ブラウザのtrust storeへ登録した後、`./scripts/open-sample-web.sh`を実行します。Gorape deviceの所有者と同じKeycloak account（local seedではuser01）のパスキーでsampleへログインします。操作の保証レベルを`standard_passkey`にし、クロスデバイス優先を選んで承認します。Chromeに保存済み`hybrid` transportが提示され、PixelでQRを読み取るか端末選択を完了するとassertionが実行されます。sampleはサーバー保存済みtransportを変更せず、登録値に`hybrid`があるときだけ`hybrid` hintを送ります。
+
+現在のPixel credentialは`BE=true`のため保証レベルは`standard_passkey`です。`hardware_attested`要求は満たせません。この確認ではローカルorigin `https://app.gorapeflutter.site:5174`、公開apex DAL、app/Keycloak HTTPS用のローカル開発CAを使います。TLS証明書検証を回避してはいけません。
+
+### Metadataと失効の再評価
+
+`attestation.webauthn.mds.enabled`がtrueの場合、Gorapeは署名済みFIDO MDS BLOBを検証し、credentialのAAGUIDとauthenticator statusを確認します。保存済みcredentialは以降のassertion時に再評価されます。MDSの`keyProtection`が`hardware`、`tee`、`secure_element`、`smart_card`のいずれかならハードウェア証拠として扱います。`attestation.revocation.enabled`がtrueの場合、保存したleaf attestation certificateをcache TTLの範囲でCRL/OCSPにより再確認します。network failureや未知のstatusは高保証判断ではfail closedです。
+
 各platformで同一RP IDへのassociationが必要です。
 
-- **Android:** `https://<rp-id>/.well-known/assetlinks.json`に`delegate_permission/common.get_login_creds`と`delegate_permission/common.handle_all_urls`、package name、debug/release/Play signing certificateのSHA-256 fingerprintsを設定します。
-- **iOS/macOS:** AASAの`webcredentials`にTeam ID + bundle IDを設定し、アプリのAssociated Domains entitlementへ`webcredentials:<rp-id>`を追加します。
+- **Android:** `https://gorapeflutter.site/.well-known/assetlinks.json`に`delegate_permission/common.get_login_creds`と`delegate_permission/common.handle_all_urls`、package name、debug/release/Play signing certificateのSHA-256 fingerprintsを設定します。
+- **iOS/macOS:** `https://gorapeflutter.site/.well-known/apple-app-site-association`のAASA `webcredentials`にTeam ID + bundle IDを設定し、アプリのAssociated Domains entitlementへ`webcredentials:gorapeflutter.site`を追加します。Apple Team IDは本番署名identityと一致させます。
 - **Web:** secure originでserveし、RP IDをpage hostまたは親domainにします。
-- **Windows:** Windows WebAuthn APIを利用します。TPM attestationがOS/providerから返る保証はありません。
+- **Windows:** Windows WebAuthn APIを利用します。TPM attestationがOS/providerから返る保証はありません。gf-appはローカルDevice鍵としてCNG/Platform Crypto Provider（利用可能ならTPM）も生成します。
 - **Linux:** `passkeys` pluginは未対応ですが、gf-appのWeb ceremony pageをChrome/Firefoxで開きます。Gorape本体はUIを提供せず、APIのみです。
 
 `rp_origins`は完全一致のallowlistです。HTTPS originはRP ID配下、HTTPはlocalhost開発のみ、Android native originは`android:apk-key-hash:`の完全な値を登録してください。wildcardは使用できません。Linux browser ceremony pageはgf-app web buildに含まれ、`portal_origin`から配信します。`portal_origin`は`rp_origins`と`web_origins`の両方に登録し、`browser_api_origin`はgf-appのAPI URLと一致させます。Gorape本体はAPIのみで、end-user画面を持ちません。Linux buildには`desktop_webview_window`のGTK/WebKitGTK development librariesが必要ですが、実行時はChrome/Firefox等のsystem browserを使います。`direct`はattestationを要求するpreferenceで、返却を保証しません。Gorapeは応答内の実際のformatとtrust chainを検証します。
@@ -170,7 +203,7 @@ gf-appはAndroid Keystore、Apple Secure Enclave、Windows Platform Crypto Provi
 
 | 項目 | 値 |
 | --- | --- |
-| Issuer | `http://localhost:8080/realms/gorape` |
+| Issuer | `https://idp.gorapeflutter.site:9443/realms/gorape` |
 | Client | `gorape-client`（public） |
 | Flow | Authorization Code + PKCE S256 |
 | Scope | `openid profile` |
@@ -178,13 +211,13 @@ gf-appはAndroid Keystore、Apple Secure Enclave、Windows Platform Crypto Provi
 | CLI redirect | `http://127.0.0.1:8400/callback`（維持） |
 | Android/iOS/macOS redirect | `com.gorapeflutter.gfapp:/oauth2redirect` |
 | Windows/Linux redirect | `http://127.0.0.1:8401/oauth2redirect` |
-| Web redirect | 同一originの`/auth.html`（local devは`http://localhost:5000/auth.html`） |
+| Web redirect | 同一originの`/auth.html`（local devは`https://app.gorapeflutter.site:5174/auth.html`または`http://localhost:5000/auth.html`） |
 
 新規ローカルDBでは、Flutter redirect/passwordless WebAuthn/パスキー専用ログインフロー/`gorape-passkey-amr` mapper/登録Required Actionを`../gorape/etc/keycloak/gorape-realm.json`からimportします。「Keycloakパスキーを登録」はWebAuthn Passwordless AIAを使います。「パスキーでログイン」はユーザー名・パスワード欄のない専用フローを要求します。成功したWebAuthn executionが`amr: ["passkey"]`を発行し、Gorapeはこの署名済みclaimがある場合のみデバイス登録・所有証明を許可します。
 
 ローカルPostgres containerはschema migration後に`../gorape/scripts/data/postgres/004-gorape-demo-seed.sql`を読み込み、`demo` projectと権限テスト用fixtureを作成します。ローカル環境では`gorape-admin provision apply`は不要です。これらは新規DB初期化時のみ適用されます。tmpfs Postgres containerを再作成するとKeycloak userと登録済みpasskeyも初期化されます。
 
-既存realmではKeycloak Admin Console → realm `gorape` → Clients → `gorape-client`からFlutter redirect URI/Web Originsを追加し、CLI callbackは残してください。Local Webは`flutter run -d chrome --web-port=5000`で起動します。
+既存realmではKeycloak Admin Console → realm `gorape` → Clients → `gorape-client`からFlutter redirect URI/Web Originsを追加し、CLI callbackは残してください。Local Webは`flutter run -d chrome --web-port=5000`で起動するか、sample webを`https://app.gorapeflutter.site:5174`でserveします。
 
 Keycloak/Postgres dataを削除するとrealmとdemo fixtureは設定ファイルから再importされます。test passwordは`../gorape/etc/README.md`を参照し、端末passkeyは再登録してください。
 
@@ -208,12 +241,15 @@ Realmはnative custom scheme、desktop loopback、同一origin Web callbackに�
 
 | Service | URL |
 | --- | --- |
-| Gorape API | http://localhost:8000 |
-| Health | http://localhost:8000/health |
-| Keycloak | http://localhost:8080 |
-| Keycloak admin | http://localhost:8080/admin |
+| Gorape API | http://api.gorapeflutter.site:8000 |
+| Health | http://api.gorapeflutter.site:8000/health |
+| Gorape API (HTTPS) | https://api.gorapeflutter.site:8443 |
+| Keycloak | http://idp.gorapeflutter.site:8080 |
+| Keycloak admin | http://idp.gorapeflutter.site:8080/admin |
 | pgAdmin | http://localhost:3001 |
 | Swagger UI（任意） | http://localhost:3002 |
+
+`*.gorapeflutter.site`はローカル開発で`127.0.0.1`に解決されます。開発domainを解決できないtoolでは`localhost`名も使えますが、その場合はKeycloakの`iss`も同じhostに揃えてください。
 
 開発用credentialはbackend repositoryで管理されます。
 

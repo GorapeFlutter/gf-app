@@ -120,7 +120,7 @@ void main() {
         expect(await repository.registerPasskey(), isTrue);
         expect(
           appAuth.lastAuthorizationRequest?.additionalParameters?['kc_action'],
-          'webauthn-register-passwordless:skip_if_exists',
+          'webauthn-register-passwordless',
         );
       },
     );

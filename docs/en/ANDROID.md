@@ -1,11 +1,15 @@
 # Android registration and attestation
 
-Android is the only platform where this client performs real device
-registration. The backend verifier is implemented for Android only.
+The primary device-registration path on Android is the Gorape RP WebAuthn
+passkey ceremony. This chapter documents the separate legacy Android Key
+Attestation flow, which the backend verifier still implements for compatibility.
 
-This is Android Key Attestation for an app-generated device key, not WebAuthn
+Legacy Android Key Attestation is an app-generated device key, not WebAuthn
 passkey attestation. See the [architecture chapter](ARCHITECTURE.md) for the
-TPM and passkey-attestation comparison.
+TPM and passkey-attestation comparison. Passkey assurance (`hardware_attested`,
+`device_bound_unattested`, `standard_passkey`, `rejected`) is derived by Gorape
+from verified attestation evidence and the BE/BS flags, never from the platform
+name.
 
 ## Configuration
 
@@ -58,12 +62,13 @@ DER-encoded (do not convert it to raw `r || s`).
 
 The Android development defaults are:
 
-- API: `https://localhost:8443` (local server; debug CA is loaded by the runner)
-- OIDC issuer: `http://localhost:8080/realms/gorape`
+- API: `https://api.gorapeflutter.site:8443` (local server; debug CA is loaded by the runner)
+- OIDC issuer: `https://idp.gorapeflutter.site:9443/realms/gorape`
+- WebAuthn RP ID: `gorapeflutter.site` (association files at the apex `/.well-known/`)
 
-The issuer must match Keycloak's `iss` claim exactly. The simplest setup that
-works on both emulators and physical devices is `adb reverse` plus localhost for
-both endpoints:
+The issuer must match Keycloak's `iss` claim exactly. `*.gorapeflutter.site`
+resolves to `127.0.0.1` in local development, and `adb reverse` forwards the
+ports from the device to the developer host:
 
 ```bash
 ./scripts/run-android.sh
@@ -73,30 +78,37 @@ The script runs:
 
 ```bash
 adb reverse tcp:8080 tcp:8080
+adb reverse tcp:8000 tcp:8000
 adb reverse tcp:8443 tcp:8443
+adb reverse tcp:9443 tcp:9443
 flutter run -d <device> --debug \
-  --dart-define=GORAPE_API_BASE_URL=https://localhost:8443 \
-  --dart-define=GORAPE_OIDC_ISSUER=http://localhost:8080/realms/gorape
+  --dart-define=GORAPE_API_BASE_URL=https://api.gorapeflutter.site:8443 \
+  --dart-define=GORAPE_OIDC_ISSUER=https://idp.gorapeflutter.site:9443/realms/gorape
 ```
 
 For local HTTPS, prefer `./scripts/run-android.sh`; it passes the generated CA
-PEM to the debug Dart client. For manual `flutter run`, add the CA as
-`GORAPE_TLS_CA_CERT_BASE64` or use an OS-trusted certificate.
+PEM to the debug Dart client. Also install that CA as a user certificate on the
+Android device so native AppAuth and Chrome Custom Tabs can trust the Keycloak
+TLS endpoint. The OIDC issuer must exactly match the discovery document's
+`issuer` value.
 
 Useful options:
 
 ```bash
 ./scripts/run-android.sh --device emulator-5554
-./scripts/run-android.sh --api-url https://localhost:8443 --tls-ca config/generated/tls/ca.crt
+./scripts/run-android.sh --api-url https://api.gorapeflutter.site:8443 --tls-ca config/generated/tls/ca.crt
 ./scripts/run-android.sh -- --verbose                      # extra flutter run args
 ```
 
-The generated CA is trusted only by the debug Dart HTTP client. Do not pass a
-development CA to release builds; use a publicly trusted server certificate.
+Use the generated CA only for local development. Do not use it in release
+builds; use a publicly trusted server certificate.
 
 For a physical device without `adb reverse`, use the host's LAN IP for the API
 **and** configure Keycloak with a matching hostname/issuer. Do not change only
 the issuer host in the app unless Keycloak also issues tokens with that host.
+The development domain can be replaced with any custom domain through
+`--dart-define`; production must use a publicly trusted TLS certificate (never
+disable certificate verification).
 
 ## Verifying registration
 
@@ -105,18 +117,37 @@ TOKEN=$(cat ../gorape/etc/.gorape/client/admin/access_token)
 PROJECT_ID=805c5265-7315-420b-8aa7-3aea715ed88a
 
 curl -s -H "Authorization: Bearer $TOKEN" \
-  "http://localhost:8000/v1/projects/$PROJECT_ID/attestation/capabilities"
+  "http://api.gorapeflutter.site:8000/v1/projects/$PROJECT_ID/attestation/capabilities"
 
 curl -s -H "Authorization: Bearer $TOKEN" \
-  "http://localhost:8000/v1/projects/$PROJECT_ID/devices"
+  "http://api.gorapeflutter.site:8000/v1/projects/$PROJECT_ID/devices"
 
 curl -s -H "Authorization: Bearer $TOKEN" \
-  "http://localhost:8000/v1/projects/$PROJECT_ID/devices/<deviceId>/attestation"
+  "http://api.gorapeflutter.site:8000/v1/projects/$PROJECT_ID/devices/<deviceId>/attestation"
 ```
 
 A successful registration returns HTTP 201 and a device with
 `platform: "android"`. The attestation record shows the verifier type, security
-level and status.
+level, status, and the derived assurance level. Legacy Android Key Attestation
+proves hardware key residency, so a `BE=false` credential can reach
+`hardware_attested`; a WebAuthn passkey returns its own verified level.
+
+### Physical Pixel PoC result
+
+On Pixel 6 / Android 17 (API 37), with GF Hardware Passkeys enabled, a Gorape
+RP credential registered with HTTP 201. The persisted attestation record showed
+`android-key`, `verified`, `trust_anchor`, `hardware_protected=true`,
+`BE=false`, `BS=false`, and `assurance_level=hardware_attested`. A subsequent
+passkey assertion was verified with HTTP 200. MDS was disabled in this test;
+the configured Google Android Key Attestation root was used for certificate
+chain validation.
+
+The persisted `security_level=android_key_attested` does not distinguish TEE
+from StrongBox. The provider prefers StrongBox and falls back to TEE, but this
+record alone does not prove which level generated the key. Keycloak login uses a
+separate Google Password Manager credential for the `idp.gorapeflutter.site`
+RP. CDA/hybrid remains unverified; the GF provider currently returns only the
+`internal` transport.
 
 ## Troubleshooting
 
@@ -128,9 +159,11 @@ level and status.
 | 422 `attestation challenge` mismatch | The raw decoded challenge was not the exact value passed to `setAttestationChallenge`, or a stale challenge was reused. |
 | `Android Key Attestation did not return a certificate chain` | The Keystore has no attestation support (common on emulators / some ROMs). Use a device with a hardware-backed Keystore. |
 | Login opens Keycloak but returns `invalid_redirect_uri` | The Flutter redirect is not allow-listed. Fresh local realms import redirect URIs from `../gorape/etc/keycloak/gorape-realm.json`; add it manually to an existing realm's `gorape-client` if needed. |
-| Login succeeds but API returns 401 | The token issuer/audience must match `http://localhost:8080/realms/gorape` and `gorape-api`. Check the app's connection settings. |
+| Login never opens the browser | Match the app's issuer to the Keycloak discovery document and install the local CA on Android for the HTTPS issuer. |
+| Login succeeds but API returns 401 | The token issuer/audience must match `https://idp.gorapeflutter.site:9443/realms/gorape` and `gorape-api`. Check app settings and the Gorape project issuer. |
 | `Cleartext HTTP traffic not permitted` | Only local development hosts are allow-listed in `network_security_config.xml`; use HTTPS or add the dev host. |
 | Key exists but proof fails | The Keystore key may have been invalidated (lock screen change, restore, etc.). Revoke the device and register again. |
+| Passkey registration returns `fmt=none` | Android Credential Manager may omit attestation even when `direct` is requested. The local strict test config rejects it; never infer hardware protection from the platform name. |
 
 Emulators often produce software or test-rooted attestation. Passing Key
 Attestation normally requires a physical Android device with a TEE/StrongBox
@@ -138,9 +171,14 @@ implementation that chains to Google's published roots.
 
 ## Limitations
 
-- The backend has no iOS/macOS/Windows verifier, so those platforms stop at
-  Keycloak login and display an explicit unsupported state.
+- The legacy Android Key Attestation verifier is Android-only. iOS, macOS,
+  Windows and Linux use the Gorape WebAuthn passkey ceremony, whose assurance is
+  derived from verified attestation evidence (Apple, TPM, Android Key, or FIDO
+  MDS).
 - The app does not use Play Integrity; the Gorape contract is Android Key
-  Attestation.
+  Attestation and WebAuthn attestation.
+- Physical-device validation of Credential Manager `fmt=none`, Google root
+  rotation, and release signing certificates is **unverified** in this
+  environment. DAL currently contains debug fingerprints only.
 - Device groups and policy enforcement are backend features that are not part of
   the current client/OpenAPI surface.

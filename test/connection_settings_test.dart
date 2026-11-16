@@ -8,31 +8,101 @@ import 'package:gf_app/entity/model/platform.dart';
 
 void main() {
   group('ConnectionSettings', () {
-    test('uses the local HTTPS API and platform-specific OIDC redirects', () {
-      final config = newConnectionConfig();
-      final android = config.defaultsFor(RuntimePlatform.android);
-      final macos = config.defaultsFor(RuntimePlatform.macos);
-      final windows = config.defaultsFor(RuntimePlatform.windows);
-      final linux = config.defaultsFor(RuntimePlatform.linux);
-      final web = config.defaultsFor(RuntimePlatform.web);
+    test(
+      'uses the gorapeflutter.site HTTPS API and platform-specific OIDC redirects',
+      () {
+        final config = newConnectionConfig();
+        final android = config.defaultsFor(RuntimePlatform.android);
+        final macos = config.defaultsFor(RuntimePlatform.macos);
+        final windows = config.defaultsFor(RuntimePlatform.windows);
+        final linux = config.defaultsFor(RuntimePlatform.linux);
+        final web = config.defaultsFor(RuntimePlatform.web);
 
-      expect(android.apiBaseUrl, 'https://localhost:8443');
-      expect(macos.apiBaseUrl, 'https://localhost:8443');
-      expect(android.issuer, 'http://localhost:8080/realms/gorape');
-      expect(android.clientId, 'gorape-client');
-      expect(android.redirectUri, ConnectionSettings.flutterRedirectUri);
-      expect(windows.redirectUri, ConnectionSettings.desktopRedirectUri);
-      expect(linux.redirectUri, ConnectionSettings.desktopRedirectUri);
-      expect(web.redirectUri, 'http://localhost:8080/auth.html');
-      expect(android.scopes, ['openid', 'profile']);
-    });
+        expect(android.apiBaseUrl, 'https://api.gorapeflutter.site:8443');
+        expect(macos.apiBaseUrl, 'https://api.gorapeflutter.site:8443');
+        expect(
+          android.issuer,
+          'https://idp.gorapeflutter.site:9443/realms/gorape',
+        );
+        expect(android.clientId, 'gorape-client');
+        expect(android.redirectUri, ConnectionSettings.flutterRedirectUri);
+        expect(windows.redirectUri, ConnectionSettings.desktopRedirectUri);
+        expect(linux.redirectUri, ConnectionSettings.desktopRedirectUri);
+        expect(web.redirectUri, 'https://app.gorapeflutter.site/auth.html');
+        expect(android.scopes, ['openid', 'profile']);
+      },
+    );
 
-    test('migrates the saved local HTTP API endpoint to HTTPS', () async {
+    test(
+      'migrates saved legacy API and HTTP issuer endpoints to current HTTPS endpoints',
+      () async {
+        final store = MemorySecureStore({
+          ConnectionUsecaseImpl.storageKey: ConnectionSettings(
+            apiBaseUrl: 'http://localhost:8000/',
+            issuer: 'http://localhost:8080/realms/gorape',
+            clientId: 'gorape-client',
+            redirectUri: ConnectionSettings.flutterRedirectUri,
+          ).encode(),
+        });
+        final usecase = newConnectionUsecase(store, newConnectionConfig());
+
+        final settings = await usecase.load(RuntimePlatform.android);
+
+        expect(settings.apiBaseUrl, 'https://api.gorapeflutter.site:8443');
+        expect(
+          ConnectionSettings.decode(
+            store.values[ConnectionUsecaseImpl.storageKey]!,
+          ).apiBaseUrl,
+          'https://api.gorapeflutter.site:8443',
+        );
+        expect(
+          settings.issuer,
+          'https://idp.gorapeflutter.site:9443/realms/gorape',
+        );
+        expect(settings.usesInsecureTransport, isFalse);
+        expect(
+          ConnectionSettings.decode(
+            store.values[ConnectionUsecaseImpl.storageKey]!,
+          ).issuer,
+          'https://idp.gorapeflutter.site:9443/realms/gorape',
+        );
+      },
+    );
+
+    test(
+      'migrates the saved local Keycloak HTTP issuer to its HTTPS issuer',
+      () async {
+        final store = MemorySecureStore({
+          ConnectionUsecaseImpl.storageKey: const ConnectionSettings(
+            apiBaseUrl: 'https://api.gorapeflutter.site:8443',
+            issuer: 'http://idp.gorapeflutter.site:8080/realms/gorape',
+            clientId: 'gorape-client',
+            redirectUri: ConnectionSettings.flutterRedirectUri,
+          ).encode(),
+        });
+        final usecase = newConnectionUsecase(store, newConnectionConfig());
+
+        final settings = await usecase.load(RuntimePlatform.android);
+
+        expect(
+          settings.issuer,
+          'https://idp.gorapeflutter.site:9443/realms/gorape',
+        );
+        expect(
+          ConnectionSettings.decode(
+            store.values[ConnectionUsecaseImpl.storageKey]!,
+          ).issuer,
+          settings.issuer,
+        );
+      },
+    );
+
+    test('preserves custom domain endpoints without migrating them', () async {
       final store = MemorySecureStore({
-        ConnectionUsecaseImpl.storageKey: ConnectionSettings(
-          apiBaseUrl: 'http://localhost:8000/',
-          issuer: 'http://localhost:8080/realms/gorape',
-          clientId: 'gorape-client',
+        ConnectionUsecaseImpl.storageKey: const ConnectionSettings(
+          apiBaseUrl: 'https://api.custom.example.com',
+          issuer: 'https://idp.custom.example.com/realms/gorape',
+          clientId: 'custom-client',
           redirectUri: ConnectionSettings.flutterRedirectUri,
         ).encode(),
       });
@@ -40,14 +110,17 @@ void main() {
 
       final settings = await usecase.load(RuntimePlatform.android);
 
-      expect(settings.apiBaseUrl, 'https://localhost:8443');
+      expect(settings.apiBaseUrl, 'https://api.custom.example.com');
+      expect(settings.issuer, 'https://idp.custom.example.com/realms/gorape');
+      expect(settings.clientId, 'custom-client');
+      expect(settings.usesInsecureTransport, isFalse);
       expect(
-        ConnectionSettings.decode(
-          store.values[ConnectionUsecaseImpl.storageKey]!,
-        ).apiBaseUrl,
-        'https://localhost:8443',
+        settings.registrationUrl,
+        'https://idp.custom.example.com/realms/gorape/protocol/openid-connect/registrations'
+        '?client_id=custom-client'
+        '&redirect_uri=com.gorapeflutter.gfapp%3A%2Foauth2redirect'
+        '&response_type=code&scope=openid',
       );
-      expect(settings.issuer, 'http://localhost:8080/realms/gorape');
     });
 
     test('validates required fields', () {
@@ -67,14 +140,12 @@ void main() {
     test('round-trips through JSON', () {
       final settings = newConnectionConfig()
           .defaultsFor(RuntimePlatform.android)
-          .copyWith(
-            apiBaseUrl: 'https://gorape.example.com/',
-          );
+          .copyWith(apiBaseUrl: 'https://gorape.example.com/');
       final decoded = ConnectionSettings.decode(settings.encode());
 
       expect(decoded, settings);
       expect(decoded.apiBaseUrl, 'https://gorape.example.com');
-      expect(decoded.usesInsecureTransport, isTrue);
+      expect(decoded.usesInsecureTransport, isFalse);
     });
   });
 

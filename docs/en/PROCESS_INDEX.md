@@ -75,9 +75,9 @@ These are logical processing boundaries, not IDs for individual statements.
 | [GF-02066](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/connection.dart#L29) | Start connection loading from platform defaults | `lib/back/usecase/connection.dart` |
 | [GF-02067](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/connection.dart#L31) | Prefer locally persisted connection settings | `lib/back/usecase/connection.dart` |
 | [GF-02068](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/connection.dart#L36) | Reject saved settings without the required OIDC scope | `lib/back/usecase/connection.dart` |
-| [GF-02069](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/connection.dart#L61) | Validate connection URLs and OIDC fields | `lib/back/usecase/connection.dart` |
-| [GF-02070](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/connection.dart#L69) | Persist validated settings securely | `lib/back/usecase/connection.dart` |
-| [GF-02071](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/connection.dart#L76) | Remove overrides and return platform defaults | `lib/back/usecase/connection.dart` |
+| [GF-02069](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/connection.dart#L72) | Validate connection URLs and OIDC fields | `lib/back/usecase/connection.dart` |
+| [GF-02070](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/connection.dart#L80) | Persist validated settings securely | `lib/back/usecase/connection.dart` |
+| [GF-02071](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/connection.dart#L87) | Remove overrides and return platform defaults | `lib/back/usecase/connection.dart` |
 | [GF-02072](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/language.dart#L17) | Restore the saved language or default to Japanese | `lib/back/controller/language.dart` |
 | [GF-02073](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/language.dart#L26) | Restrict language selection to supported locales | `lib/back/controller/language.dart` |
 | [GF-02074](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/language.dart#L30) | Persist the language and update reactive UI state | `lib/back/controller/language.dart` |
@@ -105,36 +105,36 @@ These are logical processing boundaries, not IDs for individual statements.
 | [GF-02096](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L206) | Reset form errors and mark registration as active | `lib/ui/screens/register_device_screen.dart` |
 | [GF-02097](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L214) | Invoke the device-registration application flow | `lib/ui/screens/register_device_screen.dart` |
 | [GF-02098](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L222) | Present verified device details and next actions | `lib/ui/screens/register_device_screen.dart` |
-| [GF-02099](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L264) | Notify the parent and clear the submitted name | `lib/ui/screens/register_device_screen.dart` |
-| [GF-02100](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L268) | Keep registration failures visible in the form | `lib/ui/screens/register_device_screen.dart` |
-| [GF-02101](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L276) | Restore the form idle state after every outcome | `lib/ui/screens/register_device_screen.dart` |
-| [GF-02102](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L301) | Clear proof errors and prevent duplicate submissions | `lib/ui/screens/device_detail_screen.dart` |
-| [GF-02103](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L309) | Run the challenge-signing ownership proof | `lib/ui/screens/device_detail_screen.dart` |
-| [GF-02104](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L317) | Report proof success and reload device evidence | `lib/ui/screens/device_detail_screen.dart` |
-| [GF-02105](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L323) | Surface proof failures on the device detail screen | `lib/ui/screens/device_detail_screen.dart` |
-| [GF-02106](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L331) | Release the proof action lock | `lib/ui/screens/device_detail_screen.dart` |
-| [GF-02107](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L343) | Require confirmation before device revocation | `lib/ui/screens/device_detail_screen.dart` |
-| [GF-02108](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L368) | Mark device revocation as active | `lib/ui/screens/device_detail_screen.dart` |
-| [GF-02109](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L376) | Revoke the backend device and clean up its local key | `lib/ui/screens/device_detail_screen.dart` |
-| [GF-02110](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L381) | Notify the user and close revoked device details | `lib/ui/screens/device_detail_screen.dart` |
-| [GF-02111](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L387) | Keep revocation failures on the current screen | `lib/ui/screens/device_detail_screen.dart` |
-| [GF-02112](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L395) | Release the revoke action lock | `lib/ui/screens/device_detail_screen.dart` |
-| [GF-02113](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L385) | Clear feedback and mark connection settings as saving | `lib/ui/screens/settings_screen.dart` |
-| [GF-02114](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L394) | Validate and persist settings through the controller | `lib/ui/screens/settings_screen.dart` |
-| [GF-02115](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L397) | Confirm settings persistence to the user | `lib/ui/screens/settings_screen.dart` |
-| [GF-02116](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L402) | Display validation or persistence errors | `lib/ui/screens/settings_screen.dart` |
-| [GF-02117](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L409) | Clear the saving state after every outcome | `lib/ui/screens/settings_screen.dart` |
-| [GF-02118](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L420) | Start reset feedback and prevent concurrent actions | `lib/ui/screens/settings_screen.dart` |
-| [GF-02119](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L429) | Remove saved overrides and load platform defaults | `lib/ui/screens/settings_screen.dart` |
-| [GF-02120](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L433) | Synchronize text fields with reset settings | `lib/ui/screens/settings_screen.dart` |
-| [GF-02121](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L440) | Confirm that defaults have been restored | `lib/ui/screens/settings_screen.dart` |
-| [GF-02122](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L445) | Display reset failures without discarding the form | `lib/ui/screens/settings_screen.dart` |
-| [GF-02123](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L452) | Clear the saving state after reset | `lib/ui/screens/settings_screen.dart` |
-| [GF-02124](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L463) | Start a health check and clear stale results | `lib/ui/screens/settings_screen.dart` |
-| [GF-02125](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L472) | Query the configured Gorape endpoint | `lib/ui/screens/settings_screen.dart` |
-| [GF-02126](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L475) | Format and display the health response | `lib/ui/screens/settings_screen.dart` |
-| [GF-02127](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L484) | Display health-check transport or API errors | `lib/ui/screens/settings_screen.dart` |
-| [GF-02128](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L491) | Clear the health-check progress state | `lib/ui/screens/settings_screen.dart` |
+| [GF-02099](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L266) | Notify the parent and clear the submitted name | `lib/ui/screens/register_device_screen.dart` |
+| [GF-02100](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L270) | Keep registration failures visible in the form | `lib/ui/screens/register_device_screen.dart` |
+| [GF-02101](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/register_device_screen.dart#L278) | Restore the form idle state after every outcome | `lib/ui/screens/register_device_screen.dart` |
+| [GF-02102](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L304) | Clear proof errors and prevent duplicate submissions | `lib/ui/screens/device_detail_screen.dart` |
+| [GF-02103](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L312) | Run the challenge-signing ownership proof | `lib/ui/screens/device_detail_screen.dart` |
+| [GF-02104](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L320) | Report proof success and reload device evidence | `lib/ui/screens/device_detail_screen.dart` |
+| [GF-02105](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L326) | Surface proof failures on the device detail screen | `lib/ui/screens/device_detail_screen.dart` |
+| [GF-02106](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L334) | Release the proof action lock | `lib/ui/screens/device_detail_screen.dart` |
+| [GF-02107](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L346) | Require confirmation before device revocation | `lib/ui/screens/device_detail_screen.dart` |
+| [GF-02108](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L371) | Mark device revocation as active | `lib/ui/screens/device_detail_screen.dart` |
+| [GF-02109](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L379) | Revoke the backend device and clean up its local key | `lib/ui/screens/device_detail_screen.dart` |
+| [GF-02110](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L384) | Notify the user and close revoked device details | `lib/ui/screens/device_detail_screen.dart` |
+| [GF-02111](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L390) | Keep revocation failures on the current screen | `lib/ui/screens/device_detail_screen.dart` |
+| [GF-02112](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/device_detail_screen.dart#L398) | Release the revoke action lock | `lib/ui/screens/device_detail_screen.dart` |
+| [GF-02113](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L386) | Clear feedback and mark connection settings as saving | `lib/ui/screens/settings_screen.dart` |
+| [GF-02114](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L395) | Validate and persist settings through the controller | `lib/ui/screens/settings_screen.dart` |
+| [GF-02115](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L398) | Confirm settings persistence to the user | `lib/ui/screens/settings_screen.dart` |
+| [GF-02116](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L403) | Display validation or persistence errors | `lib/ui/screens/settings_screen.dart` |
+| [GF-02117](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L410) | Clear the saving state after every outcome | `lib/ui/screens/settings_screen.dart` |
+| [GF-02118](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L421) | Start reset feedback and prevent concurrent actions | `lib/ui/screens/settings_screen.dart` |
+| [GF-02119](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L430) | Remove saved overrides and load platform defaults | `lib/ui/screens/settings_screen.dart` |
+| [GF-02120](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L434) | Synchronize text fields with reset settings | `lib/ui/screens/settings_screen.dart` |
+| [GF-02121](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L441) | Confirm that defaults have been restored | `lib/ui/screens/settings_screen.dart` |
+| [GF-02122](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L446) | Display reset failures without discarding the form | `lib/ui/screens/settings_screen.dart` |
+| [GF-02123](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L453) | Clear the saving state after reset | `lib/ui/screens/settings_screen.dart` |
+| [GF-02124](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L464) | Start a health check and clear stale results | `lib/ui/screens/settings_screen.dart` |
+| [GF-02125](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L473) | Query the configured Gorape endpoint | `lib/ui/screens/settings_screen.dart` |
+| [GF-02126](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L476) | Format and display the health response | `lib/ui/screens/settings_screen.dart` |
+| [GF-02127](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L485) | Display health-check transport or API errors | `lib/ui/screens/settings_screen.dart` |
+| [GF-02128](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/settings_screen.dart#L492) | Clear the health-check progress state | `lib/ui/screens/settings_screen.dart` |
 | [GF-02129](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L361) | Collect group edits and stop on dialog cancellation | `lib/ui/screens/group_detail_screen.dart` |
 | [GF-02130](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L369) | Persist group changes through the group controller | `lib/ui/screens/group_detail_screen.dart` |
 | [GF-02131](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_detail_screen.dart#L378) | Replace local group state and report success | `lib/ui/screens/group_detail_screen.dart` |
@@ -161,22 +161,22 @@ These are logical processing boundaries, not IDs for individual statements.
 | [GF-02152](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_management_screen.dart#L128) | Collect group details and handle dialog cancellation | `lib/ui/screens/group_management_screen.dart` |
 | [GF-02153](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_management_screen.dart#L136) | Create a group and retain its server-generated record | `lib/ui/screens/group_management_screen.dart` |
 | [GF-02154](https://github.com/GorapeFlutter/gf-app/blob/main/lib/ui/screens/group_management_screen.dart#L144) | Confirm creation and open the new group details | `lib/ui/screens/group_management_screen.dart` |
-| [GF-02155](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L103) | Enter loading state before provider sign-in | `lib/back/controller/auth.dart` |
-| [GF-02156](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L112) | Call the sign-in use case and publish the session | `lib/back/controller/auth.dart` |
-| [GF-02157](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L122) | Preserve expected authentication errors for the UI | `lib/back/controller/auth.dart` |
-| [GF-02158](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L140) | Wrap unexpected errors as authentication failures | `lib/back/controller/auth.dart` |
-| [GF-02159](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L175) | Reuse an in-flight refresh instead of duplicating it | `lib/back/controller/auth.dart` |
-| [GF-02160](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L178) | Start one refresh and clear its in-flight marker | `lib/back/controller/auth.dart` |
-| [GF-02161](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L244) | Clear rejected credentials before publishing the auth error | `lib/back/controller/auth.dart` |
+| [GF-02155](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L99) | Enter loading state before provider sign-in | `lib/back/controller/auth.dart` |
+| [GF-02156](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L108) | Call the sign-in use case and publish the session | `lib/back/controller/auth.dart` |
+| [GF-02157](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L118) | Preserve expected authentication errors for the UI | `lib/back/controller/auth.dart` |
+| [GF-02158](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L136) | Wrap unexpected errors as authentication failures | `lib/back/controller/auth.dart` |
+| [GF-02159](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L171) | Reuse an in-flight refresh instead of duplicating it | `lib/back/controller/auth.dart` |
+| [GF-02160](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L174) | Start one refresh and clear its in-flight marker | `lib/back/controller/auth.dart` |
+| [GF-02161](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L240) | Clear rejected credentials before publishing the auth error | `lib/back/controller/auth.dart` |
 | [GF-02162](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L791) | Attach attestation guidance to validation failures | `lib/back/repository/gorape.dart` |
 | [GF-02163](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L800) | Explain backend role authorization for forbidden actions | `lib/back/repository/gorape.dart` |
 | [GF-02164](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L272) | Accept only implemented backend verifier capabilities | `lib/back/usecase/device.dart` |
 | [GF-02165](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L296) | Decode and reject empty challenge bytes | `lib/back/usecase/device.dart` |
 | [GF-02166](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L301) | Convert malformed challenges to a domain error | `lib/back/usecase/device.dart` |
-| [GF-02169](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L77) | Record session restore outcomes without credential material | `lib/back/controller/auth.dart` |
-| [GF-02170](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L106) | Record sign-in mode and outcome without tokens | `lib/back/controller/auth.dart` |
-| [GF-02171](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L157) | Record Keycloak passkey action outcomes | `lib/back/controller/auth.dart` |
-| [GF-02172](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L191) | Record refresh outcomes without token material | `lib/back/controller/auth.dart` |
+| [GF-02169](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L73) | Record session restore outcomes without credential material | `lib/back/controller/auth.dart` |
+| [GF-02170](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L102) | Record sign-in mode and outcome without tokens | `lib/back/controller/auth.dart` |
+| [GF-02171](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L153) | Record Keycloak passkey action outcomes | `lib/back/controller/auth.dart` |
+| [GF-02172](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L187) | Record refresh outcomes without token material | `lib/back/controller/auth.dart` |
 | [GF-02173](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L701) | Record API method, redacted path, status and duration | `lib/back/repository/gorape.dart` |
 | [GF-02174](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/passkey_device.dart#L56) | Record registration ceremony stages without credential payloads | `lib/back/usecase/passkey_device.dart` |
 | [GF-02175](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/passkey_device.dart#L156) | Record possession ceremony stages without assertion payloads | `lib/back/usecase/passkey_device.dart` |
@@ -190,3 +190,4 @@ These are logical processing boundaries, not IDs for individual statements.
 | [GF-02183](https://github.com/GorapeFlutter/gf-app/blob/main/linux/runner/linux_native_keys.cc#L325) | Create a TPM2 P-256 key and store only TPM-wrapped key blobs | `linux/runner/linux_native_keys.cc` |
 | [GF-02184](https://github.com/GorapeFlutter/gf-app/blob/main/linux/runner/linux_native_keys.cc#L363) | Reload and sign with a TPM2 protected key | `linux/runner/linux_native_keys.cc` |
 | [GF-02185](https://github.com/GorapeFlutter/gf-app/blob/main/linux/runner/linux_native_keys.cc#L466) | Register Linux TPM2 Device channel | `linux/runner/linux_native_keys.cc` |
+| [GF-02186](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/connection.dart#L39) | Migrate legacy local API and issuer defaults to the `gorapeflutter.site` domain | `lib/back/usecase/connection.dart` |

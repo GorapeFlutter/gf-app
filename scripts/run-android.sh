@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 # Run gf-app on a connected Android device or emulator.
 #
-# The app reaches the host through adb reverse. The Gorape API uses local HTTPS
-# and its development CA is passed to the debug Dart HTTP client. The OIDC
-# issuer remains HTTP on localhost and matches Keycloak's `iss` claim.
+# The app reaches the host through adb reverse. The Gorape API and Keycloak OIDC
+# issuer use local HTTPS; their issuer URL must match Keycloak discovery exactly.
 
 set -euo pipefail
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/lib.sh"
@@ -14,9 +13,9 @@ Usage: ./scripts/run-android.sh [options] [-- flutter-run-args...]
 
 Options:
   --device ID       Target device (default: Flutter's selection)
-  --api-url URL     API base URL (default: https://localhost:8443)
+  --api-url URL     API base URL (default: https://api.gorapeflutter.site:8443)
   --tls-ca FILE     CA PEM for the API TLS certificate (default: generated CA)
-  --issuer URL      OIDC issuer (default: http://localhost:8080/realms/gorape)
+  --issuer URL      OIDC issuer (default: https://idp.gorapeflutter.site:9443/realms/gorape)
   --release         Build/run in release mode
   --skip-checks     Do not require the backend health endpoints to be up
   -h, --help        Show this help
@@ -27,8 +26,8 @@ EOF
 }
 
 device=""
-api_url="${GORAPE_API_BASE_URL:-https://localhost:8443}"
-issuer="${GORAPE_OIDC_ISSUER:-http://localhost:8080/realms/gorape}"
+api_url="${GORAPE_API_BASE_URL:-https://api.gorapeflutter.site:8443}"
+issuer="${GORAPE_OIDC_ISSUER:-https://idp.gorapeflutter.site:9443/realms/gorape}"
 tls_ca_file="${GORAPE_TLS_CA_FILE:-}"
 flutter_mode="--debug"
 skip_checks=0
@@ -72,7 +71,7 @@ while [[ $# -gt 0 ]]; do
   shift
 done
 
-if [[ -z "$tls_ca_file" && "$api_url" == https://localhost:8443* ]]; then
+if [[ -z "$tls_ca_file" && ( "$api_url" == https://api.gorapeflutter.site:8443* || "$api_url" == https://localhost:8443* ) ]]; then
   tls_ca_file="$APP_ROOT/config/generated/tls/ca.crt"
 fi
 tls_ca_arg=""
@@ -103,9 +102,15 @@ if [[ "$skip_checks" != "1" ]]; then
     curl -fsS --max-time 5 "$api_url/health" >/dev/null 2>&1 ||
       die "Gorape API is not reachable at $api_url. Start it with ./scripts/gorape-up.sh."
   fi
-  curl -fsS --max-time 5 \
-    "${issuer%/}/.well-known/openid-configuration" >/dev/null 2>&1 ||
-    die "Keycloak is not reachable at $issuer. Start it with ./scripts/gorape-up.sh."
+  if [[ "$issuer" == https://* && -n "$tls_ca_file" ]]; then
+    curl -fsS --cacert "$tls_ca_file" --max-time 5 \
+      "${issuer%/}/.well-known/openid-configuration" >/dev/null 2>&1 ||
+      die "Keycloak is not reachable at $issuer using CA $tls_ca_file. Start it with ./scripts/gorape-up.sh --https."
+  else
+    curl -fsS --max-time 5 \
+      "${issuer%/}/.well-known/openid-configuration" >/dev/null 2>&1 ||
+      die "Keycloak is not reachable at $issuer. Start it with ./scripts/gorape-up.sh."
+  fi
 fi
 
 info "Configuring adb reverse for $device"
@@ -113,7 +118,8 @@ info "Configuring adb reverse for $device"
 adb -s "$device" reverse tcp:8080 tcp:8080 >/dev/null
 adb -s "$device" reverse tcp:8000 tcp:8000 >/dev/null
 adb -s "$device" reverse tcp:8443 tcp:8443 >/dev/null
-ok "localhost:8080, localhost:8000, and localhost:8443 now reach the host"
+adb -s "$device" reverse tcp:9443 tcp:9443 >/dev/null
+ok "Android localhost ports 8080, 8000, 8443, and 9443 now reach the host"
 
 cd "$APP_ROOT"
 info "Running gf-app on $device"

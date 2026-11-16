@@ -68,8 +68,11 @@ void main() {
       ),
       findsOneWidget,
     );
-    expect(find.text('https://localhost:8443'), findsOneWidget);
-    expect(find.text('http://localhost:8080/realms/gorape'), findsOneWidget);
+    expect(find.text('https://api.gorapeflutter.site:8443'), findsOneWidget);
+    expect(
+      find.text('https://idp.gorapeflutter.site:9443/realms/gorape'),
+      findsOneWidget,
+    );
     expect(find.text(ConnectionSettings.flutterRedirectUri), findsOneWidget);
     expect(find.textContaining('ID TokenはAPI認証情報として使用しません'), findsOneWidget);
 
@@ -92,7 +95,7 @@ void main() {
     await tester.tap(find.text('アカウント登録'));
     await tester.pumpAndSettle();
 
-    expect(find.text(LoginScreen.registrationUrl), findsOneWidget);
+    expect(find.text(settings.registrationUrl), findsOneWidget);
   });
 
   testWidgets('offers Keycloak passkey registration and login actions', (

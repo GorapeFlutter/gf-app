@@ -41,25 +41,26 @@ class LoginScreen extends StatelessWidget {
   final AuthSession? session;
 
   static const registrationUrl =
-      'http://localhost:8080/realms/gorape/protocol/openid-connect/registrations'
-      '?client_id=gorape-client'
-      '&redirect_uri=com.gorapeflutter.gfapp:/oauth2redirect'
+      '${ConnectionSettings.defaultOidcIssuer}/protocol/openid-connect/registrations'
+      '?client_id=${ConnectionSettings.defaultClientId}'
+      '&redirect_uri=${ConnectionSettings.flutterRedirectUri}'
       '&response_type=code&scope=openid';
 
   /// GF-00825 — Handles show registration dialog in LoginScreen.
   void _showRegistrationDialog(BuildContext context) {
+    final url = settings?.registrationUrl ?? registrationUrl;
     showDialog<void>(
       context: context,
       builder: /* GF-00826 — Runs an inline callback in LoginScreen._showRegistrationDialog. */
           (context) => AlertDialog(
             title: const AppText('MCODE-00061'),
-            content: const Column(
+            content: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                AppText('MCODE-00063'),
-                SizedBox(height: 12),
-                SelectableText(registrationUrl),
+                const AppText('MCODE-00063'),
+                const SizedBox(height: 12),
+                SelectableText(url),
               ],
             ),
             actions: [

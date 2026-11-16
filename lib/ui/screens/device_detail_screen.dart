@@ -232,8 +232,11 @@ class _DeviceDetailScreenState extends ConsumerState<DeviceDetailScreen> {
                                             spacing: 8,
                                             runSpacing: 4,
                                             children: [
-                                              if (record.assuranceLevel != null &&
-                                                  record.assuranceLevel!.isNotEmpty)
+                                              if (record.assuranceLevel !=
+                                                      null &&
+                                                  record
+                                                      .assuranceLevel!
+                                                      .isNotEmpty)
                                                 StatusChip(
                                                   label: record.assuranceLevel!,
                                                   color: switch (record

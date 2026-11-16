@@ -186,12 +186,12 @@ const Map<String, AppMessage> appMessageCatalog = <String, AppMessage>{
     en: "This is an HTTP development connection. Use HTTPS in production.",
   ),
   "MCODE-00096": AppMessage(
-    ja: "Android Emulatorは 10.0.2.2、実機はPCのLAN IPを指定してください。adb reverse を使う場合は localhost:8000 も利用できます。",
-    en: "Use 10.0.2.2 for Android emulators, your computer’s LAN IP for physical devices, or localhost:8000 with adb reverse.",
+    ja: "Android Emulatorは adb reverse、実機はPCのLAN IPか公開済みの独自ドメインを指定してください。開発既定は api.gorapeflutter.site です。",
+    en: "Use adb reverse for Android emulators, or your computer’s LAN IP / a published custom domain for physical devices. The development default is api.gorapeflutter.site.",
   ),
   "MCODE-00097": AppMessage(
-    ja: "Android Emulatorでは OIDC 用に `adb reverse tcp:8080 tcp:8080` を実行してください。APIは既定で 10.0.2.2:8000 を利用します。",
-    en: "For Android emulators, run `adb reverse tcp:8080 tcp:8080` for OIDC. The API defaults to 10.0.2.2:8000.",
+    ja: "Android Emulatorでは OIDC/API 用に `adb reverse tcp:8080 tcp:8080` と `adb reverse tcp:8443 tcp:8443` を実行してください。API既定は https://api.gorapeflutter.site:8443 です。",
+    en: "For Android emulators, run `adb reverse tcp:8080 tcp:8080` and `adb reverse tcp:8443 tcp:8443` for OIDC/API. The API defaults to https://api.gorapeflutter.site:8443.",
   ),
   "MCODE-00098": AppMessage(ja: "Android端末を登録", en: "Register Android device"),
   "MCODE-00099": AppMessage(ja: "この端末", en: "This device"),
@@ -853,8 +853,8 @@ const Map<String, AppMessage> appMessageCatalog = <String, AppMessage>{
   ),
   "MCODE-00336": AppMessage(ja: "を実行してください。", en: " run this command."),
   "MCODE-00337": AppMessage(
-    ja: "adb reverse を使う場合は localhost:8000 も利用できます。",
-    en: "With adb reverse, localhost:8000 can also be used.",
+    ja: "adb reverse を使えば api.gorapeflutter.site:8000 も利用できます。",
+    en: "With adb reverse, api.gorapeflutter.site:8000 can also be used.",
   ),
   "MCODE-00338": AppMessage(
     ja: "android_trust_anchors にGoogle Hardware Attestation Root CAを",
@@ -1151,20 +1151,20 @@ const Map<String, AppMessage> appMessageCatalog = <String, AppMessage>{
     en: "The ID token is not sent.",
   ),
   "MCODE-00419": AppMessage(
-    ja: "APIは既定で 10.0.2.2:8000 を利用します。",
-    en: "The API defaults to 10.0.2.2:8000.",
+    ja: "APIは既定で https://api.gorapeflutter.site:8443 を利用します。",
+    en: "The API defaults to https://api.gorapeflutter.site:8443.",
   ),
   "MCODE-00420": AppMessage(
-    ja: "Android Emulatorは 10.0.2.2、実機はPCのLAN IPを指定してください。",
-    en: "Use 10.0.2.2 for Android emulators and your PC LAN IP for physical devices.",
+    ja: "Android Emulatorは adb reverse、実機はPCのLAN IPか独自ドメインを指定してください。",
+    en: "Use adb reverse for Android emulators, or your PC LAN IP / custom domain for physical devices.",
   ),
   "MCODE-00421": AppMessage(
-    ja: "Android Emulatorでは OIDC 用に",
-    en: "For OIDC on Android emulators, ",
+    ja: "Android Emulatorでは OIDC/API 用に",
+    en: "For OIDC/API on Android emulators, ",
   ),
   "MCODE-00422": AppMessage(
-    ja: "`adb reverse tcp:8080 tcp:8080` を実行してください。",
-    en: "run `adb reverse tcp:8080 tcp:8080`.",
+    ja: "`adb reverse tcp:8080 tcp:8080` と `adb reverse tcp:8443 tcp:8443` を実行してください。",
+    en: "run `adb reverse tcp:8080 tcp:8080` and `adb reverse tcp:8443 tcp:8443`.",
   ),
   "MCODE-00423": AppMessage(ja: "保存に失敗しました: ", en: "Save failed: "),
   "MCODE-00424": AppMessage(
@@ -1357,8 +1357,8 @@ const Map<String, AppMessage> appMessageCatalog = <String, AppMessage>{
     en: "HTTP is for local development only. Use HTTPS and a registered redirect URI in production.",
   ),
   "MCODE-00484": AppMessage(
-    ja: "Android Emulatorでは OIDC 用に `adb reverse tcp:8080 tcp:8080` を実行してください。APIは既定で 10.0.2.2:8000 を利用します。",
-    en: "For OIDC on an Android emulator, run `adb reverse tcp:8080 tcp:8080`. The API defaults to 10.0.2.2:8000.",
+    ja: "Android Emulatorでは OIDC/API 用に `adb reverse tcp:8080 tcp:8080` と `adb reverse tcp:8443 tcp:8443` を実行してください。API既定は https://api.gorapeflutter.site:8443 です。",
+    en: "For OIDC/API on an Android emulator, run `adb reverse tcp:8080 tcp:8080` and `adb reverse tcp:8443 tcp:8443`. The API defaults to https://api.gorapeflutter.site:8443.",
   ),
   "MCODE-00485": AppMessage(
     ja: "Gorape RPへパスキーを登録",
@@ -1474,6 +1474,30 @@ const Map<String, AppMessage> appMessageCatalog = <String, AppMessage>{
   "MCODE-00515": AppMessage(
     ja: "Keycloakパスキーの登録に失敗しました。",
     en: "Keycloak passkey registration failed.",
+  ),
+  "MCODE-00516": AppMessage(
+    ja: "Android Credential Manager",
+    en: "Android Credential Manager",
+  ),
+  "MCODE-00517": AppMessage(
+    ja: "Provider状態を確認しています...",
+    en: "Checking provider status…",
+  ),
+  "MCODE-00518": AppMessage(
+    ja: "GF Hardware Passkeys ProviderにはAndroid 14以降が必要です。",
+    en: "GF Hardware Passkeys Provider requires Android 14 or later.",
+  ),
+  "MCODE-00519": AppMessage(
+    ja: "このアプリのProvider Serviceが登録されていません。アプリのbuild設定を確認してください。",
+    en: "The provider service is not registered in this app build. Check the app build configuration.",
+  ),
+  "MCODE-00520": AppMessage(
+    ja: "Provider Serviceは登録済みです。Android設定の「その他のサービス」でGF Hardware Passkeysを有効にしてください。有効状態はAndroidの公開APIから取得できません。",
+    en: "The provider service is registered. Enable GF Hardware Passkeys under Other services in Android Settings. Android does not expose its enabled state through a public API.",
+  ),
+  "MCODE-00521": AppMessage(
+    ja: "パスワードとパスキーの設定を開く",
+    en: "Open password and passkey settings",
   ),
 };
 
