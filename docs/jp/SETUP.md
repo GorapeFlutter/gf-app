@@ -177,9 +177,9 @@ Cross-device authentication (CDA)は認証器のcapabilityです。Gorapeは登�
 
 ### sample web appでクロスデバイス承認を試す
 
-ローカルHTTPS stackを起動し、`config/generated/tls/ca.crt`をPCのOS/ブラウザのtrust storeへ登録した後、`./scripts/open-sample-web.sh`を実行します。Gorape deviceの所有者と同じKeycloak account（local seedではuser01）のパスキーでsampleへログインします。操作の保証レベルを`standard_passkey`にし、クロスデバイス優先を選んで承認します。Chromeに保存済み`hybrid` transportが提示され、PixelでQRを読み取るか端末選択を完了するとassertionが実行されます。sampleはサーバー保存済みtransportを変更せず、登録値に`hybrid`があるときだけ`hybrid` hintを送ります。
+ローカルHTTPS stackを起動し、`config/generated/tls/ca.crt`をPCのOS/ブラウザのtrust storeへ登録した後、`./scripts/open-sample-web.sh`を実行します。Gorape deviceの所有者と同じKeycloak account（local seedではuser01）のパスキーでsampleへログインします。操作の保証レベルを`standard_passkey`にし、クロスデバイス優先を選んで承認します。Chromeに保存済み`hybrid` transportが提示され、Android端末でQRを読み取るか端末選択を完了するとassertionが実行されます。sampleはサーバー保存済みtransportを変更せず、登録値に`hybrid`があるときだけ`hybrid` hintを送ります。
 
-現在のPixel credentialは`BE=true`のため保証レベルは`standard_passkey`です。`hardware_attested`要求は満たせません。この確認ではローカルorigin `https://app.gorapeflutter.site:5174`、公開apex DAL、app/Keycloak HTTPS用のローカル開発CAを使います。TLS証明書検証を回避してはいけません。
+現在のAndroid端末のcredentialは`BE=true`のため保証レベルは`standard_passkey`です。`hardware_attested`要求は満たせません。この確認ではローカルorigin `https://app.gorapeflutter.site:5174`、公開apex DAL、app/Keycloak HTTPS用のローカル開発CAを使います。TLS証明書検証を回避してはいけません。
 
 ### Metadataと失効の再評価
 

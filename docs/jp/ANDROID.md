@@ -96,9 +96,9 @@ curl -s -H "Authorization: Bearer $TOKEN" \
 
 登録成功時はHTTP 201と`platform: "android"`のdeviceが返ります。attestation recordにはverifier type、security level、status、導出された保証レベルが含まれます。legacy Android Key Attestationはハードウェア鍵の常在を証明するため、`BE=false`のcredentialは`hardware_attested`になり得ます。WebAuthnパスキーは独自の検証済みレベルを返します。
 
-### Pixel実機PoCの検証結果
+### Android実機PoCの検証結果
 
-Pixel 6 / Android 17 (API 37) でGF Hardware Passkeysを有効にし、Gorape RP用credentialを登録しました。Gorapeはregistration verifyでHTTP 201を返し、DBのattestation recordは`android-key`、`verified`、`trust_anchor`、`hardware_protected=true`、`BE=false`、`BS=false`、`assurance_level=hardware_attested`でした。続くpasskey assertionもHTTP 200で検証されています。検証用設定ではMDSは無効で、Google Android Key Attestation trust anchorによるchain検証を使いました。
+Android 17 (API 37) の実機でGF Hardware Passkeysを有効にし、Gorape RP用credentialを登録しました。Gorapeはregistration verifyでHTTP 201を返し、DBのattestation recordは`android-key`、`verified`、`trust_anchor`、`hardware_protected=true`、`BE=false`、`BS=false`、`assurance_level=hardware_attested`でした。続くpasskey assertionもHTTP 200で検証されています。検証用設定ではMDSは無効で、Google Android Key Attestation trust anchorによるchain検証を使いました。
 
 DBの`security_level=android_key_attested`はTEE/StrongBoxを区別しません。実装はStrongBoxを優先し、利用できない場合はTEEへfallbackしますが、この登録結果だけからどちらのlevelかは断定しません。Keycloakログイン用パスキーは別RP (`idp.gorapeflutter.site`) のGoogle Password Manager credentialであり、このGF Providerの検証対象ではありません。CDA/hybridは未検証で、現在のProviderは`internal`のみを返します。
 

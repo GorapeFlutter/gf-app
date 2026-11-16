@@ -205,11 +205,11 @@ desktop OS/browser trust store, then run `./scripts/open-sample-web.sh`. Sign in
 to the sample with the Keycloak passkey for the same account that owns the
 Gorape device (user01 in the local seed). Create an operation with
 `standard_passkey`, select cross-device preferred, and approve it. Chrome should
-offer the registered `hybrid` transport so the Pixel can scan/complete the
+offer the registered `hybrid` transport so the Android device can scan/complete the
 cross-device assertion. The sample preserves the server-stored transport list
 and only sends a `hybrid` hint when that list advertises `hybrid`.
 
-The current Pixel credential has `BE=true`, so its assurance is
+The current Android-device credential has `BE=true`, so its assurance is
 `standard_passkey`; it cannot satisfy a `hardware_attested` request. This test
 uses the local app origin `https://app.gorapeflutter.site:5174`, the published
 apex DAL for the phone, and the locally trusted development CA for the app and

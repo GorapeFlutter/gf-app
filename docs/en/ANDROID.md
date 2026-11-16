@@ -132,9 +132,9 @@ level, status, and the derived assurance level. Legacy Android Key Attestation
 proves hardware key residency, so a `BE=false` credential can reach
 `hardware_attested`; a WebAuthn passkey returns its own verified level.
 
-### Physical Pixel PoC result
+### Physical Android-device PoC result
 
-On Pixel 6 / Android 17 (API 37), with GF Hardware Passkeys enabled, a Gorape
+On a physical Android device running Android 17 (API 37), with GF Hardware Passkeys enabled, a Gorape
 RP credential registered with HTTP 201. The persisted attestation record showed
 `android-key`, `verified`, `trust_anchor`, `hardware_protected=true`,
 `BE=false`, `BS=false`, and `assurance_level=hardware_attested`. A subsequent
