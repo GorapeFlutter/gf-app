@@ -44,6 +44,8 @@ flowchart LR
 
 サインインとdevice-trust flowでは、同じ認証sessionに見えてもprotocol上の役割が異なります。KeycloakはOIDC Identity Provider（IdP）であり、Keycloak credential用WebAuthn Relying Party（RP）です。`gf-app`はpublic OIDC clientです。Gorapeもdevice passkey用の独立したWebAuthn RPとなり、別の登録ceremonyと完全な`attestationObject`を受け取ります。credentialはRP IDにスコープされるため、Keycloak用credentialをGorapeで再利用できません。従来のAndroid Keystore登録APIは互換性のため残しますが、端末登録画面はWebAuthn経路を利用します。
 
+Androidのdevice-passkey経路はAndroidX Credential Provider APIを使います。`passkeys` pluginが標準Credential Managerのcreate/get requestを送り、Provider選択とユーザー検証UIはAndroid OSが表示します。GF Hardware PasskeysはGorape RP向けのProvider実装であり、標準WebAuthn credential/attestation構造を返します。GF独自部分はAndroid KeystoreでのP-256鍵生成と`android-key` attestation objectの構成です。独自のブラウザwire protocolや選択UIを定義するものではありません。Keycloak RPとそのログインcredentialは別です。現在Providerが返すtransportは`internal`のみで、CDA/hybridは未実装・未検証です。
+
 ```mermaid
 flowchart LR
     User[ユーザー]
@@ -83,7 +85,7 @@ flowchart LR
 
     App -->|登録options| API
     API -->|RP ID + challenge + attestation preference| App
-    App -->|WebAuthn create()| PasskeyPlugin
+    App -->|"WebAuthn create()"| PasskeyPlugin
     PasskeyPlugin --> Authenticator
     Authenticator -->|credential + attestationObject| PasskeyPlugin
     PasskeyPlugin --> App

@@ -36,7 +36,7 @@ flowchart LR
     Svc -->|2. Service Account + GF-10035<br/>POST /proof-requests| Gorape
     Gorape -->|3. proof_id + public_key_options| Svc
     Svc -->|4. WebAuthn Options| Vue
-    Vue -->|5. navigator.credentials.get()<br/>Same-device internal / Cross-device hybrid| Authn
+    Vue -->|"5. navigator.credentials.get()<br/>Same-device internal / Cross-device hybrid"| Authn
     Authn -->|6. Signed Assertion| Vue
     Vue -->|7. Submit Assertion| Svc
     Svc -->|8. GF-10036<br/>POST /proof-requests/:proofId/verify| Gorape
@@ -58,7 +58,7 @@ flowchart TB
         PublicDNS[Authoritative DNS: gorapeflutter.site<br/>*.gorapeflutter.site IN A 127.0.0.1]
     end
 
-    subgraph DevHost[Developer PC / Docker Host (127.0.0.1)]
+    subgraph DevHost["Developer PC / Docker Host (127.0.0.1)"]
         KC[Keycloak Container<br/>idp.gorapeflutter.site:8080]
         API[Gorape Server Container<br/>api.gorapeflutter.site:8000 / :8443 TLS]
         Portal[Ceremony Portal / Sample Web<br/>app.gorapeflutter.site:5174]
@@ -74,7 +74,7 @@ flowchart TB
         iOSApp[GF App on iOS]
     end
 
-     AndroidApp -->|adb reverse tcp:8443 / tcp:9443<br/>or LAN DNS| DevHost
+    AndroidApp -->|"adb reverse tcp:8443 / tcp:9443<br/>or LAN DNS"| DevHost
     iOSApp -->|LAN DNS resolving to PC LAN IP| DevHost
 ```
 
@@ -142,9 +142,23 @@ sequenceDiagram
     Server->>Redis: Atomically consume single-use challenge (GF-10009)
     Server->>Server: Verify challenge, origin, RP ID (gorapeflutter.site), signature, attestation chain/MDS, BE/BS flags (GF-10011 / GF-10013)
     Server->>Server: Classify assurance_level (hardware_attested / device_bound_unattested / standard_passkey)
-    Server->>DB: Transactionally store Device, DeviceKey (public key only; raw attestation stripped), and Attestation record
+    Server->>DB: Store Device, public-key-only DeviceKey, and Attestation record in one transaction
     Server-->>App: 201 Created (Device + Attestation)
 ```
+
+### Android Credential Provider boundary
+
+The Android device-registration implementation uses the AndroidX
+`CredentialProviderService` contract. The Flutter passkey adapter invokes
+standard Credential Manager create/get requests; Android supplies the chooser
+and user-verification UI. GF Hardware Passkeys handles only the Gorape RP ID
+and returns standard WebAuthn `PublicKeyCredential`, authenticator-data, COSE,
+and CBOR attestation structures. The GF-specific implementation generates the
+P-256 key in Android Keystore and forms the `android-key` attestation statement;
+it does not introduce a proprietary WebAuthn wire format or a replacement OS
+chooser. Keycloak login is a separate RP/credential path. The current provider
+advertises only `internal`; CDA/hybrid must not be considered supported until
+its transport and cross-device flow are implemented and verified on-device.
 
 ### 4.3 Device Authentication (Possession Proof & External Service Approval) Sequences
 

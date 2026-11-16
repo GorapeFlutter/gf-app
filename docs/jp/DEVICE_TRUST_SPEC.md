@@ -36,7 +36,7 @@ flowchart LR
     Svc -->|2. Service Account + GF-10035<br/>POST /proof-requests| Gorape
     Gorape -->|3. proof_id + public_key_options| Svc
     Svc -->|4. WebAuthn Options| Vue
-    Vue -->|5. navigator.credentials.get()<br/>同一端末 internal / クロスデバイス hybrid| Authn
+    Vue -->|"5. navigator.credentials.get()<br/>同一端末 internal / クロスデバイス hybrid"| Authn
     Authn -->|6. 署名済みAssertion| Vue
     Vue -->|7. Assertion送信| Svc
     Svc -->|8. GF-10036<br/>POST /proof-requests/:proofId/verify| Gorape
@@ -58,7 +58,7 @@ flowchart TB
         PublicDNS[権威DNS: gorapeflutter.site<br/>*.gorapeflutter.site IN A 127.0.0.1]
     end
 
-    subgraph DevHost[開発用PC / Docker Host (127.0.0.1)]
+    subgraph DevHost["開発用PC / Docker Host (127.0.0.1)"]
         KC[Keycloak Container<br/>idp.gorapeflutter.site:8080]
         API[Gorape Server Container<br/>api.gorapeflutter.site:8000 / :8443 TLS]
         Portal[Ceremony Portal / Sample Web<br/>app.gorapeflutter.site:5174]
@@ -74,7 +74,7 @@ flowchart TB
         iOSApp[GF App on iOS]
     end
 
-     AndroidApp -->|adb reverse tcp:8443 / tcp:9443<br/>または LAN DNS| DevHost
+    AndroidApp -->|"adb reverse tcp:8443 / tcp:9443<br/>または LAN DNS"| DevHost
     iOSApp -->|LAN DNS で開発PCのLAN IPへ解決| DevHost
 ```
 
@@ -145,6 +145,10 @@ sequenceDiagram
     Server->>DB: Device + DeviceKey (公開鍵のみ・生attestation除去) + Attestation記録をトランザクション保存
     Server-->>App: 201 Created (Device + Attestation)
 ```
+
+### Android Credential Providerの境界
+
+Androidのデバイス登録はAndroidXの`CredentialProviderService` contractを使います。Flutterのpasskey adapterが標準Credential Manager create/get requestを送り、Provider選択とユーザー検証UIはAndroid OSが表示します。GF Hardware PasskeysはGorape RP IDだけを扱い、標準WebAuthn `PublicKeyCredential`、authenticator data、COSE key、CBOR attestation objectを返します。GF独自実装はAndroid Keystore内でのP-256鍵生成と`android-key` attestation statementの構成であり、独自のWebAuthn wire formatやOS chooser UIを定義するものではありません。Keycloak login用RP/credentialとは別経路です。現在のProviderは`internal`のみを広告します。transportとクロスデバイスflowの実装・実機検証が完了するまではCDA/hybrid対応と扱いません。
 
 ### 4.3 デバイス認証（所有証明・外部サービス操作承認）シーケンス
 

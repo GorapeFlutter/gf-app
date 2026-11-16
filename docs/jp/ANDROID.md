@@ -102,6 +102,10 @@ Android 17 (API 37) の実機でGF Hardware Passkeysを有効にし、Gorape RP�
 
 DBの`security_level=android_key_attested`はTEE/StrongBoxを区別しません。実装はStrongBoxを優先し、利用できない場合はTEEへfallbackしますが、この登録結果だけからどちらのlevelかは断定しません。Keycloakログイン用パスキーは別RP (`idp.gorapeflutter.site`) のGoogle Password Manager credentialであり、このGF Providerの検証対象ではありません。CDA/hybridは未検証で、現在のProviderは`internal`のみを返します。
 
+### 標準インターフェースとGF独自実装の境界
+
+GF Hardware PasskeysはAndroidXの`CredentialProviderService`として実装しています。Provider選択と生体認証等のシステムUIはAndroid Credential Managerが担当し、gf-app独自の選択画面は追加しません。対応するGorape RPでは、標準WebAuthn create/get requestを受け取り、標準`PublicKeyCredential` response、authenticatorData、COSE key、CBOR attestation objectを返します。GF独自部分はAndroid KeystoreでのP-256鍵生成、秘密鍵の保持、`android-key` attestation responseの構成です。Keycloakログイン用credentialとは別RP・別credentialです。現在返すtransportは`internal`のみで、CDA/hybrid対応を示すものではありません。
+
 ## Troubleshooting
 
 | 症状 | 原因 / 対処 |

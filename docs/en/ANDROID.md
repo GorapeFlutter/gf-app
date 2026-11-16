@@ -150,6 +150,19 @@ separate Google Password Manager credential for the `idp.gorapeflutter.site`
 RP. CDA/hybrid remains unverified; the GF provider currently returns only the
 `internal` transport.
 
+### Standard interfaces and GF-specific implementation
+
+GF Hardware Passkeys is implemented as an AndroidX
+`CredentialProviderService`. Android Credential Manager owns provider selection
+and the system user-verification UI; gf-app does not draw a replacement chooser.
+For the supported Gorape RP, the provider consumes standard WebAuthn
+create/get requests and returns standard `PublicKeyCredential` responses,
+authenticator data, COSE key, and CBOR attestation-object structures. GF-specific
+code creates the P-256 key in Android Keystore, keeps the private key there, and
+constructs the `android-key` attestation response. Keycloak login credentials
+are separate and remain with the standard selected provider. Only `internal` is
+currently reported; do not treat this as CDA/hybrid support.
+
 ## Troubleshooting
 
 | Symptom | Cause / fix |

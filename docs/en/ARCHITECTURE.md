@@ -54,6 +54,16 @@ Gorape. A Keycloak credential cannot be reused because credentials are scoped
 to their RP ID. The older Android Keystore registration endpoints remain for
 compatibility but are no longer used by the device-registration screen.
 
+On Android, the device-passkey path uses the AndroidX Credential Provider API.
+The `passkeys` plugin submits standard Credential Manager create/get requests;
+Android owns the provider chooser and user-verification UI. GF Hardware
+Passkeys is the selected provider implementation for the Gorape RP and returns
+standard WebAuthn credential/attestation structures. Its GF-specific work is
+creating a P-256 key in Android Keystore and constructing the `android-key`
+attestation; it does not define a proprietary browser protocol or replace the
+OS chooser. Keycloak's RP and login credential remain separate. The provider
+currently reports only `internal`; CDA/hybrid is not implemented or verified.
+
 ```mermaid
 flowchart LR
     User[User]
@@ -93,7 +103,7 @@ flowchart LR
 
     App -->|Registration options| API
     API -->|RP ID + challenge + attestation preference| App
-    App -->|WebAuthn create()| PasskeyPlugin
+    App -->|"WebAuthn create()"| PasskeyPlugin
     PasskeyPlugin --> Authenticator
     Authenticator -->|Credential + attestationObject| PasskeyPlugin
     PasskeyPlugin --> App
