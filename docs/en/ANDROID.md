@@ -153,8 +153,10 @@ RP. CDA/hybrid remains unverified; the GF provider currently returns only the
 ### Standard interfaces and GF-specific implementation
 
 GF Hardware Passkeys is implemented as an AndroidX
-`CredentialProviderService`. Android Credential Manager owns provider selection
-and the system user-verification UI; gf-app does not draw a replacement chooser.
+`CredentialProviderService`. Credential Manager presents the provider chooser
+and dispatches the selected entry; the provider Activity invokes Android's
+`BiometricPrompt` for system user verification. gf-app does not draw a
+replacement chooser.
 For the supported Gorape RP, the provider consumes standard WebAuthn
 create/get requests and returns standard `PublicKeyCredential` responses,
 authenticator data, COSE key, and CBOR attestation-object structures. GF-specific

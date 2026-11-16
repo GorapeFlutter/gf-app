@@ -124,6 +124,12 @@ sequenceDiagram
     participant User
     participant App as GF App (GF-02174)
     participant OS as OS Passkey Provider / Authenticator
+    participant CM as Android Credential Manager
+    participant Provider as GF CredentialProviderService
+    participant Activity as GorapeCredentialProviderActivity
+    participant Keystore as Android Keystore
+    participant Bio as Android BiometricPrompt
+    participant Store as Local passkey metadata
     participant DAL as https://gorapeflutter.site/.well-known/*
     participant Server as Gorape Server (GF-10016 / GF-10017)
     participant Redis as Redis (GF-10009)
@@ -134,10 +140,33 @@ sequenceDiagram
     Server->>Server: Verify Bearer Token, passkey AMR, and device:register permission (GF-10008 / GF-10016)
     Server->>Redis: Store single-use challenge & WebAuthn SessionData (TTL 5m)
     Server-->>App: challenge_id + PublicKeyCredentialCreationOptions (rp.id=gorapeflutter.site, UV=required, RK=required)
-    App->>OS: WebAuthn create()
-    OS->>DAL: Validate RP ID (gorapeflutter.site) app association (DAL / AASA)
-    OS->>User: Local user verification (biometric / PIN)
-    OS-->>App: PublicKeyCredential + clientDataJSON + attestationObject
+    alt Android with GF Hardware Passkeys
+        App->>CM: AndroidX public-key create request
+        CM->>Provider: BeginCreatePublicKeyCredentialRequest
+        Provider->>Provider: Check request type and Gorape RP ID
+        Provider-->>CM: CreateEntry + PendingIntent
+        CM->>User: Show system provider chooser
+        User-->>CM: Select GF Hardware Passkeys
+        CM->>Activity: Launch selected PendingIntent
+        Activity->>Activity: Validate Gorape RP ID, caller origin and clientDataHash
+        Activity->>Keystore: Generate P-256 key with attestation challenge
+        Keystore-->>Activity: Public key + Android attestation chain
+        Activity->>Bio: Authorize signing with BiometricPrompt
+        Bio->>User: Show system biometric prompt
+        User-->>Bio: Verify biometric
+        Bio-->>Activity: Authenticated CryptoObject
+        Activity->>Keystore: Sign WebAuthn attestation data
+        Keystore-->>Activity: Attestation signature
+        Activity->>Activity: Build clientDataJSON, authenticatorData, CBOR attestationObject
+        Activity->>Store: Save credential metadata and key alias only
+        Activity-->>CM: Standard PublicKeyCredential response (internal transport only)
+        CM-->>App: CreatePublicKeyCredentialResponse
+    else Other supported OS passkey provider
+        App->>OS: WebAuthn create()
+        OS->>DAL: Validate RP association (DAL / AASA as applicable)
+        OS->>User: Local user verification
+        OS-->>App: PublicKeyCredential + clientDataJSON + attestationObject
+    end
     App->>Server: POST /v1/projects/{projectId}/devices/passkeys/registration/verify
     Server->>Redis: Atomically consume single-use challenge (GF-10009)
     Server->>Server: Verify challenge, origin, RP ID (gorapeflutter.site), signature, attestation chain/MDS, BE/BS flags (GF-10011 / GF-10013)
@@ -150,10 +179,12 @@ sequenceDiagram
 
 The Android device-registration implementation uses the AndroidX
 `CredentialProviderService` contract. The Flutter passkey adapter invokes
-standard Credential Manager create/get requests; Android supplies the chooser
-and user-verification UI. GF Hardware Passkeys handles only the Gorape RP ID
-and returns standard WebAuthn `PublicKeyCredential`, authenticator-data, COSE,
-and CBOR attestation structures. The GF-specific implementation generates the
+standard Credential Manager create/get requests; Credential Manager presents
+the provider chooser and dispatches the selected entry. The provider Activity
+uses Android `BiometricPrompt` for system user-verification UI. GF Hardware
+Passkeys handles only the Gorape RP ID and returns standard WebAuthn
+`PublicKeyCredential`, authenticator-data, COSE, and CBOR attestation
+structures. The GF-specific implementation generates the
 P-256 key in Android Keystore and forms the `android-key` attestation statement;
 it does not introduce a proprietary WebAuthn wire format or a replacement OS
 chooser. Keycloak login is a separate RP/credential path. The current provider

@@ -44,7 +44,7 @@ flowchart LR
 
 サインインとdevice-trust flowでは、同じ認証sessionに見えてもprotocol上の役割が異なります。KeycloakはOIDC Identity Provider（IdP）であり、Keycloak credential用WebAuthn Relying Party（RP）です。`gf-app`はpublic OIDC clientです。Gorapeもdevice passkey用の独立したWebAuthn RPとなり、別の登録ceremonyと完全な`attestationObject`を受け取ります。credentialはRP IDにスコープされるため、Keycloak用credentialをGorapeで再利用できません。従来のAndroid Keystore登録APIは互換性のため残しますが、端末登録画面はWebAuthn経路を利用します。
 
-Androidのdevice-passkey経路はAndroidX Credential Provider APIを使います。`passkeys` pluginが標準Credential Managerのcreate/get requestを送り、Provider選択とユーザー検証UIはAndroid OSが表示します。GF Hardware PasskeysはGorape RP向けのProvider実装であり、標準WebAuthn credential/attestation構造を返します。GF独自部分はAndroid KeystoreでのP-256鍵生成と`android-key` attestation objectの構成です。独自のブラウザwire protocolや選択UIを定義するものではありません。Keycloak RPとそのログインcredentialは別です。現在Providerが返すtransportは`internal`のみで、CDA/hybridは未実装・未検証です。
+Androidのdevice-passkey経路はAndroidX Credential Provider APIを使います。`passkeys` pluginが標準Credential Managerのcreate/get requestを送り、Credential ManagerがProvider選択画面と選ばれたProviderへのdispatchを担当します。Provider ActivityはAndroidの`BiometricPrompt`を使ってシステムのユーザー検証UIを表示します。GF Hardware PasskeysはGorape RP向けのProvider実装であり、標準WebAuthn credential/attestation構造を返します。GF独自部分はAndroid KeystoreでのP-256鍵生成と`android-key` attestation objectの構成です。独自のブラウザwire protocolや選択UIを定義するものではありません。Keycloak RPとそのログインcredentialは別です。現在Providerが返すtransportは`internal`のみで、CDA/hybridは未実装・未検証です。
 
 ```mermaid
 flowchart LR
@@ -55,9 +55,15 @@ flowchart LR
     App[gf-app<br/>public OIDC client]
     API[Gorape API<br/>OAuth resource server / device-trust RP]
     PasskeyPlugin[passkeys Flutter plugin]
+    CredentialManager[Android Credential Manager]
+    ProviderService[GF CredentialProviderService]
+    ProviderActivity[GorapeCredentialProviderActivity]
+    PasskeyStore[端末内passkey metadata<br/>SharedPreferences]
+    PasskeyKeystore[Android Keystore<br/>P-256 passkey key]
+    BiometricPrompt[Android BiometricPrompt]
     WebAuthnRP[Gorape WebAuthn RP / verifier policy]
     Native[Android MainActivity<br/>MethodChannel GF-01140]
-    Keystore[Android Keystore]
+    LegacyKeystore[Android Keystore<br/>legacy device-key経路]
 
     User -->|サインイン GF-00002 / GF-00136| App
     App -->|Authorization Code + PKCE GF-00002 / GF-01056| Keycloak
@@ -71,23 +77,36 @@ flowchart LR
     App -->|登録challenge GF-00005 / GF-02026| API
     API -->|challenge_id + challenge| App
     App -->|端末登録 GF-00005 / GF-01087| Native
-    Native -->|鍵生成 GF-01142 / GF-01143| Keystore
-    Keystore -->|公開鍵 + Android certificate chain GF-02090| Native
+    Native -->|legacy鍵生成 GF-01142 / GF-01143| LegacyKeystore
+    LegacyKeystore -->|公開鍵 + Android certificate chain GF-02090| Native
     Native -->|登録evidence| App
     App -->|登録検証 GF-02028| API
 
     API -->|所有証明challenge GF-00006 / GF-02032| App
     App -->|challenge署名 GF-00006 / GF-01088 / GF-01144| Native
-    Native -->|秘密鍵操作。鍵は端末内に保持| Keystore
-    Keystore -->|DER signature| Native
+    Native -->|legacy秘密鍵操作| LegacyKeystore
+    LegacyKeystore -->|DER signature| Native
     Native -->|署名| App
     App -->|所有証明検証 GF-02034| API
 
     App -->|登録options| API
     API -->|RP ID + challenge + attestation preference| App
-    App -->|"WebAuthn create()"| PasskeyPlugin
-    PasskeyPlugin --> Authenticator
-    Authenticator -->|credential + attestationObject| PasskeyPlugin
+    App -->|"WebAuthn create() / get()"| PasskeyPlugin
+    PasskeyPlugin -->|Android標準create/get request| CredentialManager
+    CredentialManager -->|Provider request dispatch| ProviderService
+    ProviderService -->|RP一致のchooser entry| CredentialManager
+    CredentialManager -->|選択されたPendingIntentを起動| ProviderActivity
+    ProviderService -->|一致するcredentialを検索| PasskeyStore
+    PasskeyStore -->|metadataとKeystore alias| ProviderService
+    ProviderActivity -->|鍵生成 / assertion署名| PasskeyKeystore
+    PasskeyKeystore -->|attestation chain / signature| ProviderActivity
+    ProviderActivity -->|生体認証UV要求| BiometricPrompt
+    BiometricPrompt -->|OSの生体認証prompt| User
+    User -->|生体認証| BiometricPrompt
+    BiometricPrompt -->|認証済みCryptoObject| ProviderActivity
+    ProviderActivity -->|metadataのみ保存| PasskeyStore
+    ProviderActivity -->|標準PublicKeyCredential response; internal transport| CredentialManager
+    CredentialManager --> PasskeyPlugin
     PasskeyPlugin --> App
     App -->|credential response全体| API
     API --> WebAuthnRP

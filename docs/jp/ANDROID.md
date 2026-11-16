@@ -104,7 +104,7 @@ DBの`security_level=android_key_attested`はTEE/StrongBoxを区別しません�
 
 ### 標準インターフェースとGF独自実装の境界
 
-GF Hardware PasskeysはAndroidXの`CredentialProviderService`として実装しています。Provider選択と生体認証等のシステムUIはAndroid Credential Managerが担当し、gf-app独自の選択画面は追加しません。対応するGorape RPでは、標準WebAuthn create/get requestを受け取り、標準`PublicKeyCredential` response、authenticatorData、COSE key、CBOR attestation objectを返します。GF独自部分はAndroid KeystoreでのP-256鍵生成、秘密鍵の保持、`android-key` attestation responseの構成です。Keycloakログイン用credentialとは別RP・別credentialです。現在返すtransportは`internal`のみで、CDA/hybrid対応を示すものではありません。
+GF Hardware PasskeysはAndroidXの`CredentialProviderService`として実装しています。Credential ManagerがProvider選択画面と選択されたentryのdispatchを担当し、Provider ActivityがAndroidの`BiometricPrompt`でシステムのユーザー検証UIを呼び出します。gf-app独自の選択画面は追加しません。対応するGorape RPでは、標準WebAuthn create/get requestを受け取り、標準`PublicKeyCredential` response、authenticatorData、COSE key、CBOR attestation objectを返します。GF独自部分はAndroid KeystoreでのP-256鍵生成、秘密鍵の保持、`android-key` attestation responseの構成です。Keycloakログイン用credentialとは別RP・別credentialです。現在返すtransportは`internal`のみで、CDA/hybrid対応を示すものではありません。
 
 ## Troubleshooting
 

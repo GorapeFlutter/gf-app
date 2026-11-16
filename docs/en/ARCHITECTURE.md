@@ -56,8 +56,10 @@ compatibility but are no longer used by the device-registration screen.
 
 On Android, the device-passkey path uses the AndroidX Credential Provider API.
 The `passkeys` plugin submits standard Credential Manager create/get requests;
-Android owns the provider chooser and user-verification UI. GF Hardware
-Passkeys is the selected provider implementation for the Gorape RP and returns
+Credential Manager presents the provider chooser and dispatches the selected
+entry. The provider Activity uses Android's `BiometricPrompt` for system
+user-verification UI. GF Hardware Passkeys is the selected provider
+implementation for the Gorape RP and returns
 standard WebAuthn credential/attestation structures. Its GF-specific work is
 creating a P-256 key in Android Keystore and constructing the `android-key`
 attestation; it does not define a proprietary browser protocol or replace the
@@ -73,9 +75,15 @@ flowchart LR
     App[gf-app<br/>public OIDC client]
     API[Gorape API<br/>OAuth resource server / device-trust RP]
     PasskeyPlugin[passkeys Flutter plugin]
+    CredentialManager[Android Credential Manager]
+    ProviderService[GF CredentialProviderService]
+    ProviderActivity[GorapeCredentialProviderActivity]
+    PasskeyStore[Local passkey metadata<br/>SharedPreferences]
+    PasskeyKeystore[Android Keystore<br/>P-256 passkey keys]
+    BiometricPrompt[Android BiometricPrompt]
     WebAuthnRP[Gorape WebAuthn RP and verifier policy]
     Native[Android MainActivity<br/>MethodChannel GF-01140]
-    Keystore[Android Keystore]
+    LegacyKeystore[Android Keystore<br/>legacy device-key path]
 
     User -->|Sign-in GF-00002 / GF-00136| App
     App -->|Authorization Code + PKCE GF-00002 / GF-01056| Keycloak
@@ -89,23 +97,36 @@ flowchart LR
     App -->|Registration challenge GF-00005 / GF-02026| API
     API -->|challenge_id + challenge| App
     App -->|Register GF-00005 / GF-01087| Native
-    Native -->|Generate key GF-01142 / GF-01143| Keystore
-    Keystore -->|Public key + Android certificate chain GF-02090| Native
+    Native -->|Generate legacy key GF-01142 / GF-01143| LegacyKeystore
+    LegacyKeystore -->|Public key + Android certificate chain GF-02090| Native
     Native -->|Registration evidence| App
     App -->|Registration verify GF-02028| API
 
     API -->|Possession challenge GF-00006 / GF-02032| App
     App -->|Sign challenge GF-00006 / GF-01088 / GF-01144| Native
-    Native -->|Private-key operation; key remains local| Keystore
-    Keystore -->|DER signature| Native
+    Native -->|Legacy private-key operation| LegacyKeystore
+    LegacyKeystore -->|DER signature| Native
     Native -->|Signature| App
     App -->|Proof verify GF-02034| API
 
     App -->|Registration options| API
     API -->|RP ID + challenge + attestation preference| App
-    App -->|"WebAuthn create()"| PasskeyPlugin
-    PasskeyPlugin --> Authenticator
-    Authenticator -->|Credential + attestationObject| PasskeyPlugin
+    App -->|"WebAuthn create() / get()"| PasskeyPlugin
+    PasskeyPlugin -->|Android standard create/get request| CredentialManager
+    CredentialManager -->|Dispatch provider request| ProviderService
+    ProviderService -->|RP-matched chooser entries| CredentialManager
+    CredentialManager -->|Launch selected PendingIntent| ProviderActivity
+    ProviderService -->|Look up matching credentials| PasskeyStore
+    PasskeyStore -->|Metadata and Keystore alias| ProviderService
+    ProviderActivity -->|Generate key / sign assertion| PasskeyKeystore
+    PasskeyKeystore -->|Attestation chain / signature| ProviderActivity
+    ProviderActivity -->|Request biometric UV| BiometricPrompt
+    BiometricPrompt -->|System biometric prompt| User
+    User -->|Biometric verification| BiometricPrompt
+    BiometricPrompt -->|Authorized CryptoObject| ProviderActivity
+    ProviderActivity -->|Persist metadata only| PasskeyStore
+    ProviderActivity -->|Standard PublicKeyCredential response; internal transport| CredentialManager
+    CredentialManager --> PasskeyPlugin
     PasskeyPlugin --> App
     App -->|Complete credential response| API
     API --> WebAuthnRP

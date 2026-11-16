@@ -124,6 +124,12 @@ sequenceDiagram
     participant User as ユーザー
     participant App as GF App (GF-02174)
     participant OS as OS パスキープロバイダー / 認証器
+    participant CM as Android Credential Manager
+    participant Provider as GF CredentialProviderService
+    participant Activity as GorapeCredentialProviderActivity
+    participant Keystore as Android Keystore
+    participant Bio as Android BiometricPrompt
+    participant Store as 端末内passkey metadata
     participant DAL as https://gorapeflutter.site/.well-known/*
     participant Server as Gorape Server (GF-10016 / GF-10017)
     participant Redis as Redis (GF-10009)
@@ -134,10 +140,33 @@ sequenceDiagram
     Server->>Server: Bearer Token & passkey AMR & device:register 権限検証 (GF-10008 / GF-10016)
     Server->>Redis: 単回Challenge・WebAuthn SessionData保存 (TTL 5m)
     Server-->>App: challenge_id + PublicKeyCredentialCreationOptions (rp.id=gorapeflutter.site, UV=required, RK=required)
-    App->>OS: WebAuthn create()
-    OS->>DAL: RP ID (gorapeflutter.site) とアプリの関連付け検証 (DAL / AASA)
-    OS->>User: 生体認証 / PIN によるユーザー検証 (UV)
-    OS-->>App: PublicKeyCredential + clientDataJSON + attestationObject
+    alt Android GF Hardware Passkeysを利用
+        App->>CM: AndroidX public-key create request
+        CM->>Provider: BeginCreatePublicKeyCredentialRequest
+        Provider->>Provider: request typeとGorape RP IDを確認
+        Provider-->>CM: CreateEntry + PendingIntent
+        CM->>User: OSのProvider選択画面を表示
+        User-->>CM: GF Hardware Passkeysを選択
+        CM->>Activity: 選択されたPendingIntentを起動
+        Activity->>Activity: Gorape RP ID、呼び出し元origin、clientDataHashを検証
+        Activity->>Keystore: attestation challenge付きP-256鍵を生成
+        Keystore-->>Activity: 公開鍵 + Android attestation chain
+        Activity->>Bio: BiometricPromptで署名を認可
+        Bio->>User: OSの生体認証promptを表示
+        User-->>Bio: 生体認証
+        Bio-->>Activity: 認証済みCryptoObject
+        Activity->>Keystore: WebAuthn attestation dataに署名
+        Keystore-->>Activity: attestation signature
+        Activity->>Activity: clientDataJSON、authenticatorData、CBOR attestationObjectを構成
+        Activity->>Store: credential metadataとkey aliasのみ保存
+        Activity-->>CM: 標準PublicKeyCredential response（transportはinternalのみ）
+        CM-->>App: CreatePublicKeyCredentialResponse
+    else その他の対応OS passkey provider
+        App->>OS: WebAuthn create()
+        OS->>DAL: RP associationを検証（該当platformのDAL / AASA）
+        OS->>User: ローカルユーザー検証
+        OS-->>App: PublicKeyCredential + clientDataJSON + attestationObject
+    end
     App->>Server: POST /v1/projects/{projectId}/devices/passkeys/registration/verify
     Server->>Redis: Challenge を原子的に単回消費 (GF-10009)
     Server->>Server: Challenge・Origin・RP ID (gorapeflutter.site)・署名・Attestationチェーン/MDS・BE/BS検証 (GF-10011 / GF-10013)
@@ -148,7 +177,7 @@ sequenceDiagram
 
 ### Android Credential Providerの境界
 
-Androidのデバイス登録はAndroidXの`CredentialProviderService` contractを使います。Flutterのpasskey adapterが標準Credential Manager create/get requestを送り、Provider選択とユーザー検証UIはAndroid OSが表示します。GF Hardware PasskeysはGorape RP IDだけを扱い、標準WebAuthn `PublicKeyCredential`、authenticator data、COSE key、CBOR attestation objectを返します。GF独自実装はAndroid Keystore内でのP-256鍵生成と`android-key` attestation statementの構成であり、独自のWebAuthn wire formatやOS chooser UIを定義するものではありません。Keycloak login用RP/credentialとは別経路です。現在のProviderは`internal`のみを広告します。transportとクロスデバイスflowの実装・実機検証が完了するまではCDA/hybrid対応と扱いません。
+Androidのデバイス登録はAndroidXの`CredentialProviderService` contractを使います。Flutterのpasskey adapterが標準Credential Manager create/get requestを送り、Credential ManagerがProvider選択画面と選ばれたentryへのdispatchを担当します。Provider ActivityはAndroid `BiometricPrompt`でシステムのユーザー検証UIを表示します。GF Hardware PasskeysはGorape RP IDだけを扱い、標準WebAuthn `PublicKeyCredential`、authenticator data、COSE key、CBOR attestation objectを返します。GF独自実装はAndroid Keystore内でのP-256鍵生成と`android-key` attestation statementの構成であり、独自のWebAuthn wire formatやOS chooser UIを定義するものではありません。Keycloak login用RP/credentialとは別経路です。現在のProviderは`internal`のみを広告します。transportとクロスデバイスflowの実装・実機検証が完了するまではCDA/hybrid対応と扱いません。
 
 ### 4.3 デバイス認証（所有証明・外部サービス操作承認）シーケンス
 
