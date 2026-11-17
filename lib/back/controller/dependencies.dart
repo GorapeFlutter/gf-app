@@ -89,7 +89,7 @@ final deviceUsecaseProvider = Provider<DeviceUsecase>(
 );
 
 final passkeyRepositoryProvider = Provider<PasskeyRepository>(
-  /* GF-00181 — Runs an inline callback in top level. */ (ref) =>
+  /* GF-01391 — Create the platform-specific PasskeyRepository provider. */ (ref) =>
       newPasskeyRepository(ref.watch(runtimePlatformProvider)),
 );
 final credentialProviderRepositoryProvider =
@@ -98,11 +98,11 @@ final credentialProviderRepositoryProvider =
           newCredentialProviderRepository(ref.watch(runtimePlatformProvider)),
     );
 final passkeyDeviceRepositoryProvider = Provider<PasskeyDeviceRepository>(
-  /* GF-00183 — Runs an inline callback in top level. */ (ref) =>
+  /* GF-01392 — Create the API-backed PasskeyDeviceRepository provider. */ (ref) =>
       PasskeyDeviceRepositoryImpl(ref.watch(gorapeApiProvider)),
 );
 final passkeyDeviceUsecaseProvider = Provider<PasskeyDeviceUsecase>(
-  /* GF-00182 — Runs an inline callback in top level. */ (ref) =>
+  /* GF-01393 — Create the dependency-injected PasskeyDeviceUsecase provider. */ (ref) =>
       newPasskeyDeviceUsecase(
         devices: ref.watch(passkeyDeviceRepositoryProvider),
         passkeys: ref.watch(passkeyRepositoryProvider),

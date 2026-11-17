@@ -26,6 +26,7 @@ constexpr std::array<uint8_t, 26> kSpkiPrefix = {
 
 struct NativeContext { bool dpop; };
 
+// GF-01481 — Locate an approved root-owned TPM2 executable in trusted directories.
 std::string FindTrustedTpmTool(const std::string& executable) {
   static const char* directories[] = {"/usr/bin", "/usr/sbin", "/usr/local/bin", "/bin", "/sbin"};
   for (const char* directory : directories) {
@@ -44,6 +45,7 @@ std::string FindTrustedTpmTool(const std::string& executable) {
   throw std::runtime_error("A root-owned TPM2 tool is unavailable");
 }
 
+// GF-01482 — RFC 4648 §5: encode bytes as unpadded Base64url.
 std::string EncodeBase64Url(const uint8_t* bytes, size_t length) {
   std::string result;
   uint32_t accumulator = 0;
@@ -60,6 +62,7 @@ std::string EncodeBase64Url(const uint8_t* bytes, size_t length) {
   return result;
 }
 
+// GF-01483 — RFC 4648 §5: decode unpadded Base64url bytes.
 std::vector<uint8_t> DecodeBase64Url(const std::string& text) {
   std::vector<uint8_t> result;
   uint32_t accumulator = 0;
@@ -78,6 +81,7 @@ std::vector<uint8_t> DecodeBase64Url(const std::string& text) {
   return result;
 }
 
+// GF-01484 — Read a required non-empty string from a Flutter method map.
 std::string Argument(FlValue* arguments, const char* name) {
   if (arguments == nullptr || fl_value_get_type(arguments) != FL_VALUE_TYPE_MAP) {
     throw std::runtime_error("missing method arguments");
@@ -91,6 +95,7 @@ std::string Argument(FlValue* arguments, const char* name) {
   return text;
 }
 
+// GF-01485 — Validate a key identifier against its namespace and allowed characters.
 void ValidateIdentifier(const std::string& identifier, bool dpop) {
   const std::string prefix = dpop ? kDpopPrefix : kDevicePrefix;
   if (identifier.size() > 128 || identifier.rfind(prefix, 0) != 0) {
@@ -105,6 +110,7 @@ void ValidateIdentifier(const std::string& identifier, bool dpop) {
   }
 }
 
+// GF-01486 — Create and secure the per-user TPM2 key-blob directory.
 std::string KeyDirectory() {
   gchar* path = g_build_filename(g_get_user_data_dir(), "gf_app", "tpm2_keys", nullptr);
   const std::string result(path);
@@ -115,6 +121,7 @@ std::string KeyDirectory() {
   return result;
 }
 
+// GF-01487 — Derive a non-reversible file path for one TPM2 key blob.
 std::string KeyBlobPath(const std::string& identifier, const char* suffix) {
   gchar* digest = g_compute_checksum_for_string(G_CHECKSUM_SHA256, identifier.c_str(), -1);
   const std::string filename = std::string(digest) + suffix;
@@ -125,11 +132,13 @@ std::string KeyBlobPath(const std::string& identifier, const char* suffix) {
   return result;
 }
 
+// GF-01488 — Remove the public and private TPM2 blobs for a key identifier.
 void RemoveKeyBlobs(const std::string& identifier) {
   g_remove(KeyBlobPath(identifier, ".pub").c_str());
   g_remove(KeyBlobPath(identifier, ".priv").c_str());
 }
 
+// GF-01489 — Run a trusted TPM2 tool with a fixed device TCTI and time limit.
 void Run(const std::vector<std::string>& arguments) {
   if (arguments.empty()) throw std::runtime_error("empty TPM2 command");
   std::vector<std::string> safe_arguments = arguments;
@@ -175,6 +184,7 @@ void Run(const std::vector<std::string>& arguments) {
   throw std::runtime_error("TPM2 operation exceeded the 10-second limit");
 }
 
+// GF-01490 — Probe whether the required TPM2 command-line tools are usable.
 bool HasTpmTools() {
   try {
     Run({"tpm2_getcap", "properties-fixed"});
@@ -184,6 +194,7 @@ bool HasTpmTools() {
   }
 }
 
+// GF-01491 — Create a private temporary workspace for a TPM2 operation.
 std::string CreateTempDirectory() {
   GError* error = nullptr;
   gchar* path = g_dir_make_tmp("gf-app-tpm2-XXXXXX", &error);
@@ -197,6 +208,7 @@ std::string CreateTempDirectory() {
   return result;
 }
 
+// GF-01492 — Remove known temporary TPM2 operation files and their directory.
 void RemoveTempDirectory(const std::string& directory) {
   static const char* files[] = {"primary.ctx", "key.pub", "key.priv", "key.ctx",
                                 "creation.data", "creation.hash", "creation.ticket",
@@ -209,6 +221,7 @@ void RemoveTempDirectory(const std::string& directory) {
   g_rmdir(directory.c_str());
 }
 
+// GF-01493 — Read a bounded non-empty text file produced by TPM2 tools.
 std::string ReadTextFile(const std::string& path) {
   gchar* contents = nullptr;
   gsize length = 0;
@@ -221,6 +234,7 @@ std::string ReadTextFile(const std::string& path) {
   return result;
 }
 
+// GF-01494 — Read a bounded non-empty TPM2 public or private blob.
 std::vector<uint8_t> ReadBlob(const std::string& path) {
   gchar* contents = nullptr;
   gsize length = 0;
@@ -234,6 +248,7 @@ std::vector<uint8_t> ReadBlob(const std::string& path) {
   return result;
 }
 
+// GF-01495 — Persist a TPM2 key blob with owner-only file permissions.
 void WriteBlob(const std::string& path, const std::vector<uint8_t>& value) {
   if (value.empty() || value.size() > 64 * 1024 ||
       !g_file_set_contents(path.c_str(), reinterpret_cast<const gchar*>(value.data()), value.size(), nullptr) ||
@@ -242,6 +257,7 @@ void WriteBlob(const std::string& path, const std::vector<uint8_t>& value) {
   }
 }
 
+// GF-01496 — Decode and validate a P-256 SubjectPublicKeyInfo PEM value.
 std::vector<uint8_t> DecodePublicPem(const std::string& pem) {
   const std::string begin = "-----BEGIN PUBLIC KEY-----";
   const std::string end = "-----END PUBLIC KEY-----";
@@ -268,6 +284,7 @@ std::vector<uint8_t> DecodePublicPem(const std::string& pem) {
   return std::vector<uint8_t>(der.begin() + kSpkiPrefix.size(), der.end());
 }
 
+// GF-01497 — Reload TPM-wrapped blobs and recover the corresponding public point.
 std::vector<uint8_t> LoadPublicPoint(const std::string& identifier, bool dpop,
                                      const std::string& directory) {
   ValidateIdentifier(identifier, dpop);
@@ -285,6 +302,7 @@ std::vector<uint8_t> LoadPublicPoint(const std::string& identifier, bool dpop,
   return DecodePublicPem(ReadTextFile(pem_path));
 }
 
+// GF-01498 — Describe local TPM protection without claiming remote attestation.
 FlValue* Evidence() {
   FlValue* evidence = fl_value_new_map();
   fl_value_set_string_take(evidence, "format", fl_value_new_string("linux-tpm2-local"));
@@ -295,6 +313,7 @@ FlValue* Evidence() {
   return evidence;
 }
 
+// GF-01499 — Load public TPM key material and serialize the Flutter response.
 FlValue* KeyMaterial(const std::string& identifier, bool dpop) {
   const std::string directory = CreateTempDirectory();
   try {
@@ -322,6 +341,7 @@ FlValue* KeyMaterial(const std::string& identifier, bool dpop) {
   }
 }
 
+// GF-01500 — TCG TPM 2.0: create a challenge-bound P-256 key and store TPM-wrapped blobs.
 // GF-02183 — Creates a TPM2 P-256 key with challenge in creation data and stores only TPM-wrapped blobs.
 void CreateKey(const std::string& identifier, bool dpop, const std::vector<uint8_t>& challenge) {
   ValidateIdentifier(identifier, dpop);
@@ -360,6 +380,7 @@ void CreateKey(const std::string& identifier, bool dpop, const std::vector<uint8
   }
 }
 
+// GF-01501 — TCG TPM 2.0: reload the protected key and sign without exporting private material.
 // GF-02184 — Reloads the TPM-protected key blob and signs without exporting private key material.
 std::string Sign(const std::string& identifier, bool dpop, const std::string& encoded) {
   const auto input = DecodeBase64Url(encoded);
@@ -383,6 +404,7 @@ std::string Sign(const std::string& identifier, bool dpop, const std::string& en
   }
 }
 
+// GF-01502 — Create a random identifier in the legacy DPoP namespace.
 std::string NewDpopIdentifier() {
   gchar* uuid = g_uuid_string_random();
   const std::string result = std::string(kDpopPrefix) + uuid;
@@ -390,6 +412,7 @@ std::string NewDpopIdentifier() {
   return result;
 }
 
+// GF-01503 — Route a Flutter method call to a TPM2 device-key operation.
 FlValue* Dispatch(const gchar* method, FlValue* arguments, bool dpop) {
   if (!dpop && g_strcmp0(method, "availability") == 0) {
     const gboolean available = HasTpmTools();
@@ -439,6 +462,7 @@ FlValue* Dispatch(const gchar* method, FlValue* arguments, bool dpop) {
   throw std::runtime_error("unsupported TPM2 operation");
 }
 
+// GF-01504 — Execute a Flutter method call and return a typed channel result.
 void MethodCallHandler(FlMethodChannel*, FlMethodCall* call, gpointer user_data) {
   auto* context = static_cast<NativeContext*>(user_data);
   try {
@@ -451,8 +475,10 @@ void MethodCallHandler(FlMethodChannel*, FlMethodCall* call, gpointer user_data)
   }
 }
 
+// GF-01505 — Release the native method-channel callback context.
 void DestroyContext(gpointer user_data) { delete static_cast<NativeContext*>(user_data); }
 
+// GF-01506 — Create and configure a Flutter method channel for a key namespace.
 FlMethodChannel* CreateChannel(FlBinaryMessenger* messenger, const char* name, bool dpop) {
   g_autoptr(FlStandardMethodCodec) codec = fl_standard_method_codec_new();
   FlMethodChannel* channel = fl_method_channel_new(messenger, name, FL_METHOD_CODEC(codec));
@@ -463,6 +489,7 @@ FlMethodChannel* CreateChannel(FlBinaryMessenger* messenger, const char* name, b
 }
 }  // namespace
 
+// GF-01507 — Register the Linux device-key channel backed by TPM2 tools.
 // GF-02185 — Installs the Linux Device key channel backed by TPM2 tools only.
 void RegisterLinuxNativeKeyChannels(FlBinaryMessenger* messenger,
                                    FlMethodChannel** device_channel) {

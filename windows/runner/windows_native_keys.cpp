@@ -29,10 +29,15 @@ constexpr std::array<uint8_t, 26> kSpkiPrefix = {
 
 struct ProviderHandle {
   NCRYPT_PROV_HANDLE value = 0;
+  // GF-01421 — Initialize an empty Windows storage-provider handle.
   ProviderHandle() = default;
+  // GF-01422 — Prevent duplicate ownership of an NCrypt provider handle.
   ProviderHandle(const ProviderHandle&) = delete;
+  // GF-01423 — Prevent copy assignment of an NCrypt provider handle.
   ProviderHandle& operator=(const ProviderHandle&) = delete;
+  // GF-01424 — Transfer ownership of an NCrypt provider handle.
   ProviderHandle(ProviderHandle&& other) noexcept : value(other.value) { other.value = 0; }
+  // GF-01425 — Release the previous handle and transfer ownership on move assignment.
   ProviderHandle& operator=(ProviderHandle&& other) noexcept {
     if (this != &other) {
       if (value) NCryptFreeObject(value);
@@ -41,19 +46,24 @@ struct ProviderHandle {
     }
     return *this;
   }
+  // GF-01426 — Free the owned NCrypt provider handle.
   ~ProviderHandle() { if (value) NCryptFreeObject(value); }
 };
 struct KeyHandle {
   NCRYPT_KEY_HANDLE value = 0;
+  // GF-01427 — Free the owned NCrypt key handle.
   ~KeyHandle() { if (value) NCryptFreeObject(value); }
 };
 
+// GF-01419 — Throw a runtime error for a failed native key operation.
 [[noreturn]] void Fail(const char* message) { throw std::runtime_error(message); }
 
+// GF-01420 — Convert a failed NCrypt status into an application error.
 void Check(SECURITY_STATUS status, const char* message) {
   if (status != ERROR_SUCCESS) Fail(message);
 }
 
+// GF-01428 — RFC 4648 §5: encode bytes as unpadded Base64url.
 std::string EncodeBase64Url(const uint8_t* bytes, size_t length) {
   std::string output;
   output.reserve((length * 4 + 2) / 3);
@@ -71,6 +81,7 @@ std::string EncodeBase64Url(const uint8_t* bytes, size_t length) {
   return output;
 }
 
+// GF-01429 — RFC 4648 §5: decode unpadded Base64url bytes.
 std::vector<uint8_t> DecodeBase64Url(const std::string& text) {
   std::vector<uint8_t> output;
   uint32_t accumulator = 0;
@@ -89,6 +100,7 @@ std::vector<uint8_t> DecodeBase64Url(const std::string& text) {
   return output;
 }
 
+// GF-01430 — Convert a validated UTF-8 value to a Windows wide string.
 std::wstring Widen(const std::string& value) {
   if (value.empty()) Fail("Empty native key identifier.");
   int count = MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, value.data(),
@@ -102,6 +114,7 @@ std::wstring Widen(const std::string& value) {
   return result;
 }
 
+// GF-01431 — Read a required non-empty string from Flutter method arguments.
 std::string StringArgument(const Value* arguments, const char* name) {
   const auto* map = std::get_if<Map>(arguments);
   if (!map) Fail("Native key method arguments are missing.");
@@ -112,6 +125,7 @@ std::string StringArgument(const Value* arguments, const char* name) {
   return *value;
 }
 
+// GF-01432 — Validate a key identifier against its allowed namespace and characters.
 void ValidateIdentifier(const std::string& name, bool dpop) {
   const std::string prefix = dpop ? kDpopPrefix : kDevicePrefix;
   if (name.size() > 128 || name.rfind(prefix, 0) != 0) Fail("Invalid key namespace.");
@@ -124,6 +138,7 @@ void ValidateIdentifier(const std::string& name, bool dpop) {
   }
 }
 
+// GF-01433 — Open and verify the hardware-backed Windows Platform Crypto Provider.
 ProviderHandle OpenHardwareProvider() {
   ProviderHandle provider;
   Check(NCryptOpenStorageProvider(&provider.value, kPlatformProvider, 0),
@@ -142,6 +157,7 @@ ProviderHandle OpenHardwareProvider() {
   return provider;
 }
 
+// GF-01434 — Export and validate the public P-256 point from an NCrypt key.
 std::vector<uint8_t> ExportPublicKey(NCRYPT_KEY_HANDLE key) {
   DWORD size = 0;
   Check(NCryptExportKey(key, 0, BCRYPT_ECCPUBLIC_BLOB, nullptr, nullptr, 0, &size,
@@ -162,6 +178,7 @@ std::vector<uint8_t> ExportPublicKey(NCRYPT_KEY_HANDLE key) {
   return point;
 }
 
+// GF-01435 — Serialize an SPKI public key as a PEM document.
 std::string Pem(const std::vector<uint8_t>& point) {
   std::vector<uint8_t> der(kSpkiPrefix.begin(), kSpkiPrefix.end());
   der.insert(der.end(), point.begin(), point.end());
@@ -188,9 +205,10 @@ std::string Pem(const std::vector<uint8_t>& point) {
   return output;
 }
 
+// GF-01436 — RFC 3279: convert the fixed-width ECDSA signature to ASN.1 DER.
 std::vector<uint8_t> DerSignature(const std::vector<uint8_t>& raw) {
   if (raw.size() != 64) Fail("Windows TPM ECDSA signature has an invalid length.");
-  auto integer = [](const uint8_t* input) {
+  auto integer = /* GF-01437 — Encode one unsigned ECDSA integer for the DER sequence. */ [](const uint8_t* input) {
     size_t first = 0;
     while (first < 31 && input[first] == 0) ++first;
     std::vector<uint8_t> output(input + first, input + 32);
@@ -209,6 +227,7 @@ std::vector<uint8_t> DerSignature(const std::vector<uint8_t>& raw) {
   return result;
 }
 
+// GF-01438 — Describe local TPM protection without claiming remote attestation.
 Map Evidence(bool /* dpop */) {
   return {{Value("format"), Value("windows-cng-platform-tpm-local")},
           {Value("remote_attestation"), Value(false)},
@@ -216,6 +235,7 @@ Map Evidence(bool /* dpop */) {
           {Value("note"), Value("TPM-protected key; server-verifiable key attestation is not supplied by this provider.")}};
 }
 
+// GF-01439 — Load an active TPM key and serialize its public evidence for Flutter.
 Map KeyMaterial(const std::string& name, bool dpop) {
   ValidateIdentifier(name, dpop);
   auto provider = OpenHardwareProvider();
@@ -238,6 +258,7 @@ Map KeyMaterial(const std::string& name, bool dpop) {
           {Value("attestationEvidence"), Value(Evidence(dpop))}};
 }
 
+// GF-01440 — Create a random namespace identifier for the legacy DPoP channel.
 std::string NewDpopIdentifier() {
   std::array<uint8_t, 16> bytes{};
   if (BCryptGenRandom(nullptr, bytes.data(), static_cast<ULONG>(bytes.size()),
@@ -256,6 +277,7 @@ std::string NewDpopIdentifier() {
   return std::string(kDpopPrefix) + uuid;
 }
 
+// GF-01441 — Create a non-exportable P-256 key through the TPM-backed CNG provider.
 // GF-02180 — Creates a non-exportable P-256 key in the TPM-backed CNG provider.
 Map CreateKey(const std::string& name, bool dpop) {
   ValidateIdentifier(name, dpop);
@@ -295,6 +317,7 @@ Map CreateKey(const std::string& name, bool dpop) {
   }
 }
 
+// GF-01442 — Sign data with the TPM-backed CNG key and return Base64url DER.
 // GF-02181 — Signs a Device payload through the TPM-backed CNG key.
 std::string Sign(const std::string& name, bool dpop, const std::string& data_text) {
   ValidateIdentifier(name, dpop);
@@ -340,6 +363,7 @@ std::string Sign(const std::string& name, bool dpop, const std::string& data_tex
   return EncodeBase64Url(der.data(), der.size());
 }
 
+// GF-01443 — Route Flutter method-channel calls to Windows native-key operations.
 Value Dispatch(const flutter::MethodCall<Value>& call, bool dpop) {
   const std::string method = call.method_name();
   const auto* arguments = call.arguments();
@@ -403,8 +427,9 @@ Value Dispatch(const flutter::MethodCall<Value>& call, bool dpop) {
   Fail("Unknown native key operation.");
 }
 
+// GF-01444 — Attach the Windows native-key method handler to a channel.
 void SetHandler(Channel* channel, bool dpop) {
-  channel->SetMethodCallHandler([dpop](const auto& call, auto result) {
+  channel->SetMethodCallHandler(/* GF-01445 — Dispatch a method call and serialize native errors. */ [dpop](const auto& call, auto result) {
     try {
       result->Success(Dispatch(call, dpop));
     } catch (...) {
@@ -414,6 +439,7 @@ void SetHandler(Channel* channel, bool dpop) {
 }
 }  // namespace
 
+// GF-01446 — Register the Flutter device-key channel backed by the Windows TPM provider.
 // GF-02182 — Installs the Device key channel using the Windows Platform Crypto Provider.
 void RegisterWindowsNativeKeyChannels(
     flutter::BinaryMessenger* messenger,

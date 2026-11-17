@@ -8,6 +8,7 @@ legacy Android Key Attestationはアプリ専用device keyに対するattestatio
 
 - `minSdk = 24`（Android 7.0）。`KeyGenParameterSpec.setAttestationChallenge`に必要です。
 - AppAuth redirect schemeは`android/app/build.gradle.kts`（`appAuthRedirectScheme`）と`android/app/src/main/AndroidManifest.xml`で宣言します。
+- AppAuthのAuthorization ActivityはAndroidでbrowser往復中の要求stateを保持するため`singleInstance`を使い、Redirect Receiverからcallbackを受け取ります。
 - Network security configはlocal開発hostのみcleartext通信を許可します。
 
 ## 端末登録フロー
@@ -15,7 +16,7 @@ legacy Android Key Attestationはアプリ専用device keyに対するattestatio
 1. `GET /v1/projects/{projectId}/attestation/capabilities`を確認します。`android`が`implemented`でなければ登録できません。
 2. `POST /v1/projects/{projectId}/devices/registration/challenge`で、一度だけ使えるchallenge（`challenge_id`とpaddingなしBase64url bytes）を取得します。
 3. AppがBase64url challengeを生bytesにdecodeします。
-4. `MainActivity.kt`がAndroid Keystore内にEC P-256鍵を生成します。
+4. `AndroidDeviceKeyDriver`（`android/app/src/main/kotlin/.../driver/devicekey`）がAndroid Keystore内にEC P-256鍵を生成します。
    - `setAlgorithmParameterSpec(ECGenParameterSpec("secp256r1"))`
    - `setDigests(DIGEST_SHA256)`
    - `setAttestationChallenge(rawChallengeBytes)`
@@ -64,7 +65,7 @@ flutter run -d <device> --debug \
   --dart-define=GORAPE_OIDC_ISSUER=https://idp.gorapeflutter.site:9443/realms/gorape
 ```
 
-ローカルHTTPSでは`./scripts/run-android.sh`を使ってください。生成CAのPEMをdebug Dart clientへ渡します。AndroidのAppAuthとChrome Custom TabでもKeycloakへ接続するため、生成CAを端末のユーザー証明書として一度インストールしてください。IssuerはKeycloak discoveryの`issuer`と完全一致する必要があります。
+ローカルHTTPSでは`./scripts/run-android.sh`を使ってください。生成CAのPEMをdebug Dart clientへ渡します。AndroidのAppAuthとChrome Custom TabでもKeycloakへ接続するため、生成CAを端末のユーザー証明書として一度インストールしてください。IssuerはKeycloak discoveryの`issuer`と完全一致させ、APIにlocalhostを使う場合もOIDC Issuerはcanonicalな`https://idp.gorapeflutter.site:9443/realms/gorape`を維持してください。
 
 便利なoption:
 

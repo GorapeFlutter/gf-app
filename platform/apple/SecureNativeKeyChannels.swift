@@ -14,24 +14,31 @@ enum SecureNativeKeyChannels {
   private static let keyStoreQueue = DispatchQueue(label: "com.gorapeflutter.gf_app.secure-key")
   private static let deviceChannel = "com.gorapeflutter.gf_app/device_key"
 
+  // GF-01394 — Install the Apple Secure Enclave Driver for device-key operations.
   // GF-02177 — Registers the Secure Enclave channel for Device keys.
   static func install(binaryMessenger: FlutterBinaryMessenger) {
     installChannel(name: deviceChannel, binaryMessenger: binaryMessenger, namespace: "device")
   }
 
+  // GF-01395 — Register one MethodChannel for an Apple native-key namespace.
   private static func installChannel(
     name: String,
     binaryMessenger: FlutterBinaryMessenger,
     namespace: String
   ) {
     let channel = FlutterMethodChannel(name: name, binaryMessenger: binaryMessenger)
-    channel.setMethodCallHandler { call, result in
+    channel.setMethodCallHandler { /* GF-01411 — Dispatch a Flutter call to the serialized native-key queue. */ call, result in
       keyStoreQueue.async {
+        // GF-01412 — Run Keychain work away from Flutter's main thread.
         do {
           let value = try dispatch(call, namespace: namespace)
-          DispatchQueue.main.async { result(value) }
+          DispatchQueue.main.async {
+            // GF-01413 — Deliver a successful method-channel result on the main thread.
+            result(value)
+          }
         } catch {
           DispatchQueue.main.async {
+            // GF-01414 — Deliver a typed method-channel error on the main thread.
             result(FlutterError(code: "secure_key_error", message: "Apple Secure Enclave key operation failed.", details: nil))
           }
         }
@@ -39,6 +46,7 @@ enum SecureNativeKeyChannels {
     }
   }
 
+  // GF-01396 — Route Flutter method-channel commands to an Apple key operation.
   private static func dispatch(_ call: FlutterMethodCall, namespace: String) throws -> Any? {
     let arguments = call.arguments as? [String: Any] ?? [:]
     switch (namespace, call.method) {
@@ -74,6 +82,7 @@ enum SecureNativeKeyChannels {
     }
   }
 
+  // GF-01397 — Report Secure Enclave availability without claiming remote attestation.
   private static func probe(namespace: String) -> [String: Any] {
     let identifier = namespace == "dpop"
       ? "gfapp_dpop_probe_\(UUID().uuidString)"
@@ -99,6 +108,7 @@ enum SecureNativeKeyChannels {
     }
   }
 
+  // GF-01398 — Create a non-exportable P-256 Secure Enclave key and describe its assurance boundary.
   // GF-02178 — Creates a non-exportable P-256 Secure Enclave key and labels its attestation boundary.
   private static func createKey(identifier: String, namespace: String) throws -> [String: Any] {
     try validateIdentifier(identifier, namespace: namespace)
@@ -137,6 +147,7 @@ enum SecureNativeKeyChannels {
     return try keyMaterial(privateKey: privateKey, identifier: identifier, namespace: namespace)
   }
 
+  // GF-01399 — Load and serialize public material for a Secure Enclave key.
   private static func keyMaterial(identifier: String, namespace: String) throws -> [String: Any] {
     try validateIdentifier(identifier, namespace: namespace)
     var query: [String: Any] = [
@@ -154,6 +165,7 @@ enum SecureNativeKeyChannels {
     return try keyMaterial(privateKey: privateKey, identifier: identifier, namespace: namespace)
   }
 
+  // GF-01400 — Serialize public-key evidence and the local assurance boundary.
   private static func keyMaterial(privateKey: SecKey, identifier: String, namespace: String) throws -> [String: Any] {
     guard let publicKey = SecKeyCopyPublicKey(privateKey) else { throw KeyError.keyUnavailable }
     var exportError: Unmanaged<CFError>?
@@ -182,6 +194,7 @@ enum SecureNativeKeyChannels {
     ]
   }
 
+  // GF-01401 — Sign data with an existing Secure Enclave key without exporting private material.
   // GF-02179 — Signs data with a validated Secure Enclave key without exporting private material.
   private static func sign(identifier: String, namespace: String, data: Data) throws -> String {
     try validateIdentifier(identifier, namespace: namespace)
@@ -212,11 +225,13 @@ enum SecureNativeKeyChannels {
     return encode(signature)
   }
 
+  // GF-01402 — Check whether a key is bound to the Secure Enclave token.
   private static func isSecureEnclave(_ key: SecKey) -> Bool {
     guard let attributes = SecKeyCopyAttributes(key) as? [String: Any] else { return false }
     return (attributes[kSecAttrTokenID as String] as? String) == (kSecAttrTokenIDSecureEnclave as String)
   }
 
+  // GF-01403 — Check whether a Secure Enclave key exists in its namespace.
   private static func hasKey(identifier: String, namespace: String) -> Bool {
     guard (try? validateIdentifier(identifier, namespace: namespace)) != nil else { return false }
     let query: [String: Any] = [
@@ -229,6 +244,7 @@ enum SecureNativeKeyChannels {
     return SecItemCopyMatching(query as CFDictionary, nil) == errSecSuccess
   }
 
+  // GF-01404 — Delete a Secure Enclave key from its namespace.
   private static func deleteKey(identifier: String, namespace: String) throws {
     try validateIdentifier(identifier, namespace: namespace)
     let query: [String: Any] = [
@@ -242,6 +258,7 @@ enum SecureNativeKeyChannels {
     if status != errSecSuccess && status != errSecItemNotFound { throw KeyError.keyUnavailable }
   }
 
+  // GF-01405 — Validate the native-key identifier and its namespace prefix.
   private static func validateIdentifier(_ value: String, namespace: String) throws {
     guard !value.isEmpty, value.count <= 128,
           value.range(of: "^[A-Za-z0-9_-]+$", options: .regularExpression) != nil,
@@ -250,15 +267,18 @@ enum SecureNativeKeyChannels {
     }
   }
 
+  // GF-01406 — Build a namespaced Keychain application tag.
   private static func tag(_ identifier: String, namespace: String) -> Data {
     Data("com.gorapeflutter.gf_app.\(namespace).\(identifier)".utf8)
   }
 
+  // GF-01407 — Read a required non-empty string from Flutter arguments.
   private static func string(_ arguments: [String: Any], _ name: String) throws -> String {
     guard let value = arguments[name] as? String, !value.isEmpty else { throw KeyError.invalidInput }
     return value
   }
 
+  // GF-01408 — Decode unpadded Base64url input into bytes.
   private static func decode(_ value: String) throws -> Data {
     var normalized = value.replacingOccurrences(of: "-", with: "+").replacingOccurrences(of: "_", with: "/")
     let remainder = normalized.count % 4
@@ -267,12 +287,14 @@ enum SecureNativeKeyChannels {
     return data
   }
 
+  // GF-01409 — Encode bytes as unpadded Base64url.
   private static func encode(_ data: Data) -> String {
     data.base64EncodedString().replacingOccurrences(of: "+", with: "-")
       .replacingOccurrences(of: "/", with: "_")
       .replacingOccurrences(of: "=", with: "")
   }
 
+  // GF-01410 — Wrap DER SubjectPublicKeyInfo bytes in a PEM document.
   private static func pem(_ der: Data) -> String {
     let text = der.base64EncodedString(options: [.lineLength64Characters, .endLineWithLineFeed])
     return "-----BEGIN PUBLIC KEY-----\n\(text)-----END PUBLIC KEY-----\n"

@@ -17,11 +17,13 @@ struct _MyApplication {
 G_DEFINE_TYPE(MyApplication, my_application, GTK_TYPE_APPLICATION)
 
 // Called when first Flutter frame received.
+// GF-01508 — Show the GTK window after the first Flutter frame is rendered.
 static void first_frame_cb(MyApplication* self, FlView* view) {
   gtk_widget_show(gtk_widget_get_toplevel(GTK_WIDGET(view)));
 }
 
 // Implements GApplication::activate.
+// GF-01509 — Create the GTK application window and attach the Flutter view.
 static void my_application_activate(GApplication* application) {
   MyApplication* self = MY_APPLICATION(application);
   GtkWindow* window =
@@ -86,6 +88,7 @@ static void my_application_activate(GApplication* application) {
 }
 
 // Implements GApplication::local_command_line.
+// GF-01510 — Save Dart arguments, register the application, and activate it.
 static gboolean my_application_local_command_line(GApplication* application,
                                                   gchar*** arguments,
                                                   int* exit_status) {
@@ -107,6 +110,7 @@ static gboolean my_application_local_command_line(GApplication* application,
 }
 
 // Implements GApplication::startup.
+// GF-01511 — Run the GTK parent startup lifecycle callback.
 static void my_application_startup(GApplication* application) {
   // MyApplication* self = MY_APPLICATION(object);
 
@@ -116,6 +120,7 @@ static void my_application_startup(GApplication* application) {
 }
 
 // Implements GApplication::shutdown.
+// GF-01512 — Run the GTK parent shutdown lifecycle callback.
 static void my_application_shutdown(GApplication* application) {
   // MyApplication* self = MY_APPLICATION(object);
 
@@ -125,6 +130,7 @@ static void my_application_shutdown(GApplication* application) {
 }
 
 // Implements GObject::dispose.
+// GF-01513 — Release application-owned arguments and native key-channel resources.
 static void my_application_dispose(GObject* object) {
   MyApplication* self = MY_APPLICATION(object);
   g_clear_pointer(&self->dart_entrypoint_arguments, g_strfreev);
@@ -132,6 +138,7 @@ static void my_application_dispose(GObject* object) {
   G_OBJECT_CLASS(my_application_parent_class)->dispose(object);
 }
 
+// GF-01514 — Register GTK application lifecycle callbacks.
 static void my_application_class_init(MyApplicationClass* klass) {
   G_APPLICATION_CLASS(klass)->activate = my_application_activate;
   G_APPLICATION_CLASS(klass)->local_command_line =
@@ -141,10 +148,12 @@ static void my_application_class_init(MyApplicationClass* klass) {
   G_OBJECT_CLASS(klass)->dispose = my_application_dispose;
 }
 
+// GF-01515 — Initialize the GTK application instance state.
 static void my_application_init(MyApplication* self) {
   self->device_key_channel = nullptr;
 }
 
+// GF-01516 — Create the GTK application with the configured application ID.
 MyApplication* my_application_new() {
   // Set the program name to the application ID, which helps various systems
   // like GTK and desktop environments map this running application to its

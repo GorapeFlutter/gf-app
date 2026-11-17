@@ -33,12 +33,14 @@ using EnableNonClientDpiScaling = BOOL __stdcall(HWND hwnd);
 
 // Scale helper to convert logical scaler values to physical using passed in
 // scale factor
+// GF-01447 — Scale a logical window coordinate to physical pixels.
 int Scale(int source, double scale_factor) {
   return static_cast<int>(source * scale_factor);
 }
 
 // Dynamically loads the |EnableNonClientDpiScaling| from the User32 module.
 // This API is only needed for PerMonitor V1 awareness mode.
+// GF-01448 — Enable per-monitor non-client DPI scaling when Windows supports it.
 void EnableFullDpiSupportIfAvailable(HWND hwnd) {
   HMODULE user32_module = LoadLibraryA("User32.dll");
   if (!user32_module) {
@@ -58,8 +60,10 @@ void EnableFullDpiSupportIfAvailable(HWND hwnd) {
 // Manages the Win32Window's window class registration.
 class WindowClassRegistrar {
  public:
+  // GF-01449 — Destroy the singleton registrar without additional work.
   ~WindowClassRegistrar() = default;
 
+  // GF-01450 — Return the singleton window-class registrar.
   // Returns the singleton registrar instance.
   static WindowClassRegistrar* GetInstance() {
     if (!instance_) {
@@ -77,6 +81,7 @@ class WindowClassRegistrar {
   void UnregisterWindowClass();
 
  private:
+  // GF-01451 — Initialize the window-class registrar.
   WindowClassRegistrar() = default;
 
   static WindowClassRegistrar* instance_;
@@ -86,6 +91,7 @@ class WindowClassRegistrar {
 
 WindowClassRegistrar* WindowClassRegistrar::instance_ = nullptr;
 
+// GF-01452 — Register the Win32 window class on first use and return its name.
 const wchar_t* WindowClassRegistrar::GetWindowClass() {
   if (!class_registered_) {
     WNDCLASS window_class{};
@@ -106,20 +112,24 @@ const wchar_t* WindowClassRegistrar::GetWindowClass() {
   return kWindowClassName;
 }
 
+// GF-01453 — Unregister the Win32 window class after the last window closes.
 void WindowClassRegistrar::UnregisterWindowClass() {
   UnregisterClass(kWindowClassName, nullptr);
   class_registered_ = false;
 }
 
+// GF-01456 — Initialize a top-level Win32 window wrapper.
 Win32Window::Win32Window() {
   ++g_active_window_count;
 }
 
+// GF-01457 — Release the Win32 window and update the active-window count.
 Win32Window::~Win32Window() {
   --g_active_window_count;
   Destroy();
 }
 
+// GF-01458 — Create and initialize a DPI-aware Win32 window.
 bool Win32Window::Create(const std::wstring& title,
                          const Point& origin,
                          const Size& size) {
@@ -149,11 +159,13 @@ bool Win32Window::Create(const std::wstring& title,
   return OnCreate();
 }
 
+// GF-01459 — Show the current Win32 window.
 bool Win32Window::Show() {
   return ShowWindow(window_handle_, SW_SHOWNORMAL);
 }
 
 // static
+// GF-01460 — Dispatch Win32 window messages to the owning window wrapper.
 LRESULT CALLBACK Win32Window::WndProc(HWND const window,
                                       UINT const message,
                                       WPARAM const wparam,
@@ -174,6 +186,7 @@ LRESULT CALLBACK Win32Window::WndProc(HWND const window,
 }
 
 LRESULT
+// GF-01461 — Handle Win32 lifecycle, resize, activation, and theme messages.
 Win32Window::MessageHandler(HWND hwnd,
                             UINT const message,
                             WPARAM const wparam,
@@ -221,6 +234,7 @@ Win32Window::MessageHandler(HWND hwnd,
   return DefWindowProc(window_handle_, message, wparam, lparam);
 }
 
+// GF-01462 — Destroy the native window and release class registration if unused.
 void Win32Window::Destroy() {
   OnDestroy();
 
@@ -233,11 +247,13 @@ void Win32Window::Destroy() {
   }
 }
 
+// GF-01463 — Resolve the Win32Window instance stored on an HWND.
 Win32Window* Win32Window::GetThisFromHandle(HWND const window) noexcept {
   return reinterpret_cast<Win32Window*>(
       GetWindowLongPtr(window, GWLP_USERDATA));
 }
 
+// GF-01464 — Attach and size Flutter child content within the Win32 window.
 void Win32Window::SetChildContent(HWND content) {
   child_content_ = content;
   SetParent(content, window_handle_);
@@ -249,29 +265,35 @@ void Win32Window::SetChildContent(HWND content) {
   SetFocus(child_content_);
 }
 
+// GF-01465 — Return the current client-area rectangle.
 RECT Win32Window::GetClientArea() {
   RECT frame;
   GetClientRect(window_handle_, &frame);
   return frame;
 }
 
+// GF-01466 — Return the current native window handle.
 HWND Win32Window::GetHandle() {
   return window_handle_;
 }
 
+// GF-01467 — Configure whether closing the window should quit the application.
 void Win32Window::SetQuitOnClose(bool quit_on_close) {
   quit_on_close_ = quit_on_close;
 }
 
+// GF-01468 — Provide the default successful window-creation hook.
 bool Win32Window::OnCreate() {
   // No-op; provided for subclasses.
   return true;
 }
 
+// GF-01469 — Provide the default no-op window-destruction hook.
 void Win32Window::OnDestroy() {
   // No-op; provided for subclasses.
 }
 
+// GF-01470 — Apply Windows dark-mode preference to the window frame.
 void Win32Window::UpdateTheme(HWND const window) {
   DWORD light_mode;
   DWORD light_mode_size = sizeof(light_mode);

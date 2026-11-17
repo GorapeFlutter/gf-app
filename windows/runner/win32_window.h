@@ -15,12 +15,14 @@ class Win32Window {
   struct Point {
     unsigned int x;
     unsigned int y;
+    // GF-01454 — Store a logical window origin.
     Point(unsigned int x, unsigned int y) : x(x), y(y) {}
   };
 
   struct Size {
     unsigned int width;
     unsigned int height;
+    // GF-01455 — Store logical window dimensions.
     Size(unsigned int width, unsigned int height)
         : width(width), height(height) {}
   };

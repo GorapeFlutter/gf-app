@@ -13,7 +13,7 @@
             android:name=".MainActivity"
             android:exported="true"
             android:launchMode="singleTop"
-            android:taskAffinity=""
+            android:taskAffinity="com.gorapeflutter.gf_app"
             android:theme="@style/LaunchTheme"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:hardwareAccelerated="true"
@@ -31,19 +31,12 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <!-- Android 14+ recreates AppAuth's authorization activity while the
-             browser is in front, so its in-memory request state is lost and the
-             redirect fails with "No stored state - unable to handle response".
-             singleInstance keeps the original instance alive so the redirect is
-             delivered through onNewIntent.
-             Upstream: https://github.com/openid/AppAuth-Android/issues/977 -->
+        <!-- Keep AppAuth's in-memory request state across the browser handoff. -->
         <activity
             android:name="net.openid.appauth.AuthorizationManagementActivity"
-            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation|keyboard|keyboardHidden"
-            android:exported="false"
             android:launchMode="singleInstance"
-            android:theme="@style/Theme.AppCompat.Translucent.NoTitleBar"
-            tools:node="replace"/>
+            android:taskAffinity="com.gorapeflutter.gf_app"
+            tools:replace="android:launchMode,android:taskAffinity" />
         <!-- AppAuth redirect: com.gorapeflutter.gfapp:/oauth2redirect.
              Keep this URI identical to ConnectionSettings.flutterRedirectUri
              and to the Keycloak gorape-client redirect allow-list. -->
@@ -51,6 +44,7 @@
             android:name="net.openid.appauth.RedirectUriReceiverActivity"
             android:excludeFromRecents="true"
             android:exported="true"
+            android:taskAffinity="com.gorapeflutter.gf_app"
             android:theme="@style/Theme.AppCompat.Translucent.NoTitleBar"
             tools:node="replace">
             <intent-filter>

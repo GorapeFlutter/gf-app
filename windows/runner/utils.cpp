@@ -7,6 +7,7 @@
 
 #include <iostream>
 
+// GF-01477 — Attach or allocate a Windows console and synchronize output streams.
 void CreateAndAttachConsole() {
   if (::AllocConsole()) {
     FILE *unused;
@@ -21,6 +22,7 @@ void CreateAndAttachConsole() {
   }
 }
 
+// GF-01478 — Convert process command-line arguments from UTF-16 to UTF-8.
 std::vector<std::string> GetCommandLineArguments() {
   // Convert the UTF-16 command line arguments to UTF-8 for the Engine to use.
   int argc;
@@ -41,6 +43,7 @@ std::vector<std::string> GetCommandLineArguments() {
   return command_line_arguments;
 }
 
+// GF-01479 — Convert one UTF-16 string to UTF-8 with invalid-input checks.
 std::string Utf8FromUtf16(const wchar_t* utf16_string) {
   if (utf16_string == nullptr) {
     return std::string();

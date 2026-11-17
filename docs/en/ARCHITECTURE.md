@@ -4,9 +4,9 @@ This guide explains how application processing connects the UI to external
 services. IDs in the diagrams match the English source comments.
 
 - [GF-00001](https://github.com/GorapeFlutter/gf-app/blob/main/lib/app.dart#L39)–[GF-00013](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/language.dart#L12): end-to-end application flows
-- [GF-00100](https://github.com/GorapeFlutter/gf-app/blob/main/lib/app.dart#L14)–[GF-01184](https://github.com/GorapeFlutter/gf-app/blob/main/lib/entity/model/connection.dart#L60): handwritten Dart and native platform functions/callbacks
+- [GF-00100](https://github.com/GorapeFlutter/gf-app/blob/main/lib/app.dart#L14)–[GF-01519](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/GorapeCredentialProviderService.kt#L37): handwritten Dart, Kotlin, Swift, and C/C++ functions/callbacks
 - [GF-02000](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/auth.dart#L53)–[GF-02186](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/connection.dart#L39): logical steps inside multi-stage and native functions
-- [GF-10001](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/base.go#L13)–[GF-10037](https://github.com/Gorapeflutter/gorape/blob/main/pkg/config/base.go#L194): Gorape backend handlers, usecases, WebAuthn RP, MDS, revocation, authentication assurance, and external service proof verification APIs
+- [GF-10001](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/base.go#L13)–[GF-10045](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/repository/webauthn.go#L291): Gorape backend handlers, usecases, WebAuthn RP, MDS, revocation, authentication assurance, and external service proof verification APIs
 - Tests and generated code are not included.
 
 See the [function ID index](FUNCTION_INDEX.md) and
@@ -23,8 +23,11 @@ flowchart LR
     Repository --> API[Gorape REST API]
     Repository --> OIDC[Keycloak / AppAuth]
     Repository --> Secure[OS secure storage]
-    Repository -->|native key channels| Native[OS key providers]
-    Native -->|GF-02082–GF-02095| Keystore[Android Keystore]
+    Repository -->|MethodChannel| Native[Flutter channel driver<br/>driver/flutter]
+    Native --> DeviceKeyDriver[AndroidDeviceKeyDriver<br/>driver/devicekey]
+    DeviceKeyDriver -->|GF-02082–GF-02095| Keystore[Android Keystore]
+    DeviceKeyDriver --> AndroidEntity[Android data models<br/>android/.../entity]
+    DeviceKeyDriver --> AndroidShare[Native logger and codecs<br/>android/.../share]
     Native -->|GF-02177–GF-02179| Enclave[Apple Secure Enclave]
     Native -->|GF-02180–GF-02182| CNG[Windows CNG / TPM]
     Native -->|GF-02183–GF-02185| TPM[Linux TPM2 tools]
@@ -32,15 +35,18 @@ flowchart LR
     Repository --> Entity
 ```
 
-Function IDs span [GF-00100](https://github.com/GorapeFlutter/gf-app/blob/main/lib/app.dart#L14)–[GF-01184](https://github.com/GorapeFlutter/gf-app/blob/main/lib/entity/model/connection.dart#L60); function-step IDs span
-[GF-02000](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/auth.dart#L53)–[GF-02186](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/connection.dart#L39). The indexes map IDs to symbols and source files.
+Function IDs span [GF-00100](https://github.com/GorapeFlutter/gf-app/blob/main/lib/app.dart#L14)–[GF-01519](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/GorapeCredentialProviderService.kt#L37); function-step IDs span
+[GF-02000](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/auth.dart#L53)–[GF-02186](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/connection.dart#L39). The indexes map IDs to one-line summaries.
 
 - **UI** renders screens and gathers user input. It starts application work through a Controller.
 - **Controller** owns Riverpod state, calls Usecases, and invalidates dependent providers after updates.
 - **Usecase** composes application workflows, including operations that coordinate multiple repositories.
 - **Repository** forms the boundary to HTTP, OIDC, secure storage, and native APIs.
 - Non-Android native providers currently report local key protection separately from remote attestation; Gorape only accepts same-key Android evidence for enrollment.
-- **Entity** defines the data passed between layers.
+- **Entity** defines the data passed between layers. Kotlin Android models are
+  centralized under `android/app/src/main/kotlin/.../entity`.
+- **Share** contains reusable native utilities such as logging and Base64url
+  encoding under `android/app/src/main/kotlin/.../share`.
 - **UI text** is referenced by `MCODE-XXXXX` IDs. Japanese/English entries live in `lib/config/langages/messages.dart`; `AppText` resolves each code using the selected locale.
 
 ## System architecture and trust boundaries
@@ -77,12 +83,18 @@ flowchart LR
     PasskeyPlugin[passkeys Flutter plugin]
     CredentialManager[Android Credential Manager]
     ProviderService[GF CredentialProviderService]
-    ProviderActivity[GorapeCredentialProviderActivity]
+    ProviderActivity[GorapeCredentialProviderActivity adapter]
+    OfferDriver[CredentialProviderOfferDriver]
+    CreateDriver[CreateGorapePasskeyDriver]
+    GetDriver[GetGorapePasskeyDriver]
+    WebAuthnDriver[WebAuthnCredentialDriver]
+    PasskeyKeyDriver[AndroidPasskeyKeyDriver]
     PasskeyStore[Local passkey metadata<br/>SharedPreferences]
     PasskeyKeystore[Android Keystore<br/>P-256 passkey keys]
     BiometricPrompt[Android BiometricPrompt]
     WebAuthnRP[Gorape WebAuthn RP and verifier policy]
-    Native[Android MainActivity<br/>MethodChannel GF-01140]
+    Native[FlutterDeviceKeyChannelDriver<br/>MethodChannel GF-01140]
+    LegacyKeyDriver[AndroidDeviceKeyDriver]
     LegacyKeystore[Android Keystore<br/>legacy device-key path]
 
     User -->|Sign-in GF-00002 / GF-00136| App
@@ -97,15 +109,19 @@ flowchart LR
     App -->|Registration challenge GF-00005 / GF-02026| API
     API -->|challenge_id + challenge| App
     App -->|Register GF-00005 / GF-01087| Native
-    Native -->|Generate legacy key GF-01142 / GF-01143| LegacyKeystore
-    LegacyKeystore -->|Public key + Android certificate chain GF-02090| Native
+    Native --> LegacyKeyDriver
+    LegacyKeyDriver -->|Generate legacy key GF-01142 / GF-01143| LegacyKeystore
+    LegacyKeystore -->|Public key + Android certificate chain GF-02090| LegacyKeyDriver
+    LegacyKeyDriver --> Native
     Native -->|Registration evidence| App
     App -->|Registration verify GF-02028| API
 
     API -->|Possession challenge GF-00006 / GF-02032| App
     App -->|Sign challenge GF-00006 / GF-01088 / GF-01144| Native
-    Native -->|Legacy private-key operation| LegacyKeystore
-    LegacyKeystore -->|DER signature| Native
+    Native --> LegacyKeyDriver
+    LegacyKeyDriver -->|Legacy private-key operation| LegacyKeystore
+    LegacyKeystore -->|DER signature| LegacyKeyDriver
+    LegacyKeyDriver --> Native
     Native -->|Signature| App
     App -->|Proof verify GF-02034| API
 
@@ -114,18 +130,28 @@ flowchart LR
     App -->|"WebAuthn create() / get()"| PasskeyPlugin
     PasskeyPlugin -->|Android standard create/get request| CredentialManager
     CredentialManager -->|Dispatch provider request| ProviderService
-    ProviderService -->|RP-matched chooser entries| CredentialManager
+    ProviderService --> OfferDriver
+    OfferDriver -->|RP-matched chooser entries| CredentialManager
     CredentialManager -->|Launch selected PendingIntent| ProviderActivity
-    ProviderService -->|Look up matching credentials| PasskeyStore
-    PasskeyStore -->|Metadata and Keystore alias| ProviderService
-    ProviderActivity -->|Generate key / sign assertion| PasskeyKeystore
-    PasskeyKeystore -->|Attestation chain / signature| ProviderActivity
-    ProviderActivity -->|Request biometric UV| BiometricPrompt
+    OfferDriver -->|Look up matching credentials| PasskeyStore
+    PasskeyStore -->|Metadata and Keystore alias| OfferDriver
+    ProviderActivity --> CreateDriver
+    ProviderActivity --> GetDriver
+    CreateDriver --> WebAuthnDriver
+    GetDriver --> WebAuthnDriver
+    CreateDriver --> PasskeyKeyDriver
+    GetDriver --> PasskeyKeyDriver
+    PasskeyKeyDriver -->|Generate key / sign assertion| PasskeyKeystore
+    PasskeyKeystore -->|Attestation chain / signature| PasskeyKeyDriver
+    CreateDriver -->|Request biometric UV| BiometricPrompt
+    GetDriver -->|Request biometric UV| BiometricPrompt
     BiometricPrompt -->|System biometric prompt| User
     User -->|Biometric verification| BiometricPrompt
-    BiometricPrompt -->|Authorized CryptoObject| ProviderActivity
-    ProviderActivity -->|Persist metadata only| PasskeyStore
-    ProviderActivity -->|Standard PublicKeyCredential response; internal transport| CredentialManager
+    BiometricPrompt -->|Authorized CryptoObject| CreateDriver
+    BiometricPrompt -->|Authorized CryptoObject| GetDriver
+    CreateDriver -->|Persist metadata only| PasskeyStore
+    CreateDriver -->|Standard PublicKeyCredential response; internal transport| CredentialManager
+    GetDriver -->|Standard PublicKeyCredential response| CredentialManager
     CredentialManager --> PasskeyPlugin
     PasskeyPlugin --> App
     App -->|Complete credential response| API
@@ -137,7 +163,7 @@ their own user-verification ceremony in the authenticator/platform. The app
 receives only WebAuthn responses and never biometric data. Gorape requests
 `userVerification: required` by default. The separate, legacy Android
 device-registration key sets
-`setUserAuthenticationRequired(false)` in [GF-01143](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L234), so that device-key
+`setUserAuthenticationRequired(false)` in [GF-01143](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/driver/devicekey/AndroidDeviceKeyDriver.kt#L99), so that device-key
 registration/proof path does not require local UV. Do not interpret the passkey
 UV step as a property of the current [GF-00005](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L89) key.
 
@@ -168,28 +194,28 @@ flowchart LR
     Passkey --> RP --> DB
 ```
 
-The backend ID range is [GF-10001](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/base.go#L13) through [GF-10037](https://github.com/Gorapeflutter/gorape/blob/main/pkg/config/base.go#L194). It is maintained in the
+The backend ID range is [GF-10001](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/base.go#L13) through [GF-10045](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/repository/webauthn.go#L291). It is maintained in the
 Gorape repository and linked separately from gf-app's Dart/Android IDs. See the
 [backend source index](https://github.com/Gorapeflutter/gorape/blob/main/docs/book/src/source-index.md).
 Platform provisioning uses [GF-10023](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/usecase/provisioning.go#L33) and [GF-10024](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/usecase/provisioning.go#L59).
 
 ## End-to-end flow IDs
 
-| ID | Flow | Main implementation |
-| --- | --- | --- |
-| [GF-00001](https://github.com/GorapeFlutter/gf-app/blob/main/lib/app.dart#L39) | Startup, settings load, session restoration, and screen routing | `lib/app.dart`, `lib/back/controller/auth.dart`, `lib/back/usecase/auth.dart` |
-| [GF-00002](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L93) | Keycloak sign-in/sign-out and local session management | `lib/back/controller/auth.dart`, `lib/back/usecase/auth.dart`, `lib/back/repository/auth.dart` |
-| [GF-00003](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L614) | Gorape API requests, Bearer token, one refresh-and-retry after 401 | `lib/back/repository/gorape.dart` |
-| [GF-00004](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/project.dart#L12) | Read projects, devices, groups, and attestation data | `lib/back/controller/project.dart`, `device.dart`, `group.dart`, `attestation.dart` |
-| [GF-00005](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L89) | Android device registration and Key Attestation verification | `lib/back/usecase/device.dart`, `lib/back/repository/device_key.dart`, `MainActivity.kt` |
-| [GF-00006](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L193) | Prove device possession using its private key | `lib/back/usecase/device.dart`, `lib/back/repository/device_key.dart`, `MainActivity.kt` |
-| [GF-00007](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L247) | Revoke a device on the server and clean up local key data | `lib/back/usecase/device.dart` |
-| [GF-00008](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/group.dart#L71) | Create/update/delete groups and assign devices | `lib/back/controller/group.dart`, `lib/back/usecase/group.dart`, `lib/back/repository/group.dart` |
-| [GF-00009](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/role.dart#L11) | Resolve UI roles from Keycloak token claims | `lib/back/controller/role.dart`, `lib/entity/model/role.dart` |
-| [GF-00010](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/role.dart#L118) | Manage Gorape project/group role bindings | `lib/back/controller/role.dart`, `lib/back/usecase/role.dart`, `lib/back/repository/role.dart` |
-| [GF-00011](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/connection.dart#L29) | Read/write connection settings and check Gorape health | `lib/back/controller/connection.dart`, `lib/back/usecase/connection.dart` |
-| [GF-00012](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/policy.dart#L11) | Read/write local-only device policy preferences | `lib/back/controller/policy.dart`, `lib/back/usecase/policy.dart` |
-| [GF-00013](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/language.dart#L12) | Read/write the app display language | `lib/back/controller/language.dart` |
+| GF ID | Flow summary |
+| --- | --- |
+| [GF-00001](https://github.com/GorapeFlutter/gf-app/blob/main/lib/app.dart#L39) | Start the app, load settings, restore the session, and route screens. |
+| [GF-00002](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L93) | Sign in or out with Keycloak and manage the local session. |
+| [GF-00003](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L614) | Call Gorape APIs with a Bearer token and retry once after token refresh. |
+| [GF-00004](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/project.dart#L12) | Load projects, devices, groups, and attestation data. |
+| [GF-00005](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L89) | Register an Android device and verify its Key Attestation. |
+| [GF-00006](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L193) | Prove device possession by signing a server challenge. |
+| [GF-00007](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L247) | Revoke a device and remove its local key data. |
+| [GF-00008](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/group.dart#L71) | Manage groups and assign devices to them. |
+| [GF-00009](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/role.dart#L11) | Resolve UI roles from Keycloak token claims. |
+| [GF-00010](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/role.dart#L118) | Manage project and group role bindings. |
+| [GF-00011](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/connection.dart#L29) | Read connection settings and check Gorape health. |
+| [GF-00012](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/policy.dart#L11) | Read and write local device-policy preferences. |
+| [GF-00013](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/language.dart#L12) | Read and write the app display language. |
 
 These IDs describe application processing. They do not represent backend API
 features or authorization grants.
@@ -318,7 +344,7 @@ sequenceDiagram
     participant UI as Device detail screen
     participant UC as DeviceUsecase.provePossession GF-01088
     participant API as Gorape API
-    participant Native as MainActivity.sign GF-01144
+    participant Native as AndroidDeviceKeyDriver.sign GF-01144
     participant KS as Android Keystore
     UI->>UC: provePossession() GF-00006 / GF-02102–GF-02103
     UC->>UC: Load and validate local key GF-02031

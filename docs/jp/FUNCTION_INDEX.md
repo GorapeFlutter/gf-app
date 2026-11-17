@@ -1,5 +1,5 @@
 # 関数・callback ID一覧
 
-[GF-00100](https://github.com/GorapeFlutter/gf-app/blob/main/lib/app.dart#L14)以降は、手書きDartコードとAndroidネイティブコードの関数、メソッド、getter/setter、constructor、inline callbackを識別します。対応する関数名とファイルは以下の一覧を参照してください。
+[GF-00100](https://github.com/GorapeFlutter/gf-app/blob/main/lib/app.dart#L14)〜[GF-01519](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/GorapeCredentialProviderService.kt#L37)は、手書きDart・Kotlin・Swift・C/C++コードの関数、メソッド、getter/setter、constructor、callbackを識別します。各IDは実装へリンクし、一行概要を一覧に記載します。
 
 {{#include FUNCTION_INDEX_TABLE.md}}

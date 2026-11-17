@@ -7,11 +7,14 @@
 #include "flutter/generated_plugin_registrant.h"
 #include "windows_native_keys.h"
 
+// GF-01471 — Initialize a Flutter host window with its Dart project.
 FlutterWindow::FlutterWindow(const flutter::DartProject& project)
     : project_(project) {}
 
+// GF-01472 — Release the Flutter host window.
 FlutterWindow::~FlutterWindow() {}
 
+// GF-01473 — Create the Flutter controller and register Windows native-key channels.
 bool FlutterWindow::OnCreate() {
   if (!Win32Window::OnCreate()) {
     return false;
@@ -32,7 +35,7 @@ bool FlutterWindow::OnCreate() {
                                    &device_key_channel_);
   SetChildContent(flutter_controller_->view()->GetNativeWindow());
 
-  flutter_controller_->engine()->SetNextFrameCallback([&]() {
+  flutter_controller_->engine()->SetNextFrameCallback(/* GF-01476 — Show the window after Flutter renders its first frame. */ [&]() {
     this->Show();
   });
 
@@ -44,6 +47,7 @@ bool FlutterWindow::OnCreate() {
   return true;
 }
 
+// GF-01474 — Release the Flutter controller before destroying the window.
 void FlutterWindow::OnDestroy() {
   if (flutter_controller_) {
     flutter_controller_ = nullptr;
@@ -53,6 +57,7 @@ void FlutterWindow::OnDestroy() {
 }
 
 LRESULT
+// GF-01475 — Give Flutter first opportunity to process top-level Win32 messages.
 FlutterWindow::MessageHandler(HWND hwnd, UINT const message,
                               WPARAM const wparam,
                               LPARAM const lparam) noexcept {

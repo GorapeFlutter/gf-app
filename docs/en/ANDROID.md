@@ -18,6 +18,9 @@ name.
 - AppAuth redirect scheme is declared in
   `android/app/build.gradle.kts` (`appAuthRedirectScheme`) and
   `android/app/src/main/AndroidManifest.xml`.
+- AppAuth's authorization activity uses `singleInstance` to retain the in-flight
+  request state across the browser handoff on Android; the redirect receiver
+  forwards the callback to that activity.
 - Network security config allows cleartext only for local development hosts.
 
 ## Registration flow
@@ -27,7 +30,8 @@ name.
 2. `POST /v1/projects/{projectId}/devices/registration/challenge` — returns a
    single-use challenge (`challenge_id` + unpadded Base64url bytes).
 3. The app decodes the Base64url challenge to raw bytes.
-4. `MainActivity.kt` generates an EC P-256 key in Android Keystore with:
+4. `AndroidDeviceKeyDriver` (`android/app/src/main/kotlin/.../driver/devicekey`)
+   generates an EC P-256 key in Android Keystore with:
    - `setAlgorithmParameterSpec(ECGenParameterSpec("secp256r1"))`
    - `setDigests(DIGEST_SHA256)`
    - `setAttestationChallenge(rawChallengeBytes)`
@@ -66,9 +70,11 @@ The Android development defaults are:
 - OIDC issuer: `https://idp.gorapeflutter.site:9443/realms/gorape`
 - WebAuthn RP ID: `gorapeflutter.site` (association files at the apex `/.well-known/`)
 
-The issuer must match Keycloak's `iss` claim exactly. `*.gorapeflutter.site`
-resolves to `127.0.0.1` in local development, and `adb reverse` forwards the
-ports from the device to the developer host:
+The issuer must match Keycloak discovery and its `iss` claim exactly; keep the
+canonical `https://idp.gorapeflutter.site:9443/realms/gorape` issuer even when
+the API is reached through a localhost URL. `*.gorapeflutter.site` resolves to
+`127.0.0.1` in local development, and `adb reverse` forwards the ports from the
+device to the developer host:
 
 ```bash
 ./scripts/run-android.sh

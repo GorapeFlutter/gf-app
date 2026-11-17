@@ -3,9 +3,9 @@
 この文書は、アプリ内の処理を `GF-XXXXX` のIDで識別し、UIから外部サービスまでのつながりを説明します。ソースの処理内容は変更せず、ID付きの英語コメントを追加しています。
 
 - [GF-00001](https://github.com/GorapeFlutter/gf-app/blob/main/lib/app.dart#L39)〜[GF-00013](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/language.dart#L12): エンドツーエンドの処理フロー
-- [GF-00100](https://github.com/GorapeFlutter/gf-app/blob/main/lib/app.dart#L14)〜[GF-01184](https://github.com/GorapeFlutter/gf-app/blob/main/lib/entity/model/connection.dart#L60): 手書きのDart関数・メソッド・getter/setter・constructor・callback
+- [GF-00100](https://github.com/GorapeFlutter/gf-app/blob/main/lib/app.dart#L14)〜[GF-01519](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/GorapeCredentialProviderService.kt#L37): 手書きのDart・Kotlin・Swift・C/C++関数・メソッド・getter/setter・constructor・callback
 - [GF-02000](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/auth.dart#L53)〜[GF-02186](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/connection.dart#L39): 複数段階の関数内にある論理的な処理ステップ
-- [GF-10001](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/base.go#L13)〜[GF-10037](https://github.com/Gorapeflutter/gorape/blob/main/pkg/config/base.go#L194): Gorape backend handler、usecase、WebAuthn RP、MDS、revocation、authentication assurance、外部サービス検証API
+- [GF-10001](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/base.go#L13)〜[GF-10045](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/repository/webauthn.go#L291): Gorape backend handler、usecase、WebAuthn RP、MDS、revocation、authentication assurance、外部サービス検証API
 - Kotlinネイティブ関数も関数ID一覧に含みます。テスト・生成コードは対象外です。
 
 関数IDの全件は [`FUNCTION_INDEX.md`](FUNCTION_INDEX.md)、関数内ステップIDは [`PROCESS_INDEX.md`](PROCESS_INDEX.md) を参照してください。
@@ -21,8 +21,11 @@ flowchart LR
     Repository --> API[Gorape REST API]
     Repository --> OIDC[Keycloak / AppAuth]
     Repository --> Secure[OS Secure Storage]
-    Repository -->|native key channel| Native[PF別key provider]
-    Native -->|GF-02082–GF-02095| Keystore[Android Keystore]
+     Repository -->|MethodChannel| Native[Flutter channel driver<br/>driver/flutter]
+     Native --> DeviceKeyDriver[AndroidDeviceKeyDriver<br/>driver/devicekey]
+     DeviceKeyDriver -->|GF-02082–GF-02095| Keystore[Android Keystore]
+     DeviceKeyDriver --> AndroidEntity[Android data models<br/>android/.../entity]
+     DeviceKeyDriver --> AndroidShare[Native logger and codecs<br/>android/.../share]
     Native -->|GF-02177–GF-02179| Enclave[Apple Secure Enclave]
     Native -->|GF-02180–GF-02182| CNG[Windows CNG / TPM]
     Native -->|GF-02183–GF-02185| TPM[Linux TPM2 tools]
@@ -30,14 +33,15 @@ flowchart LR
     Repository --> Entity
 ```
 
-関数IDは全レイヤーで [GF-00100](https://github.com/GorapeFlutter/gf-app/blob/main/lib/app.dart#L14)〜[GF-01184](https://github.com/GorapeFlutter/gf-app/blob/main/lib/entity/model/connection.dart#L60)、関数内ステップIDは [GF-02000](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/auth.dart#L53)〜[GF-02186](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/connection.dart#L39) です。各IDの関数名と担当ファイルは一覧を参照してください。
+関数IDは全レイヤーで [GF-00100](https://github.com/GorapeFlutter/gf-app/blob/main/lib/app.dart#L14)〜[GF-01519](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/GorapeCredentialProviderService.kt#L37)、関数内ステップIDは [GF-02000](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/auth.dart#L53)〜[GF-02186](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/connection.dart#L39) です。関数ID一覧にはGF IDへのGitHubリンクと一行概要を記載しています。
 
 - **UI** は表示とユーザー入力を担当します。画面から業務処理を開始するときはControllerを呼び出します。
 - **Controller** はRiverpodの状態を管理し、Usecaseを呼び出します。更新後は関連するProviderをinvalidateして再取得します。
 - **Usecase** はアプリケーション処理を組み立てます。端末登録のような複数のRepositoryにまたがる処理もここに置きます。
 - **Repository** はHTTP、OIDC、Secure Storage、ネイティブ機能との境界です。
 - Android以外のnative providerはlocal key protectionとremote Attestationを分離しています。Device登録で同一鍵evidenceを受け入れるserver verifierはAndroidのみです。
-- **Entity** はレイヤー間で受け渡すデータを定義します。
+- **Entity** はレイヤー間で受け渡すデータを定義します。Kotlin Androidのモデルは`android/app/src/main/kotlin/.../entity`に集約します。
+- **Share** はLoggerやBase64url codecなど、再利用するネイティブ共通処理を`android/app/src/main/kotlin/.../share`に置きます。
 - **UI文言**は`MCODE-XXXXX`で参照します。日本語・英語の辞書は`lib/config/langages/messages.dart`に集約し、`AppText`が選択中の言語に応じて表示します。
 
 ## システム全体の構成とtrust boundary
@@ -57,12 +61,18 @@ flowchart LR
     PasskeyPlugin[passkeys Flutter plugin]
     CredentialManager[Android Credential Manager]
     ProviderService[GF CredentialProviderService]
-    ProviderActivity[GorapeCredentialProviderActivity]
+    ProviderActivity[GorapeCredentialProviderActivity adapter]
+    OfferDriver[CredentialProviderOfferDriver]
+    CreateDriver[CreateGorapePasskeyDriver]
+    GetDriver[GetGorapePasskeyDriver]
+    WebAuthnDriver[WebAuthnCredentialDriver]
+    PasskeyKeyDriver[AndroidPasskeyKeyDriver]
     PasskeyStore[端末内passkey metadata<br/>SharedPreferences]
     PasskeyKeystore[Android Keystore<br/>P-256 passkey key]
     BiometricPrompt[Android BiometricPrompt]
     WebAuthnRP[Gorape WebAuthn RP / verifier policy]
-    Native[Android MainActivity<br/>MethodChannel GF-01140]
+    Native[FlutterDeviceKeyChannelDriver<br/>MethodChannel GF-01140]
+    LegacyKeyDriver[AndroidDeviceKeyDriver]
     LegacyKeystore[Android Keystore<br/>legacy device-key経路]
 
     User -->|サインイン GF-00002 / GF-00136| App
@@ -77,15 +87,19 @@ flowchart LR
     App -->|登録challenge GF-00005 / GF-02026| API
     API -->|challenge_id + challenge| App
     App -->|端末登録 GF-00005 / GF-01087| Native
-    Native -->|legacy鍵生成 GF-01142 / GF-01143| LegacyKeystore
-    LegacyKeystore -->|公開鍵 + Android certificate chain GF-02090| Native
+    Native --> LegacyKeyDriver
+    LegacyKeyDriver -->|legacy鍵生成 GF-01142 / GF-01143| LegacyKeystore
+    LegacyKeystore -->|公開鍵 + Android certificate chain GF-02090| LegacyKeyDriver
+    LegacyKeyDriver --> Native
     Native -->|登録evidence| App
     App -->|登録検証 GF-02028| API
 
     API -->|所有証明challenge GF-00006 / GF-02032| App
     App -->|challenge署名 GF-00006 / GF-01088 / GF-01144| Native
-    Native -->|legacy秘密鍵操作| LegacyKeystore
-    LegacyKeystore -->|DER signature| Native
+    Native --> LegacyKeyDriver
+    LegacyKeyDriver -->|legacy秘密鍵操作| LegacyKeystore
+    LegacyKeystore -->|DER signature| LegacyKeyDriver
+    LegacyKeyDriver --> Native
     Native -->|署名| App
     App -->|所有証明検証 GF-02034| API
 
@@ -94,25 +108,35 @@ flowchart LR
     App -->|"WebAuthn create() / get()"| PasskeyPlugin
     PasskeyPlugin -->|Android標準create/get request| CredentialManager
     CredentialManager -->|Provider request dispatch| ProviderService
-    ProviderService -->|RP一致のchooser entry| CredentialManager
+    ProviderService --> OfferDriver
+    OfferDriver -->|RP一致のchooser entry| CredentialManager
     CredentialManager -->|選択されたPendingIntentを起動| ProviderActivity
-    ProviderService -->|一致するcredentialを検索| PasskeyStore
-    PasskeyStore -->|metadataとKeystore alias| ProviderService
-    ProviderActivity -->|鍵生成 / assertion署名| PasskeyKeystore
-    PasskeyKeystore -->|attestation chain / signature| ProviderActivity
-    ProviderActivity -->|生体認証UV要求| BiometricPrompt
+    OfferDriver -->|一致するcredentialを検索| PasskeyStore
+    PasskeyStore -->|metadataとKeystore alias| OfferDriver
+    ProviderActivity --> CreateDriver
+    ProviderActivity --> GetDriver
+    CreateDriver --> WebAuthnDriver
+    GetDriver --> WebAuthnDriver
+    CreateDriver --> PasskeyKeyDriver
+    GetDriver --> PasskeyKeyDriver
+    PasskeyKeyDriver -->|鍵生成 / assertion署名| PasskeyKeystore
+    PasskeyKeystore -->|attestation chain / signature| PasskeyKeyDriver
+    CreateDriver -->|生体認証UV要求| BiometricPrompt
+    GetDriver -->|生体認証UV要求| BiometricPrompt
     BiometricPrompt -->|OSの生体認証prompt| User
     User -->|生体認証| BiometricPrompt
-    BiometricPrompt -->|認証済みCryptoObject| ProviderActivity
-    ProviderActivity -->|metadataのみ保存| PasskeyStore
-    ProviderActivity -->|標準PublicKeyCredential response; internal transport| CredentialManager
+    BiometricPrompt -->|認証済みCryptoObject| CreateDriver
+    BiometricPrompt -->|認証済みCryptoObject| GetDriver
+    CreateDriver -->|metadataのみ保存| PasskeyStore
+    CreateDriver -->|標準PublicKeyCredential response; internal transport| CredentialManager
+    GetDriver -->|標準PublicKeyCredential response| CredentialManager
     CredentialManager --> PasskeyPlugin
     PasskeyPlugin --> App
     App -->|credential response全体| API
     API --> WebAuthnRP
 ```
 
-**ローカルユーザー検証（UV）の境界:** Keycloak用とGorape用のパスキーは、それぞれ独立して認証器/platformにUVを要求します。`gf-app`が受け取るのはWebAuthn responseであり、生体情報は受け取りません。Gorapeの既定は`userVerification: required`です。従来のAndroid device keyは[GF-01143](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt#L234)で`setUserAuthenticationRequired(false)`です。
+**ローカルユーザー検証（UV）の境界:** Keycloak用とGorape用のパスキーは、それぞれ独立して認証器/platformにUVを要求します。`gf-app`が受け取るのはWebAuthn responseであり、生体情報は受け取りません。Gorapeの既定は`userVerification: required`です。従来のAndroid device keyは[GF-01143](https://github.com/GorapeFlutter/gf-app/blob/main/android/app/src/main/kotlin/com/gorapeflutter/gf_app/driver/devicekey/AndroidDeviceKeyDriver.kt#L99)で`setUserAuthenticationRequired(false)`です。
 
 | 用語 | この構成での役割 |
 | --- | --- |
@@ -141,26 +165,26 @@ flowchart LR
     Passkey --> RP --> DB
 ```
 
-Backend IDは[GF-10001](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/base.go#L13)〜[GF-10037](https://github.com/Gorapeflutter/gorape/blob/main/pkg/config/base.go#L194)で、gf-appのDart/Android IDとは別rangeです。実装へのGitHub linkはこのアーキテクチャ図とendpoint tableから参照できます。
+Backend IDは[GF-10001](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/base.go#L13)〜[GF-10045](https://github.com/Gorapeflutter/gorape/blob/main/pkg/server/repository/webauthn.go#L291)で、gf-appのIDとは別rangeです。実装へのGitHub linkはこのアーキテクチャ図とendpoint tableから参照できます。
 全backend IDの一覧は[Gorapeのsource index](https://github.com/Gorapeflutter/gorape/blob/main/docs/book/src/source-index.md)にあります。
 
 ## 処理ID一覧
 
-| ID | 処理 | 主な実装 |
+| GF ID | 処理概要 |
 | --- | --- | --- |
-| [GF-00001](https://github.com/GorapeFlutter/gf-app/blob/main/lib/app.dart#L39) | 起動、接続設定の読み込み、保存済みセッションの復元、画面分岐 | `lib/app.dart`, `lib/back/controller/auth.dart`, `lib/back/usecase/auth.dart` |
-| [GF-00002](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L93) | Keycloakへのサインイン/サインアウトとローカルセッション管理 | `lib/back/controller/auth.dart`, `lib/back/usecase/auth.dart`, `lib/back/repository/auth.dart` |
-| [GF-00003](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L614) | Gorape API呼び出し、Bearer token付与、401時の一度だけの更新・再試行 | `lib/back/repository/gorape.dart` |
-| [GF-00004](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/project.dart#L12) | プロジェクト、端末、グループ、Attestationデータの読み込み | `lib/back/controller/project.dart`, `lib/back/controller/device.dart`, `lib/back/controller/group.dart`, `lib/back/controller/attestation.dart` |
-| [GF-00005](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L89) | Android端末登録とKey Attestation検証 | `lib/back/usecase/device.dart`, `lib/back/repository/device_key.dart`, `android/app/src/main/kotlin/com/gorapeflutter/gf_app/MainActivity.kt` |
-| [GF-00006](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L193) | 登録済み端末の秘密鍵による所有証明 | `lib/back/usecase/device.dart`, `lib/back/repository/device_key.dart`, `MainActivity.kt` |
-| [GF-00007](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L247) | 端末のサーバー側失効とローカル鍵情報の後片付け | `lib/back/usecase/device.dart` |
-| [GF-00008](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/group.dart#L71) | グループの作成/更新/削除と端末の割り当て | `lib/back/controller/group.dart`, `lib/back/usecase/group.dart`, `lib/back/repository/group.dart` |
-| [GF-00009](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/role.dart#L11) | Keycloak token claimsからのUI向けロール解決 | `lib/back/controller/role.dart`, `lib/entity/model/role.dart` |
-| [GF-00010](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/role.dart#L118) | Gorapeのプロジェクト/グループrole bindingの管理 | `lib/back/controller/role.dart`, `lib/back/usecase/role.dart`, `lib/back/repository/role.dart` |
-| [GF-00011](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/connection.dart#L29) | 接続設定の読み書きとGorape health check | `lib/back/controller/connection.dart`, `lib/back/usecase/connection.dart` |
-| [GF-00012](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/policy.dart#L11) | サーバーへ送信しない端末ポリシー設定の読み書き | `lib/back/controller/policy.dart`, `lib/back/usecase/policy.dart` |
-| [GF-00013](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/language.dart#L12) | アプリ表示言語の読み書き | `lib/back/controller/language.dart` |
+| [GF-00001](https://github.com/GorapeFlutter/gf-app/blob/main/lib/app.dart#L39) | アプリを起動し、設定・セッションを復元して画面遷移します。 |
+| [GF-00002](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/auth.dart#L93) | Keycloakでサインイン・サインアウトし、ローカルセッションを管理します。 |
+| [GF-00003](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/repository/gorape.dart#L614) | Bearer tokenでGorape APIを呼び出し、token更新後に一度再試行します。 |
+| [GF-00004](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/project.dart#L12) | プロジェクト、端末、グループ、Attestation情報を読み込みます。 |
+| [GF-00005](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L89) | Android端末を登録し、Key Attestationを検証します。 |
+| [GF-00006](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L193) | サーバーchallengeへの署名で端末所有を証明します。 |
+| [GF-00007](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/usecase/device.dart#L247) | 端末を失効し、ローカル鍵情報を削除します。 |
+| [GF-00008](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/group.dart#L71) | グループを管理し、端末を割り当てます。 |
+| [GF-00009](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/role.dart#L11) | Keycloak token claimsからUI roleを解決します。 |
+| [GF-00010](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/role.dart#L118) | Gorapeのプロジェクト・グループrole bindingを管理します。 |
+| [GF-00011](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/connection.dart#L29) | 接続設定を読み書きし、Gorape healthを確認します。 |
+| [GF-00012](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/policy.dart#L11) | サーバーへ送信しない端末policy設定を読み書きします。 |
+| [GF-00013](https://github.com/GorapeFlutter/gf-app/blob/main/lib/back/controller/language.dart#L12) | アプリ表示言語を読み書きします。 |
 
 IDは処理を説明するための参照番号です。バックエンドAPIの機能や権限を表すものではありません。
 
@@ -277,7 +301,7 @@ sequenceDiagram
     participant UI as 端末詳細画面
     participant UC as DeviceUsecase.provePossession GF-01088
     participant API as Gorape API
-    participant Native as MainActivity.sign GF-01144
+    participant Native as AndroidDeviceKeyDriver.sign GF-01144
     participant KS as Android Keystore
     UI->>UC: provePossession() GF-00006 / GF-02102–GF-02103
     UC->>UC: local keyを読み存在確認 GF-02031
